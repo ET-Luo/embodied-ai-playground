@@ -2,7 +2,7 @@
 
 Updated 2026-10-13 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S0.1 — VLA Data Contract**。Engineering Complete；Learning Run/Modify/Explain 均未确认。
+Current Task = **S0.1 — VLA Data Contract**。Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
 Next Task = **S0.2 — Episode / Sequence Dataset**，仅计划，不授权自动进入。
 当前没有 Tiny VLA、OpenVLA、World Model 实现；后续阶段只有 roadmap 与空目录。
 
@@ -57,3 +57,12 @@ Run：`.venv/bin/python scripts/s0_1_data_contract.py --output tmp/my_s0_1`，�
 Modify：先预测 left action/terminal/success，再用 `--direction left --output tmp/my_s0_1_left` 核对。
 Explain：回答学习包五问，画三转移四观测时序并区分真实 servo reference 与 toy delta。
 只在用户明确确认后更新 README Learning boxes。完成后等待选择 S0.2，不自动推进。
+
+## S0.1 learning confirmation — 2026-10-13
+
+用户明确确认实验和预测均已完成，五项 Explain 准确覆盖 T 次转移/T+1 观测、
+absolute reference 与 measured-state delta、float64 时钟/float32 向量、
+success/next_state 的未来信息泄漏、同 shape 不等于同 embodiment 语义。
+README 与学习包 Run/Modify/Explain 已全部勾选。这里只同步学习状态，
+未重新执行 runtime；工程结果沿用上述 2026-10-13 验证。
+Current Task 仍为 S0.1（已掌握），Next Task 为 S0.2；等待用户选择，不自动实现。

@@ -179,8 +179,11 @@ Validator 检查 shape、clock、dtype、metadata 与非法归一化，round-tri
 
 ## My Verification
 
-- [ ] Run：新目录运行默认命令，打开 JSON 与 NPZ，确认 4 observations / 3 actions。
-- [ ] Modify：先预测 `--direction left` 的第一条动作、终点和 success，再运行新目录核对。
-- [ ] Explain：用自己的话回答上面五问，特别画出 o_0→a_0→o_1→a_1→o_2→a_2→o_3。
+- [x] Run：新目录运行默认命令，打开 JSON 与 NPZ，确认 4 observations / 3 actions。
+- [x] Modify：先预测 `--direction left` 的第一条动作、终点和 success，再运行新目录核对。
+- [x] Explain：用自己的话回答上面五问，特别画出 o_0→a_0→o_1→a_1→o_2→a_2→o_3。
 
-Current Task = S0.1；Next Task = S0.2。STOP，等待用户完成学习动作与选择。
+2026-10-13 用户确认实验与预测均完成，并准确回答五项 Explain；Learning Mastered。
+解释覆盖 T/T+1、动作 anchor/frame/unit/execution、时间精度、未来信息泄漏与 embodiment 语义对齐。
+
+Current Task = S0.1；Next Task = S0.2。STOP，等待用户选择下一任务。

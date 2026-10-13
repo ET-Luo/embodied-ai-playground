@@ -25,7 +25,7 @@ flowchart TD
 
 | Stage | 主线 | 状态 |
 |---|---|---|
-| 0 | Embodied AI Data & Action Representation | S0.1 Engineering Complete |
+| 0 | Embodied AI Data & Action Representation | S0.1 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | Planned |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
@@ -40,11 +40,11 @@ S0.1 Engineering:
 - [x] Docs — contract 与 learning package
 
 S0.1 Learning:
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
-Engineering Complete；Learning 尚未 Mastered。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
+Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
 ## Run S0.1
 

@@ -1,7 +1,7 @@
 # P4 roadmap
 
 每行是用户 0.5～2 小时的阅读/运行/修改/解释任务，不是自动执行队列。
-Current Task S0.1；Next Task S0.2。仅 S0.1 工程已实现；所有后续任务 Planned。
+Current Task S0.1；Next Task S0.2。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；所有后续任务 Planned。
 所有任务最终都有 Engineering Code/Experiment/Docs 与 Learning Run/Modify/Explain 双状态。
 不重学 P0–P3；只在新语境中引用既有知识。
 
