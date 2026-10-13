@@ -218,3 +218,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# P4 local experiment outputs and datasets
+/tmp/
+/data/toy/*
+!/data/toy/.gitkeep
