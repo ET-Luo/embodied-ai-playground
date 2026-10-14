@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前实现数据契约、episode / sequence dataset 与 RLDS/OXE schema 学习及合成 adapter。
+以上是最终能力链；当前实现数据契约、episode / sequence dataset、RLDS/OXE概念adapter与一条真实Bridge转存样本检查。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
-| 0 | Embodied AI Data & Action Representation | S0.1 / S0.2 Mastered；S0.3 Engineering Complete |
+| 0 | Embodied AI Data & Action Representation | S0.1 / S0.2 / S0.3 Mastered；S0.4 Engineering Complete |
 | 1 | Tiny Vision-Language-Action Policy | Planned |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S0.3 — RLDS / Open X-Embodiment Concepts**
-Next Task = **S0.4 — Real Robot Dataset Inspection**（等待用户明确选择）
+Current Task = **S0.4 — Real Robot Dataset Inspection**
+Next Task = **S0.5 — Continuous Action Representation**（等待用户明确选择）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,34 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S0.4 status and Run
+
+Engineering:
+
+- [x] Code — pinned bounded download、Parquet/schema audit、CPU video decode、HTML/PNG/report
+- [x] Experiment — real episode0、28 rows/frames、clock/PTS、8 rejection cases、preview stride invariance
+- [x] Docs — [S0.4 learning package](docs/vla/s0_4_real_robot_dataset_inspection.md)、manifest与契约差异
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+Engineering Complete（2026-10-14）；Learning待用户确认。
+首次下载四文件共1,923,948bytes（约1.93MB）：社区BridgeData V2 LeRobot转存的一条episode、
+单相机视频和schema/task索引；不是原始RLDS。NumPy/PyArrow/av/Pillow，CPU；不下载全集或模型。
+本机隔离环境现为Python3.12.3；输出目录必须不存在：
+
+```bash
+.venv/bin/python scripts/s0_4_inspect_robot_sample.py --download --output tmp/my_s0_4
+.venv/bin/python scripts/s0_4_inspect_robot_sample.py --preview-stride 14 --output tmp/my_s0_4_stride14
+```
+
+打开`tmp/my_s0_4/inspection.html`或PNG/report.json；第二条运行前预测5→3预览帧及raw/time/shape是否改变。
+现有source只核验不覆盖；无`--download`时离线。缺终点/边界/success与控制语义证据，拒绝训练契约导出。
+完成Run/Modify/五项Explain后等待选择S0.5。
+
 ## S0.3 status and Run
 
 Engineering:
@@ -56,11 +84,11 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
-Engineering Complete（2026-10-14）；Learning待用户确认。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认实验、预测及五项 Explain）。
 只使用已有NumPy；没有TensorFlow/TFDS/RLDS安装或真实数据下载。输出目录必须不存在：
 
 ```bash
@@ -117,7 +145,7 @@ python -m venv .venv
 
 ## Scope and layout
 
-当前依赖只有 NumPy。后续需要时才添加 CPU PyTorch / Matplotlib。
+当前依赖为NumPy与S0.4读取/预览所需PyArrow、av、Pillow。后续需要时才添加CPU PyTorch / Matplotlib。
 32×32 / 64×64 图像、小模型、小数据、低维状态与小规模闭环是默认预算。
 完整版模型在 docs 中学习论文、代码与 tensor trace，再设计 Tiny / CPU Learning Version。
 当前非目标：7B VLA 训练、full OpenVLA / π0 复现或 fine-tuning、大规模 LoRA、TB 数据、

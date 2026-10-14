@@ -1,6 +1,7 @@
 # Dataset boundary
 
-当前没有下载公开 robot dataset。S0.1 的三步 toy episode 由脚本生成到 ignored `tmp/`。
+S0.4已下载一条公开Bridge社区LeRobot转存及单相机到ignored `tmp/`，原始RLDS尚未读取。
+S0.1 的三步 toy episode 由脚本生成到 ignored `tmp/`。
 `toy/` 留作未来小数据，`adapters/` 包含S0.3合成RLDS概念适配器；S0.2 的 state-only sequence dataset 已实现于 [脚本](../scripts/s0_2_sequence_dataset.py)。
 
 每个 episode 是同名 `.npz` + `.json`，见 [contract](../docs/data_contract.md)。
@@ -24,4 +25,12 @@ NPZ 只含数值/布尔数组，读取必须 `allow_pickle=False`；文本和语
 [adapter notes](adapters/README.md)：只有explicit synthetic loaded-step profile，不是通用RLDS reader。
 [oxe_schema_notes.json](adapters/oxe_schema_notes.json) 是官方Fractal/Bridge catalog字段的人工摘要，非真实episode。
 `scripts/s0_3_rlds_concepts.py` 生成约4KB JSON fixture到ignored tmp，转为本地NPZ+JSON。
-未安装TensorFlow/TFDS/RLDS，未下载真实robot dataset；真实sample inspection留给S0.4。
+S0.3当时未安装TensorFlow/TFDS/RLDS、未下载真实robot dataset；后续S0.4检查见下文。
+
+## S0.4 real sample inspection boundary
+
+[学习包](../docs/vla/s0_4_real_robot_dataset_inspection.md)、[manifest](adapters/bridge_sample_manifest.json)。
+四份固定文件1,923,948bytes，SHA256校验；28行state/action和28帧单相机视频。
+raw保留原样，HTML/PNG/JSON是派生inspection，不是本地训练episode。
+source转存代码、原始episode/reset group、action units/frame/controller、success与boundary未明确；不猜测转换。
+PyArrow/av/Pillow仅为读取和预览，未使用TensorFlow/TFDS、未训练模型或执行机器人命令。

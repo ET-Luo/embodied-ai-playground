@@ -76,3 +76,11 @@ success = final x ≥ 0.03m；这里只是显式 toy score。`move left` 对应�
 旧 manifest 没有自然语言，不能声称其原本带有 human language annotations；人工补充需记录来源。
 不运行或修改旧 repo exporter，本轮只是设计边界。S0.3已实现 [合成RLDS概念adapter](vla/s0_3_rlds_oxe_concepts.md)：canonical loaded steps的最后action无效，最后observation的is_terminal映射至内部最后transition。实际RLDS/TFDS/OXE reader尚未实现，内部不绑定RLDS；缺有效terminal observation、success、dt或单位时不编造。
 原始数据不归一化；训练统计仅从 train episode 拟合并独立存储，验证/test 不参与。
+
+## S0.4 observed real-source gap (no conversion)
+
+[真实样本检查](vla/s0_4_real_robot_dataset_inspection.md)读取一条Bridge社区LeRobot转存，28行state与28行action，
+一相机28帧。该表不是canonical RLDS loaded-step输入；不能套用toy规则自动丢弃末action。
+缺明确有效终点、terminated/truncated、独立success及动作单位/frame/controller/anchor，producer映射也未知。
+存储clock/视频PTS匹配只证明记录时间对应。当前只保存inspection report与preview，不生成embodied_episode/1.0。
+本契约未扩展、未放宽；不补造信息，不将inspection检查通过等同语义适配通过。

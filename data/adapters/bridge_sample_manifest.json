@@ -1,0 +1,32 @@
+{
+  "schema_version": "robot_sample_inspection_source/1.0",
+  "repo_id": "jesbu1/bridge_v2_lerobot",
+  "revision": "3899a5d24770fa593ad09f6f6e22cd417a227431",
+  "episode_index": 0,
+  "camera": "observation.images.image_0",
+  "accessed_date": "2026-10-14",
+  "source_kind": "community LeRobot v2.0 conversion of BridgeData V2; not original RLDS",
+  "license_declared_by_mirror": "apache-2.0; original data licensing and conversion provenance require separate review",
+  "conversion_code_revision": "unknown",
+  "original_episode_id": "unknown",
+  "files": [
+    {"path": "meta/info.json", "bytes": 4692, "sha256": "0aac6f75d5efed45cdad8594704154620c6bc434ca8fc68f125d1382b25b32f3"},
+    {"path": "meta/tasks.jsonl", "bytes": 1637992, "sha256": "2a832f97957188860ab3e95f5096385bffe0e5b03140531897e3e8d281fac625"},
+    {"path": "data/chunk-000/episode_000000.parquet", "bytes": 6384, "sha256": "36aebbce391c3b8bcc75e8c30c42a180828417b14b20df7fe3da394e7b561a3f"},
+    {"path": "videos/chunk-000/observation.images.image_0/episode_000000.mp4", "bytes": 274880, "sha256": "62a82d2b460749ebf5ae97869cb5835757231556a67406006e0b6e83875fa8b5"}
+  ],
+  "semantic_status": {
+    "state_fields": ["x", "y", "z", "roll", "pitch", "yaw", "gripper"],
+    "action_fields": ["x", "y", "z", "roll", "pitch", "yaw", "gripper"],
+    "units_frame_controller": "not specified by this mirror's info.json; do not infer from names or values",
+    "action_alignment": "unverified for this conversion; inspect diagnostics but do not shift",
+    "success": "not supplied in downloaded files",
+    "boundary_and_final_observation": "not supplied explicitly; equal row counts do not establish outgoing-action validity",
+    "sensor_causality_and_calibration": "unknown; matching presentation timestamps is not proof of acquisition synchronization"
+  },
+  "context_sources": [
+    "https://huggingface.co/datasets/jesbu1/bridge_v2_lerobot/tree/3899a5d24770fa593ad09f6f6e22cd417a227431",
+    "https://github.com/rail-berkeley/bridge_data_v2/blob/bc60a35b701a12021c8c95e9d8601274d3acd928/data_processing/bridgedata_raw_to_numpy.py",
+    "https://github.com/rail-berkeley/bridge_data_v2/blob/bc60a35b701a12021c8c95e9d8601274d3acd928/jaxrl_m/data/bridge_dataset.py"
+  ]
+}

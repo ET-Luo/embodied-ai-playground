@@ -214,9 +214,13 @@ CPU实验用4KB左右的合成loaded-RLDS fixture，末action故意设为999，�
 
 ## My Verification
 
-- [ ] Run：运行默认fixture conversion，比较source四steps与输出三actions。
-- [ ] Modify：先预测terminal→truncated的boundary arrays、success、shape、window数量，再运行核对。
-- [ ] Explain：独立回答上面五问，画出最后source step如何对应最后转移boundary。
+- [x] Run：运行默认fixture conversion，比较source四steps与输出三actions。
+- [x] Modify：先预测terminal→truncated的boundary arrays、success、shape、window数量，再运行核对。
+- [x] Explain：独立回答上面五问，画出最后source step如何对应最后转移boundary。
+
+2026-10-14 用户确认实验和预测均已完成，并提交五项 Explain：区分RLDS/TFDS/OXE职责，
+说明末step动作无效、boundary与success独立、loaded RLDS不再次shift action，
+以及真实Fractal/Bridge接入所需的schema与producer语义证据。学习状态依据用户报告确认；未重新运行实验。
 
 Current Task = S0.3；Next Task = S0.4 — Real Robot Dataset Inspection。
-Engineering Complete；Learning待用户确认。STOP，不自动进入S0.4。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认）。STOP，不自动进入S0.4。

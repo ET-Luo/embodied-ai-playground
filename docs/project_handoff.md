@@ -2,10 +2,11 @@
 
 Updated 2026-10-14 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S0.3 — RLDS / Open X-Embodiment Concepts**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+Current Task = **S0.4 — Real Robot Dataset Inspection**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+S0.3 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.2 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
-Next Task = **S0.4 — Real Robot Dataset Inspection**，仅计划，不授权自动进入。
+Next Task = **S0.5 — Continuous Action Representation**，仅计划，不授权自动进入。
 当前没有 Tiny VLA、OpenVLA、World Model 实现；后续阶段只有 roadmap 与空目录。
 
 ## Initialization and inherited experience
@@ -163,3 +164,76 @@ Run：默认新目录运行，查看source最后step与local最后transition。
 Modify：先预测 `--ending truncated` 对boundary/success/shape/window数量影响，然后运行核对。
 Explain：回答学习包五问，特别区分格式统一/语义统一、loaded/original时序与last/terminal/success。
 Current Task = S0.3；Next Task = S0.4。Learning三项未勾选，工程后STOP。
+
+## S0.3 learning confirmation — 2026-10-14
+
+用户明确确认实验和预测均已完成；五项 Explain 准确覆盖RLDS/TFDS/OXE职责与格式/动作语义区别，
+四观测三转移和末action无效，is_last/is_terminal与terminated/truncated映射及success独立，
+原始EnvLogger/dm_env与loaded RLDS时序区别（不再次shift action），
+以及Fractal/Bridge真实schema、控制器、frame、单位、终点、success来源与producer约定审计。
+README、学习包和roadmap同步为S0.3 Learning Mastered，Run/Modify/Explain全部勾选。
+启动pwd正确，git status --short为空；本轮仅修改四份状态文档，未重新执行Python实验、安装依赖或下载数据。
+运行环境与工程结果沿用上述S0.3记录（Python3.14.7 / NumPy2.5.4）；不增加真实OXE适配或机器人能力声明。
+验证命令：`git diff --check`（通过）；`git diff --stat` / `git status --short`核对四份文档变更。
+Current Task = S0.3（已掌握）；Next Task = S0.4。等待用户明确选择，不自动开始下一任务；未commit/push。
+
+## S0.4 Engineering — 2026-10-14
+
+用户明确请求“继续推进S0.4”，仅实现此任务；保留启动时S0.3学习确认的四份文档修改。
+pwd正确，读AGENTS/handoff/README/roadmap/data contract/S0.1模板/S0.3 package；S0.4此前没有package。
+[学习包](vla/s0_4_real_robot_dataset_inspection.md)、[script](../scripts/s0_4_inspect_robot_sample.py)、
+[source manifest](../data/adapters/bridge_sample_manifest.json)。
+
+来源：社区`jesbu1/bridge_v2_lerobot`，revision `3899a5d24770fa593ad09f6f6e22cd417a227431`。
+Hugging Face API查schema/单文件大小后，先向用户说明下载大小/用途/必要性，再下载四文件：
+meta info4692bytes、task索引1637992bytes、episode0 parquet6384bytes、image_0 video274880bytes，
+合计1923948bytes；初次bounded urllib探查和CLI下载验证各一份，总样本传输3847896bytes。
+raw在ignored `tmp/s0_4_source`及`tmp/s0_4_download_verified`，四文件SHA256固定在manifest。
+只取一episode/一camera，不是原始RLDS/TFDS，不下载全集或weights。
+官方Bridge上下文revision经`git ls-remote`核对：`bc60a35b701a12021c8c95e9d8601274d3acd928`。
+只读raw-to-numpy和loader，发现日期相关camera latency处理与action relabeling路径；
+没有运行producer，也不能证明社区mirror使用哪条路径。mirror许可声明不替代原数据许可审查。
+
+环境修复：启动没有`.venv`。默认Python是Conda base3.14.7；系统`/usr/bin/python3`为3.12.3。
+`/usr/bin/python3 -m venv .venv`因缺ensurepip失败，但留下隔离venv解释器。
+先说明repair及必要依赖，再用base的pip仅作installer，`--python`明确目标为venv，没有向base/system安装。
+Executed environment repair:
+
+```bash
+python3 -m pip --python .venv/bin/python3 install --only-binary=:all: 'numpy>=1.26,<3' 'pyarrow>=19,<25' 'av>=14,<18' 'Pillow>=11,<13'
+python3 -m pip --python .venv/bin/python3 install pip
+.venv/bin/python -m pip check
+```
+
+成功Python3.12.3、NumPy2.5.4、PyArrow24.0.0、av17.1.0、Pillow12.3.0、pip26.2.1；
+实际解释器`.venv/bin/python3`，sys.prefix为本repo `.venv` / base_prefix `/usr`；
+四个实际module路径都位于`.venv/lib/python3.12/site-packages/`，执行前已核对。
+wheel新下载约101MB（NumPy16.7/PyArrow48.9/av35.4），Pillow6.9MB使用cache，pip约1.8MB；
+先前70MB估算偏低，已向用户更正。requirements仅增加本任务Parquet/CPU AV1/RGB preview依赖。
+
+Executed experiments:
+
+```bash
+.venv/bin/python3 scripts/s0_4_inspect_robot_sample.py --output tmp/s0_4_verified
+.venv/bin/python3 scripts/s0_4_inspect_robot_sample.py --preview-stride 14 --output tmp/s0_4_stride14_verified
+.venv/bin/python scripts/s0_4_inspect_robot_sample.py --download --source tmp/s0_4_download_verified --output tmp/s0_4_download_run
+.venv/bin/python scripts/s0_3_rlds_concepts.py --output tmp/s0_4_env_regression
+.venv/bin/python -m pip check
+git diff --check
+```
+
+三次inspection均PASS raw hash、实际Arrow类型/有限值/identity/clock、CPU视频RGB/PTS、8/8损坏输入拒绝。
+28行state/action(28,7)float32；timestamp0…5.400000095367432s，最大clock误差1.9073486345888568e−7s。
+video CPU decoder libdav1d、5fps、28帧(256,256,3)uint8 RGB；camera mask恒[True,True,True,False]。
+task0=`put small spoon from basket to tray`，已查看PNG厨房操作图像；不从视觉判定success。
+stride7→14显示5→3帧；独立inline比较source/arrays/video/language/rows/alignment/local_contract均相同。
+NPZ训练export未实现：N/N末action语义/有效终点、boundary/success、units/frame/controller/anchor、
+producer/original reset group和sensor causality未知，六项blockers明确记录，不能套toy规则。
+逐通道action vs state差offset诊断不是时序证明，不执行shift/relabel，也不fit normalization。
+新Python3.12环境的S0.3回归（含S0.1 validator/S0.2 windows）通过；pip check无冲突。
+Markdown本地链接检查与git diff --check通过；tmp/.venv仍ignored，未改sibling，未commit/push。
+
+Run：新目录运行`--download`（已有source只核验），打开HTML/PNG/report，找last action与blockers。
+Modify：先预测preview stride7→14的行号/显示数和raw/clock/shape/diagnostic，再离线运行核对。
+Explain：学习包五问，重点是snapshot与producer、N/N与T/T+1、PTS与采集因果、diagnostic与语义。
+Current Task = S0.4；Next Task = S0.5。Engineering Complete；Learning三项未勾选，STOP等待用户。
