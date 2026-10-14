@@ -246,9 +246,14 @@ validation污染、constant channel和padding都有显式诊断。gain1使本toy
 
 ## My Verification
 
-- [ ] Run：运行新目录，查看raw与五view、normalizers、chunk masks和错误解释报告。
-- [ ] Modify：先预测gain .5→1对state/delta/success/reference/stats/chunk/boundary的影响，再运行核对。
-- [ ] Explain：独立回答上面五问，手算t=1两种delta并还原reference。
+- [x] Run：运行新目录，查看raw与五view、normalizers、chunk masks和错误解释报告。
+- [x] Modify：先预测gain .5→1对state/delta/success/reference/stats/chunk/boundary的影响，再运行核对。
+- [x] Explain：独立回答上面五问，手算t=1两种delta并还原reference。
+
+2026-10-14 用户确认实验和预测均已完成，并提交五项 Explain：三种joint表示解码及t1手算，
+command delta与measured displacement/rate的区别，joint/Cartesian的运动学与控制语义，
+逐表示train-only z-score、constant channel与inverse，shape/normalization不能统一embodiment及chunk anchor，
+以及gain .5→1的变化与不变量。Learning Mastered依据用户报告确认；本轮未重新运行实验。
 
 Current Task = S0.5；Next Task = S0.6 — Discrete Action Tokenization。
-Engineering Complete；Learning待用户确认。STOP，不自动进入S0.6。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认）。STOP，不自动进入S0.6。

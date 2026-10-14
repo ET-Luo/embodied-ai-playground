@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前实现数据契约、episode / sequence dataset、RLDS/OXE概念adapter、真实Bridge转存样本检查与连续动作表示toy实验。
+以上是最终能力链；当前实现数据契约、episode / sequence dataset、RLDS/OXE概念adapter、真实Bridge转存样本检查、连续动作表示与离散tokenization toy实验。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
-| 0 | Embodied AI Data & Action Representation | S0.1–S0.4 Mastered；S0.5 Engineering Complete |
+| 0 | Embodied AI Data & Action Representation | S0.1–S0.5 Mastered；S0.6 Engineering Complete |
 | 1 | Tiny Vision-Language-Action Policy | Planned |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S0.5 — Continuous Action Representation**
-Next Task = **S0.6 — Discrete Action Tokenization**（等待用户明确选择）
+Current Task = **S0.6 — Discrete Action Tokenization**
+Next Task = **S0.7 — Action Chunk Representation**（等待用户明确选择）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,33 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S0.6 status and Run
+
+Engineering:
+
+- [x] Code — train-range scalar bins / channel IDs / center decode / explicit saturation
+- [x] Experiment — B8→16、boundary/half-bin oracle、16 rejection cases、physical error与toy replay
+- [x] Docs — [S0.6 learning package](docs/vla/s0_6_discrete_action_tokenization.md)、codec与raw语义边界
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+Engineering Complete（2026-10-14）；Learning待用户确认。已有NumPy，无安装或下载。
+复用S0.5已知joint_absolute toy；range只fit12条原始train actions；decode有损，held-out saturation显式报告。
+output必须为新目录；第二条先预测B8→16再运行：
+
+```bash
+.venv/bin/python scripts/s0_6_action_tokenization.py --output tmp/my_s0_6
+.venv/bin/python scripts/s0_6_action_tokenization.py --bins 16 --output tmp/my_s0_6_b16
+```
+
+查看tokenizer.json、tokens.npz与report.json。词表16→32，每episode仍8IDs；half-bin界减半，held-out仍5/8饱和。
+toy replay以原reference为目标，不能把低重建误差叫真实robot success；未训练模型或复现大型tokenizer。
+完成Run/Modify/五项Explain后等待选择S0.7。
+
 ## S0.5 status and Run
 
 Engineering:
@@ -56,11 +83,11 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
-Engineering Complete（2026-10-14）；Learning待用户确认。只使用已有NumPy，无下载或安装。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认实验、预测及五项 Explain）。只使用已有NumPy，无下载或安装。
 四条手写servo toy episodes（train3 / validation1），不是Bridge转换或learned policy。
 output必须为新目录；先预测gain变化，再运行第二条：
 

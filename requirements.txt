@@ -1,4 +1,4 @@
-# S0.1–S0.5 CPU experiments; S0.5 needs only existing NumPy.
+# S0.1–S0.6 CPU experiments; S0.5 / S0.6 need only existing NumPy.
 numpy>=1.26,<3
 # S0.4: Parquet, CPU AV1 video decode, contact sheet.
 pyarrow>=19,<25

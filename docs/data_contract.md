@@ -94,3 +94,11 @@ Cartesian views为已知planar FK下的XY目标/目标差值[m]；不提供唯�
 五view各有独立train-only normalizer sidecar，normalized值不覆盖raw NPZ，不改变normalized=false规则。
 chunk复用S0.2，按mask处理真实槽；future measured-anchor delta不能总加chunk起点测量。
 这些语义只属于本toy；S0.4未知producer样本不因此变得可转换。未升级或放宽embodied_episode/1.0。
+
+## S0.6 token views (raw contract unchanged)
+
+[离散动作实验](vla/s0_6_discrete_action_tokenization.md)以S0.5 joint_absolute raw rad为输入，
+另存scalar_action_bins/1.0 codec与int64 IDs/float32 decoded views，raw物理文件不改。
+range只fit原始train actions；内部edge归右、端点范围内、中心解码，超range显式clip+saturation或reject。
+IDs依赖channel namespace及精确B/range/rules与unit/frame/anchor/controller/dt；不是可直接执行的角度或通用机器人vocabulary。
+decoded reference只用于已知toy counterfactual replay，不替换原始记录action或success；没有升级raw契约或转换真实Bridge。

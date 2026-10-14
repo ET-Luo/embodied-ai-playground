@@ -1,7 +1,7 @@
 # P4 roadmap
 
 每行是用户 0.5～2 小时的阅读/运行/修改/解释任务，不是自动执行队列。
-Current Task S0.5；Next Task S0.6。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2 / S0.3 / S0.4 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；S0.5 Engineering Complete（2026-10-14），Learning未确认；S0.6及后续任务 Planned。
+Current Task S0.6；Next Task S0.7。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.5 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；S0.6 Engineering Complete（2026-10-14），Learning未确认；S0.7及后续任务 Planned。
 所有任务最终都有 Engineering Code/Experiment/Docs 与 Learning Run/Modify/Explain 双状态。
 不重学 P0–P3；只在新语境中引用既有知识。
 
@@ -14,7 +14,7 @@ Current Task S0.5；Next Task S0.6。S0.1 Engineering Complete + Learning Master
 | S0.3 RLDS / Open X-Embodiment Concepts | 1 | [学习包](vla/s0_3_rlds_oxe_concepts.md)：官方 schema study 与 tiny metadata，合成 adapter 字段映射；不下载全集 |
 | S0.4 Real Robot Dataset Inspection | 1.5 | [学习包](vla/s0_4_real_robot_dataset_inspection.md)：一条Bridge社区LeRobot转存，固定1.93MB，CPU读数值/图像、审计clock与契约差异；不声称原始RLDS已验证 |
 | S0.5 Continuous Action Representation | 1 | [学习包](vla/s0_5_continuous_action_representation.md)：servo reference与两种delta anchor、Cartesian views、train-only normalization、chunk及embodiment mismatch |
-| S0.6 Discrete Action Tokenization | 1.5 | toy bins→IDs→decode，重建误差/边界/饱和；不复制大型 tokenizer |
+| S0.6 Discrete Action Tokenization | 1.5 | [学习包](vla/s0_6_discrete_action_tokenization.md)：train-range bins→channel IDs→center decode，half-bin界/边界/saturation与toy replay；不复制大型tokenizer |
 | S0.7 Action Chunk Representation | 1 | vision/language context→future sequence 的表示；复用 P3 chunk 知识，验证末端 mask |
 
 ## Stage 1 — Tiny Vision-Language-Action Policy

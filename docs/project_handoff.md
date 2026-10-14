@@ -2,12 +2,13 @@
 
 Updated 2026-10-14 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S0.5 — Continuous Action Representation**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+Current Task = **S0.6 — Discrete Action Tokenization**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+S0.5 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.4 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.3 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.2 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
-Next Task = **S0.6 — Discrete Action Tokenization**，仅计划，不授权自动进入。
+Next Task = **S0.7 — Action Chunk Representation**，仅计划，不授权自动进入。
 当前没有 Tiny VLA、OpenVLA、World Model 实现；后续阶段只有 roadmap 与空目录。
 
 ## Initialization and inherited experience
@@ -304,3 +305,68 @@ Run：新目录默认执行，查看raw、五view、normalizer/chunk与错误解
 Modify：先预测gain.5→1对state/delta/reference/joint_absolute stats/chunk/boundary/success的影响，再运行核对。
 Explain：回答五问并手算t1 delta两anchor恢复r1。
 Current Task = S0.5；Next Task = S0.6。Engineering Complete；Learning三项未勾选，STOP；未commit/push。
+
+## S0.5 learning confirmation — 2026-10-14
+
+用户明确确认实验和预测均已完成；五项 Explain 准确覆盖absolute reference与两种delta anchor的解码，
+t1 [.25,.15] / [.2,.2]rad均恢复[.4,.5]rad；command delta与measured displacement/rate区别，
+joint/Cartesian依赖运动学、links/frame/unit/姿态/controller且FK(delta)不是Cartesian displacement，
+逐表示train-only原始action各一次fit（排除validation/padding/重复chunk）、constant std0/scale1与matching inverse，
+shape/z-score不能统一embodiment/order/frame/unit/anchor/controller/dt，以及未来measured-anchor chunk需各自测量。
+gain.5→1使本toy测量到reference、两delta一致、四episode success False→True；
+absolute references、previous-reference delta、joint_absolute stats、split/chunk/mask和truncated boundary不变。
+README和学习包Run/Modify/Explain全部勾选，roadmap同步S0.5 Learning Mastered。
+启动pwd正确、git status --short为空；本轮仅修改四份状态文档，未重新执行实验、安装依赖或下载数据。
+环境与工程结果沿用上述S0.5记录（Python3.12.3 / NumPy2.5.4）；不增加真实robot success或泛化声明。
+验证命令：`git diff --check`（通过）；`git diff --stat` / `git status --short`核对四份文档变更。
+Current Task = S0.5（已掌握）；Next Task = S0.6。等待用户明确选择，不自动开始下一任务；未commit/push。
+
+## S0.6 Engineering — 2026-10-14
+
+用户明确请求“继续推进S0.6”，只实现当前任务；保留启动时S0.5学习确认的四份文档修改。
+pwd正确，读取AGENTS/README/handoff/roadmap/S0.5 package/code与S0.1 package模板；S0.6此前无学习包。
+[学习包](vla/s0_6_discrete_action_tokenization.md)、[script](../scripts/s0_6_action_tokenization.py)。
+执行前确认`.venv/bin/python` Python3.12.3、sys.prefix为repo `.venv` / base_prefix `/usr`，
+NumPy2.5.4实际module path=`.venv/lib/python3.12/site-packages/numpy/__init__.py`。
+无安装/新依赖/下载；requirements仅更新任务注释；未读改sibling或S0.4原始Bridge数据。
+
+复用S0.5 explicit generator与round_trip/servo/views，raw为四独立reset，train3/validation1，各4commands/5observations。
+joint_absolute rad、dt.1s、raw gain.5不变；range只fit12原始train actions，low≈[.1,.2] / high≈[.6,.65]rad。
+scalar uniform B-bin，每channel namespace j*B+bin；内部edge归右，low/high范围内，decode中心float32。
+overflow clip返回per-scalar bool saturation，reject模式测试；constant range拒绝，不假造范围。
+IDs/serialized/decoded/saturation单独保存，time-major每episode8IDs；int64 ID payload64bytes vs raw action32bytes，非压缩。
+codec保存signature/fit IDs/规则/B/ranges，NPZ allow_pickle=False往返与saved codec decode通过。
+
+Executed final experiments:
+
+```bash
+.venv/bin/python scripts/s0_6_action_tokenization.py --output tmp/s0_6_final
+.venv/bin/python scripts/s0_6_action_tokenization.py --bins 16 --output tmp/s0_6_b16_final
+.venv/bin/python -m pip check
+git diff --check
+```
+
+B8/B16均PASS raw/token/codec round-trip、ID decode→encode稳定、manual B4 oracle、
+endpoint/内部edge/nextafter/out-of-range boundary oracle、每通道半格误差界与16/16拒绝。
+train saturation0/24；validation saturation5/8(62.5%)，bins翻倍不改变range或saturation。
+half-bin界[.03125,.028125]→[.015625,.0140625]rad；base MAE≈[.0125,.01875002]→[.00624999,.00703125]rad。
+held-out最大total error≈[.73124993,.128125]→[.71562493,.11406250]rad，
+clipping max≈[.69999993,.10000000]rad不变；half-bin只适用于原始in-range值的total error。
+错误all-data high≈[1.3,.65]，validation q1+.2rad后变≈[1.5,.65]，正常train high保持≈[.6,.65]。
+
+Counterfactual toy replay以original r_last为目标，阈值max tracking error≤.02rad，四命令budget仍truncated。
+gain1 train baseline3/3，两B下decoded0/3→3/3；validation baseline1/1而decoded始终0/1。
+gain.5 train/validation合计baseline0/4、decoded0/4；失败stage为final joint tracking threshold，四条全保留。
+这里不是训练预测模型、真实robot success、OOD泛化或大型tokenizer复现；没有model loss/部署latency声明。
+增大B只减小in-range最坏界、词表16→32，序列仍每episode8IDs，任意单点误差不保证单调。
+
+独立inline检查raw与codec fit/ranges/ID序列/半格界、B变化不变量、全分母toy scores；
+B2/B3/B65536额外boundary/ID stability小probe通过；pip check、本地Markdown links与git diff --check通过。
+artifacts/.venv保持ignored；raw契约未升级、S0.5源码未改，未commit/push。
+限制：仅two-channel scalar codec，无constant-channel扩展、wrapped angles、gripper、padding/special tokens、learned prediction；
+已知toy反馈重放不证明真实控制、sensor causality、扰动鲁棒性或泛化，S0.4未知语义仍未解决。
+
+Run：新目录默认运行，查看raw/codec/IDs/decoded/saturation/replay report。
+Modify：先预测B8→16范围/词表/序列长度/误差界/saturation/toy results，再运行核对。
+Explain：学习包五问，手算B4 oracle并说明half-bin与range外误差区别。
+Current Task = S0.6；Next Task = S0.7。Engineering Complete；Learning三项未勾选，STOP等待用户。

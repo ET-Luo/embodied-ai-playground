@@ -41,3 +41,10 @@ PyArrow/av/Pillow仅为读取和预览，未使用TensorFlow/TFDS、未训练模
 raw NPZ+JSON仍为embodied_episode/1.0，rad references/measurements、T/T+1、显式controller与boundary/success。
 derived joint/Cartesian views、各自normalizer和chunk存独立ignored tmp artifacts；不覆盖raw或读取真实Bridge样本。
 统计只fit原始train actions各一次；validation、padding、重叠window复制不参与；无clip，constant channel政策显式。
+
+## S0.6 discrete action views
+
+[学习包](../docs/vla/s0_6_discrete_action_tokenization.md)：S0.5 raw生成器复用，train12 actions拟合两通道min/max。
+ignored tmp内单独保存tokenizer.json、tokens.npz、report.json与raw副本；IDs/decoded/saturation不覆盖raw。
+中心解码有损，range外误差与half-bin量化误差分开；clip返回显式saturation，reject模式拒绝range外输入。
+无padding/special text tokens或learned tokenizer，int64 IDs未压缩存储。真实Bridge语义缺口不因此解决。
