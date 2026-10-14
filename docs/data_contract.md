@@ -63,7 +63,7 @@ terminated: [false,false,true]; truncated: [false,false,false]
 
 success = final x ≥ 0.03m；这里只是显式 toy score。`move left` 对应负方向和 final x ≤ −0.03m。
 配对 `(proprioception[t], language_instruction) → action[t]`；这是示例标签映射，不是已训练 VLA。
-未来 action chunk 是 action[t:t+H]，不能跨 episode；S0.2 已实现 state-only sequence 的 padding/mask，见 [学习包](vla/s0_2_sequence_dataset.md)；foundation-policy action chunk研究仍留给S0.7。
+Action chunk 是 action[t:t+H]，不能跨 episode；S0.2 已实现state-only sequence的padding/mask，见 [学习包](vla/s0_2_sequence_dataset.md)；S0.7已增加synthetic RGB/language context与rule chunk/prefix实验，仍未训练foundation policy。
 
 ## Old repository export plan (not implemented)
 
@@ -102,3 +102,12 @@ chunk复用S0.2，按mask处理真实槽；future measured-anchor delta不能总
 range只fit原始train actions；内部edge归右、端点范围内、中心解码，超range显式clip+saturation或reject。
 IDs依赖channel namespace及精确B/range/rules与unit/frame/anchor/controller/dt；不是可直接执行的角度或通用机器人vocabulary。
 decoded reference只用于已知toy counterfactual replay，不替换原始记录action或success；没有升级raw契约或转换真实Bridge。
+
+## S0.7 RGB/language chunk context (raw contract unchanged)
+
+[动作chunk学习包](vla/s0_7_action_chunk_representation.md)保留point XY[m]的T+1状态、RGB及float64 clock，
+按reset group先split；S0.2窗口附加精确anchor RGB，不让future/terminal image或success进入planner。
+derived target/predicted为(N,H,2)float32 world displacement[m]，bool mask按t+k<T决定，与zero数值无关。
+H prediction与E execution prefix分开，mask仅用于offline标签有效性，不传入rule planner。
+32×32 camera明确pixel-world calibration；真实sensor同步未因toy验证而解决；无learned VLA或真实robot success声明。
+使用已有optional image契约，不改变embodied_episode/1.0，不放宽S0.2 state-only reader或S0.4 source条件。

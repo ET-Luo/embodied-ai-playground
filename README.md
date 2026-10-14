@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前实现数据契约、episode / sequence dataset、RLDS/OXE概念adapter、真实Bridge转存样本检查、连续动作表示与离散tokenization toy实验。
+以上是最终能力链；当前完成Stage0工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。未实现learned VLA或world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
-| 0 | Embodied AI Data & Action Representation | S0.1–S0.5 Mastered；S0.6 Engineering Complete |
+| 0 | Embodied AI Data & Action Representation | S0.1–S0.6 Mastered；S0.7 Engineering Complete |
 | 1 | Tiny Vision-Language-Action Policy | Planned |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S0.6 — Discrete Action Tokenization**
-Next Task = **S0.7 — Action Chunk Representation**（等待用户明确选择）
+Current Task = **S0.7 — Action Chunk Representation**
+Next Task = **S1.1 — Language-conditioned State Policy**（等待用户明确选择）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,33 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S0.7 status and Run
+
+Engineering:
+
+- [x] Code — causal state + anchor RGB + language → rule chunks、S0.2 mask/index audit、execution prefix
+- [x] Experiment — paired language、future/result isolation、12 rejection cases、H/E与扰动闭环toy比较
+- [x] Docs — [S0.7 learning package](docs/vla/s0_7_action_chunk_representation.md)、context preview与完整失败记录
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+Engineering Complete（2026-10-14）；Learning待用户确认。已有NumPy/Pillow，无安装或下载。
+6 synthetic point episodes，32×32 RGB、world delta[m]、10Hz；手写规则，不是learned VLA。
+output必须为新目录；先预测H4固定、E1→4的变化，再运行第二条：
+
+```bash
+.venv/bin/python scripts/s0_7_action_chunk.py --output tmp/my_s0_7
+.venv/bin/python scripts/s0_7_action_chunk.py --execute 4 --output tmp/my_s0_7_e4
+```
+
+查看context_preview.png、report.json及train/validation_chunks.npz；train16/validation8 anchors、42/20 valid tokens。
+离线masked MSE均0，nominal toy均2/2；固定扰动E1为1/2、E4为0/2，完整失败保留。
+H是未来输出长度，E是执行前缀；mask不传入planner。Stage0工程完成，学习确认后等待选择S1.1。
+
 ## S0.6 status and Run
 
 Engineering:
@@ -56,11 +83,11 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
-Engineering Complete（2026-10-14）；Learning待用户确认。已有NumPy，无安装或下载。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认实验、预测及五项 Explain）。已有NumPy，无安装或下载。
 复用S0.5已知joint_absolute toy；range只fit12条原始train actions；decode有损，held-out saturation显式报告。
 output必须为新目录；第二条先预测B8→16再运行：
 

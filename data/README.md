@@ -48,3 +48,10 @@ derived joint/Cartesian views、各自normalizer和chunk存独立ignored tmp art
 ignored tmp内单独保存tokenizer.json、tokens.npz、report.json与raw副本；IDs/decoded/saturation不覆盖raw。
 中心解码有损，range外误差与half-bin量化误差分开；clip返回显式saturation，reject模式拒绝range外输入。
 无padding/special text tokens或learned tokenizer，int64 IDs未压缩存储。真实Bridge语义缺口不因此解决。
+
+## S0.7 context and action chunks
+
+[学习包](../docs/vla/s0_7_action_chunk_representation.md)：6 synthetic XY point episodes，每reset红/蓝指令成对，先group split。
+raw包含T+1 states与32×32 RGB；derived chunks复用S0.2 history/action masks，显式附加anchor RGB和index。
+手写rule只看当前context，target mask留在offline loss；H与E分开，扰动rollout保留所有失败与rule latency。
+全部raw/NPZ/report/PNG在ignored tmp，不读取或重解释真实Bridge；无新normalization/tokenizer/model训练。

@@ -215,9 +215,14 @@ validation仍0/1；gain.5四条都失败。低离线误差不是控制成功，t
 
 ## My Verification
 
-- [ ] Run：新目录运行，检查raw/codec/IDs/decoded/saturation和toy replay report。
-- [ ] Modify：先预测B8→16的范围、词表、序列长度、误差界、saturation与toy成功变化，再运行核对。
-- [ ] Explain：独立回答五问，手算B4 oracle并解释half-bin界与range外误差。
+- [x] Run：新目录运行，检查raw/codec/IDs/decoded/saturation和toy replay report。
+- [x] Modify：先预测B8→16的范围、词表、序列长度、误差界、saturation与toy成功变化，再运行核对。
+- [x] Explain：独立回答五问，手算B4 oracle并解释half-bin界与range外误差。
+
+2026-10-14 用户确认实验和预测均已完成，并提交五项 Explain：train-only范围、bin/channel ID/中心解码与边界，
+physical往返有损而合法ID往返稳定，half-bin界与clipping误差区别，fit仅12条原始train动作，
+B8→16词表/误差界变化而序列长度与saturation不变，以及以原始reference评价toy replay的结果与证据限制。
+Learning Mastered依据用户报告确认；本轮未重新运行实验。
 
 Current Task = S0.6；Next Task = S0.7 — Action Chunk Representation。
-Engineering Complete；Learning待用户确认。STOP，不自动进入S0.7。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认）。STOP，不自动进入S0.7。

@@ -2,13 +2,14 @@
 
 Updated 2026-10-14 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S0.6 — Discrete Action Tokenization**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+Current Task = **S0.7 — Action Chunk Representation**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+S0.6 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.5 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.4 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.3 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.2 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
-Next Task = **S0.7 — Action Chunk Representation**，仅计划，不授权自动进入。
+Next Task = **S1.1 — Language-conditioned State Policy**，仅计划，不授权自动进入。
 当前没有 Tiny VLA、OpenVLA、World Model 实现；后续阶段只有 roadmap 与空目录。
 
 ## Initialization and inherited experience
@@ -370,3 +371,75 @@ Run：新目录默认运行，查看raw/codec/IDs/decoded/saturation/replay repo
 Modify：先预测B8→16范围/词表/序列长度/误差界/saturation/toy results，再运行核对。
 Explain：学习包五问，手算B4 oracle并说明half-bin与range外误差区别。
 Current Task = S0.6；Next Task = S0.7。Engineering Complete；Learning三项未勾选，STOP等待用户。
+
+## S0.6 learning confirmation — 2026-10-14
+
+用户明确确认实验和预测均已完成；五项 Explain 准确覆盖train-only每通道[L,H]与B等宽bins，
+channel ID=jB+b、中心decode、内部edge归右与端点有效，以及clip+saturation/reject区别；
+physical往返有损、合法ID在同codec下往返稳定，half-bin界仅约束in-range原值或clipped值，
+range外总误差需包含clipping；fit只用12原始train动作，排除validation/padding/重叠chunk。
+B8→16词表16→32、每episode仍8tokens、half-bin界减半，actual MAE下降不是普遍单调定理，
+validation仍5/8饱和；ID0合法且不是PAD，错误channel namespace拒绝。
+用户正确区分original-reference评分与decoded-target评分，准确报告gain1 train baseline3/3、decoded0/3→3/3，
+validation baseline1/1而decoded均0/1、gain.5合计0/4；toy不证明真实机器人/VLA策略成功。
+README和学习包Run/Modify/Explain全部勾选，roadmap同步S0.6 Learning Mastered。
+启动pwd正确、git status --short为空；本轮仅修改四份状态文档，未重新执行实验、安装依赖或下载数据。
+环境与工程结果沿用上述S0.6记录（Python3.12.3 / NumPy2.5.4）；不增加真实robot success或泛化声明。
+验证命令：`git diff --check`（通过）；`git diff --stat` / `git status --short`核对四份文档变更。
+Current Task = S0.6（已掌握）；Next Task = S0.7。等待用户明确选择，不自动开始下一任务；未commit/push。
+
+## S0.7 Engineering — 2026-10-14
+
+用户明确请求“推进S0.7学习”，按既有Sprint流程完成此工程/学习包；仅当前任务，不启动Stage1。
+pwd正确；保留启动时S0.6学习确认的四份文档修改。读取规则/README/handoff/roadmap/data contract/S0.1模板与S0.2/S0.5源码。
+[学习包](vla/s0_7_action_chunk_representation.md)、[script](../scripts/s0_7_action_chunk.py)。
+环境执行前确认`.venv/bin/python` Python3.12.3、sys.prefix repo `.venv` / base_prefix `/usr`，
+NumPy2.5.4与预览前额外核对Pillow12.3.0，实际module均在`.venv/lib/python3.12/site-packages/`。
+没有新依赖、安装、数据/weights下载，requirements只更新task注释；NumPy计算、已有Pillow生成PNG。
+未读改旧repo或真实Bridge source，S0.1/S0.2/S0.5源码保持不变。
+
+数据：3独立scene resets，各红/蓝literal指令一条；group0 T2/group1 T6为train4episodes16actions，
+group2 T4为validation2episodes8actions。world XY point displacement[m]/dt.1s，每component最大.06m。
+raw T+1 state/image/clock，budget均truncated，独立success3/6，5行合法zero-vector action，失败数据保留。
+32×32 uint8 RGB，u=16+x/.02,v=16−y/.02，静态red[.24,0] / blue[−.24,0]m，非真实camera。
+goal覆盖重叠agent marker，位置由state提供；image目标由精确颜色与calibration解析，不是learned vision。
+S0.2窗口复用；S0.7 context增加anchor image/image_index并审核，未放宽旧state-only loader。
+rule只接causal history/mask、current RGB/language、H，不接action mask/future/results；history仅用最新state。
+known ideal-point unroll生成H delta proposals，无embedding/fusion/neural head或learned world model。
+
+Executed final experiments:
+
+```bash
+.venv/bin/python scripts/s0_7_action_chunk.py --output tmp/s0_7_checked
+.venv/bin/python scripts/s0_7_action_chunk.py --execute 4 --output tmp/s0_7_e4_checked
+.venv/bin/python scripts/s0_7_action_chunk.py --horizon 2 --output tmp/s0_7_h2_checked
+.venv/bin/python scripts/s0_7_action_chunk.py --history 1 --horizon 1 --output tmp/s0_7_h1_checked
+.venv/bin/python -m pip check
+git diff --check
+```
+
+四次均PASS raw/chunk NPZ+JSON round-trip/S0.1 validator/S0.2 indices、RGB/state相同不同literal指令的rule chunks，
+future/result anchor0 intervention、NaN padding不影响masked loss、12/12拒绝检查。
+default L2/H4：train16/validation8anchors；state(16,2,2)/(8,2,2)、RGB(16,32,32,3)/(8,32,32,3)，
+target(16,4,2)/(8,4,2)，valid tokens42/20、masked MSE0/0m²，scalar denominators84/40。
+H2 valid tokens28/14，L1/H1为16/8；raw/split/context/anchor不因H/E变化改动，L1无history padding。
+末index train[5,-1,-1,-1]/validation[3,-1,-1,-1]，mask[T,F,F,F]，真实zero与padding区分。
+独立inline核对T2 anchor1 history[0,1]/action[1,-1,-1,-1]、source RGB、raw5行zero及手算rollout trace。
+
+四步rollout固定起点[0,-.12]、红/蓝两条，H4，第二次transition后同样+.12m world x扰动；budget始终truncated。
+E1/E4 nominal均2/2；disturbed为1/2与0/2；每条rule calls4→1。
+red受扰后恰好到goal，E1新观测停住、E4旧suffix overshoot .12m；blue被推回，剩余预算不足，E1也失败 .12m。
+失败stage均final goal error after command budget，所有commands/trace/decision ticks保留；不隐去失败。
+single-run rule plan latency各rollout记录median/max/sample count，排除render/controller，非neural inference或部署benchmark。
+E只改actual prefix，不改offline H/mask/loss；offline0不是训练模型结果或扰动成功保证。
+已查看context_preview.png，确认三组同场景paired指令与agent/target显示正确；caption不进入policy image。
+
+独立跨E/H raw/context/shape/mask/count/trace不变量检查、local Markdown links、pip check、git diff --check通过。
+artifacts/env仍ignored，未commit/push；Stage0 Engineering全部完成，但S0.7 Learning仍未确认。
+限制：精确marker与literal语言、ideal point、known unroll，不涉及camera delay/real dynamics/contact/learned language或vision。
+toy两条件完整分母不是真实robot benchmark；短E也会因budget失败，不声称一般鲁棒性/泛化；未自动开始Stage1。
+
+Run：默认新目录，打开PNG/report/NPZ，检查masks与nominal/disturbed traces。
+Modify：先预测H4固定E1→4对dataset/feedback/calls/success的影响，再运行核对。
+Explain：学习包五问，手算T2 anchor1并说明red/blue不同失败机制。
+Current Task = S0.7；Next Task = S1.1。Engineering Complete；Learning三项未勾选，STOP等待用户。
