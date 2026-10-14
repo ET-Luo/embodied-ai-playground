@@ -2,7 +2,7 @@
 
 Updated 2026-10-14 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S0.7 — Action Chunk Representation**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+Current Task = **S0.7 — Action Chunk Representation**。Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.6 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.5 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.4 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
@@ -11,6 +11,7 @@ S0.2 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
 Next Task = **S1.1 — Language-conditioned State Policy**，仅计划，不授权自动进入。
 当前没有 Tiny VLA、OpenVLA、World Model 实现；后续阶段只有 roadmap 与空目录。
+Stage0（S0.1–S0.7）Engineering Complete + Learning Mastered；Stage1尚未启动。
 
 ## Initialization and inherited experience
 
@@ -443,3 +444,19 @@ Run：默认新目录，打开PNG/report/NPZ，检查masks与nominal/disturbed t
 Modify：先预测H4固定E1→4对dataset/feedback/calls/success的影响，再运行核对。
 Explain：学习包五问，手算T2 anchor1并说明red/blue不同失败机制。
 Current Task = S0.7；Next Task = S1.1。Engineering Complete；Learning三项未勾选，STOP等待用户。
+
+## S0.7 learning confirmation — 2026-10-14
+
+用户明确确认实验和预测均已完成；五项 Explain 准确覆盖causal state history float32 world m、
+anchor RGB uint8和episode language条件，planner不读取future state/image/action、success或末端label mask；
+T2/L2/H4 anchor1 history[0,1]/image index1/action[1,-1,-1,-1]及相应mask，真实zero有效性按source index判断；
+H/E/dt的输出/执行/时间含义，H4下E1→4不改dataset/labels/mask/offline loss、calls4→1与反馈.1→.4s。
+用户正确解释offline MSE0不代表闭环成功，red E1重新观察停住、E4 stale suffix overshoot，
+blue因扰动与剩余预算不足连E1也失败，stage为budget后的final goal error；disturbed成功1/2→0/2。
+精确marker、literal language和known point dynamics是手写规则，paired条件响应/因果隔离/toy rollout
+不证明真实视觉语言理解、模型泛化或部署鲁棒性。
+README与学习包Run/Modify/Explain全部勾选，roadmap同步S0.7 Learning Mastered，Stage0全部工程与学习完成。
+启动pwd正确、git status --short为空；本轮仅修改四份状态文档，未重新执行实验、安装依赖或下载数据。
+环境与工程结果沿用上述S0.7记录（Python3.12.3 / NumPy2.5.4 / Pillow12.3.0）；不增加learned VLA或真实robot能力声明。
+验证命令：`git diff --check`（通过）；`git diff --stat` / `git status --short`核对四份文档变更。
+Current Task = S0.7（已掌握）；Next Task = S1.1。等待用户明确选择，不自动开始Stage1；未commit/push。

@@ -25,7 +25,7 @@ flowchart TD
 
 | Stage | 主线 | 状态 |
 |---|---|---|
-| 0 | Embodied AI Data & Action Representation | S0.1–S0.6 Mastered；S0.7 Engineering Complete |
+| 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | Planned |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
@@ -56,11 +56,11 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
-Engineering Complete（2026-10-14）；Learning待用户确认。已有NumPy/Pillow，无安装或下载。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认实验、预测及五项 Explain）。已有NumPy/Pillow，无安装或下载。
 6 synthetic point episodes，32×32 RGB、world delta[m]、10Hz；手写规则，不是learned VLA。
 output必须为新目录；先预测H4固定、E1→4的变化，再运行第二条：
 
@@ -71,7 +71,7 @@ output必须为新目录；先预测H4固定、E1→4的变化，再运行第二
 
 查看context_preview.png、report.json及train/validation_chunks.npz；train16/validation8 anchors、42/20 valid tokens。
 离线masked MSE均0，nominal toy均2/2；固定扰动E1为1/2、E4为0/2，完整失败保留。
-H是未来输出长度，E是执行前缀；mask不传入planner。Stage0工程完成，学习确认后等待选择S1.1。
+H是未来输出长度，E是执行前缀；mask不传入planner。Stage0 Engineering Complete + Learning Mastered，等待用户选择S1.1。
 
 ## S0.6 status and Run
 

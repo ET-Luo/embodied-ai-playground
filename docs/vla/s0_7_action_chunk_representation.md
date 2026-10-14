@@ -238,9 +238,14 @@ Stage0工程包完成后，下一模型任务仍等待用户选择，Learning须
 
 ## My Verification
 
-- [ ] Run：新目录运行，查看RGB preview、raw/contexts/masks与四条rollout traces。
-- [ ] Modify：先预测H4固定、E1→4的dataset/calls/反馈/success变化，再运行核对。
-- [ ] Explain：独立回答五问，手算T2 anchor1并解释扰动后red/blue区别。
+- [x] Run：新目录运行，查看RGB preview、raw/contexts/masks与四条rollout traces。
+- [x] Modify：先预测H4固定、E1→4的dataset/calls/反馈/success变化，再运行核对。
+- [x] Explain：独立回答五问，手算T2 anchor1并解释扰动后red/blue区别。
+
+2026-10-14 用户确认实验和预测均已完成，并提交五项 Explain：causal state/RGB/language context与future leakage，
+T2/L2/H4 anchor1的indices/masks及真实zero action有效性，H/E/dt区别与E变化不变量，
+offline0不代表扰动成功、red stale chunk overshoot与blue预算不足，以及手写规则/因果检查/toy证据的能力边界。
+Learning Mastered依据用户报告确认；本轮未重新运行实验。Stage0全部任务已完成工程与学习验收。
 
 Current Task = S0.7；Next Task = S1.1 — Language-conditioned State Policy。
-Engineering Complete；Learning待用户确认。STOP，不自动进入Stage1/S1.1。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认）。STOP，不自动进入Stage1/S1.1。
