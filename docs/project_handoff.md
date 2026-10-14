@@ -1,9 +1,10 @@
 # P4 project handoff
 
-Updated 2026-10-13 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
+Updated 2026-10-14 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S0.1 — VLA Data Contract**。Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
-Next Task = **S0.2 — Episode / Sequence Dataset**，仅计划，不授权自动进入。
+Current Task = **S0.2 — Episode / Sequence Dataset**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
+Next Task = **S0.3 — RLDS / Open X-Embodiment Concepts**，仅计划，不授权自动进入。
 当前没有 Tiny VLA、OpenVLA、World Model 实现；后续阶段只有 roadmap 与空目录。
 
 ## Initialization and inherited experience
@@ -49,9 +50,9 @@ Executed:
 各 8/8 invalid cases 被拒绝；终点 ±0.029999999329447746m；pip check 无冲突。
 独立 inline check 验证 optional next_state/image/force/tactile 合法与 next_state 错配拒绝。
 Markdown 本地链接检查与 git diff --check 通过；输出 ignored `tmp/`，环境 ignored `.venv/`。
-未下载公开 robot dataset 或模型权重；没有图像训练、sequence/padding/split 实现。
+S0.1 当时未下载公开 robot dataset 或模型权重；sequence/padding/split 见下面新增 S0.2 记录。
 
-## Learner handoff
+## S0.1 learner handoff (historical)
 
 Run：`.venv/bin/python scripts/s0_1_data_contract.py --output tmp/my_s0_1`，读 NPZ/JSON。
 Modify：先预测 left action/terminal/success，再用 `--direction left --output tmp/my_s0_1_left` 核对。
@@ -65,4 +66,45 @@ absolute reference 与 measured-state delta、float64 时钟/float32 向量、
 success/next_state 的未来信息泄漏、同 shape 不等于同 embodiment 语义。
 README 与学习包 Run/Modify/Explain 已全部勾选。这里只同步学习状态，
 未重新执行 runtime；工程结果沿用上述 2026-10-13 验证。
-Current Task 仍为 S0.1（已掌握），Next Task 为 S0.2；等待用户选择，不自动实现。
+当时 Current Task 为 S0.1（已掌握），Next Task 为 S0.2；2026-10-14 用户请求继续推进后实现 S0.2。
+
+## S0.2 Engineering — 2026-10-14
+
+用户请求“继续推进任务”，只推进下一个小任务 S0.2。
+启动 pwd 正确，git status --short 为空；读取规则/README/交接/S0.1 package和源码。
+[Learning package](vla/s0_2_sequence_dataset.md)，[script](../scripts/s0_2_sequence_dataset.py)。
+requirements 仍只有 NumPy（仅更新覆盖任务注释），无下载/安装。
+执行前重新确认 `.venv/bin/python`，Python3.14.7、NumPy2.5.4，实际模块位于 `.venv/lib/python3.14/site-packages/numpy/__init__.py`。
+该环境通过本次CPU NumPy实验；未来Torch兼容未验证。
+
+数据：6 independent reset groups，每组左右episode，T1…6，共12episodes/42actions。
+写 raw NPZ+JSON，重新读取并调用 S0.1 validator；同reset两episode整组分到train/validation。
+先split后window；每个action一个anchor；左history/右action zero padding，True=真实token。
+输出带 Unicode IDs/language、indices、masks；allow_pickle=False round-trip通过。
+本实现只支持state+language，遇可选传感模态明确拒绝；未训练模型/实现完整normalizer。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s0_2_sequence_dataset.py --output tmp/s0_2_verified
+.venv/bin/python scripts/s0_2_sequence_dataset.py --horizon 2 --output tmp/s0_2_h2
+.venv/bin/python scripts/s0_2_sequence_dataset.py --history 1 --horizon 1 --seed 3 --output tmp/s0_2_min
+.venv/bin/python -m pip check
+```
+
+默认L3/H4/seed2：train8episodes/22windows，validation4episodes/20windows；
+valid action tokens48/56，history44/48；H2保持split/N，action tokens36/36。
+L1/H1/seed3：24/18windows，所有槽真实。
+全部window逐source-index审计、split重复性、group/episode overlap=0通过。
+坏奇偶anchor split实际共享10episodes；跨界污染拒绝；改变terminal不改变policy输入。
+固定T1/L4/H4 loss probe：masked≈1.0000000093，unmasked≈750000.2500000023m²；
+padded NaN不影响masked loss，全空mask拒绝。
+validation x+100m不改train mean x=0.2545454502105713m；错误all-data mean变47.619049072265625m。
+这些只验证dataset与loss边界，不是学习到的模型结果或robot success。
+pip check、Markdown本地链接、git diff --check通过；所有输出ignored tmp/。
+README双状态已更新；Learning三项仍未确认。未开始S0.3。
+
+Run：`.venv/bin/python scripts/s0_2_sequence_dataset.py --output tmp/my_s0_2`，检查report和第一条window。
+Modify：预测H4→H2对split/N/history/action shape/有效token数的影响，再新目录运行核对。
+Explain：回答学习包五问，特别说明mask不等于非零，以及episode split与reset-group split差别。
+Current Task = S0.2；Next Task = S0.3。完成工程后STOP，等待用户学习确认与选择。

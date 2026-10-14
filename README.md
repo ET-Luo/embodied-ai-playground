@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前只实现数据契约。
+以上是最终能力链；当前实现数据契约与 episode / sequence dataset。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
-| 0 | Embodied AI Data & Action Representation | S0.1 Engineering Complete + Learning Mastered |
+| 0 | Embodied AI Data & Action Representation | S0.1 Mastered；S0.2 Engineering Complete |
 | 1 | Tiny Vision-Language-Action Policy | Planned |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S0.1 — VLA Data Contract**
-Next Task = **S0.2 — Episode / Sequence Dataset**（等待用户明确选择）
+Current Task = **S0.2 — Episode / Sequence Dataset**
+Next Task = **S0.3 — RLDS / Open X-Embodiment Concepts**（等待用户明确选择）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -45,6 +45,31 @@ S0.1 Learning:
 - [x] Explain
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
+
+## S0.2 status and Run
+
+Engineering:
+
+- [x] Code — file-backed episodes、group split、causal windows、padding/masks
+- [x] Experiment — source alignment、masked loss、boundary/leakage counterexamples
+- [x] Docs — [S0.2 learning package](docs/vla/s0_2_sequence_dataset.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+Engineering Complete（2026-10-14）；Learning 尚未 Mastered。
+只需要已有 NumPy，不增加依赖。仓库根目录执行，输出目录须不存在：
+
+```bash
+.venv/bin/python scripts/s0_2_sequence_dataset.py --output tmp/my_s0_2
+.venv/bin/python scripts/s0_2_sequence_dataset.py --horizon 2 --output tmp/my_s0_2_h2
+```
+
+第一条为 Run；第二条在预测 horizon 变化后做 Modify。阅读学习包回答五项 Explain。
+完成后等待用户选择下一任务。
 
 ## Run S0.1
 

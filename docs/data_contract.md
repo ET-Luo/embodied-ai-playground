@@ -63,7 +63,7 @@ terminated: [false,false,true]; truncated: [false,false,false]
 
 success = final x ≥ 0.03m；这里只是显式 toy score。`move left` 对应负方向和 final x ≤ −0.03m。
 配对 `(proprioception[t], language_instruction) → action[t]`；这是示例标签映射，不是已训练 VLA。
-未来 action chunk 是 action[t:t+H]，不能跨 episode；padding/mask 留给 S0.2/S0.7。
+未来 action chunk 是 action[t:t+H]，不能跨 episode；S0.2 已实现 state-only sequence 的 padding/mask，见 [学习包](vla/s0_2_sequence_dataset.md)；foundation-policy action chunk研究仍留给S0.7。
 
 ## Old repository export plan (not implemented)
 

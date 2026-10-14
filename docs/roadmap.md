@@ -1,7 +1,7 @@
 # P4 roadmap
 
 每行是用户 0.5～2 小时的阅读/运行/修改/解释任务，不是自动执行队列。
-Current Task S0.1；Next Task S0.2。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；所有后续任务 Planned。
+Current Task S0.2；Next Task S0.3。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2 Engineering Complete（2026-10-14），Learning未确认；S0.3及后续任务 Planned。
 所有任务最终都有 Engineering Code/Experiment/Docs 与 Learning Run/Modify/Explain 双状态。
 不重学 P0–P3；只在新语境中引用既有知识。
 
@@ -10,7 +10,7 @@ Current Task S0.1；Next Task S0.2。S0.1 Engineering Complete + Learning Master
 | Task | h | 目标与可检查产物 |
 |---|---:|---|
 | S0.1 VLA Data Contract | 1 | observation/language/action/episode/trajectory/embodiment；三步 NPZ+JSON 和时间对齐验证 |
-| S0.2 Episode / Sequence Dataset | 1.5 | toy history/horizon、padding/mask；episode-level split，跨界与泄漏反例 |
+| S0.2 Episode / Sequence Dataset | 1.5 | [学习包](vla/s0_2_sequence_dataset.md)：toy history/horizon、padding/mask；episode/reset-group split，跨界与泄漏反例 |
 | S0.3 RLDS / Open X-Embodiment Concepts | 1 | 官方 schema study 与 tiny metadata，adapter 字段映射；不下载全集 |
 | S0.4 Real Robot Dataset Inspection | 1.5 | 网络适合时少量公开 DROID/Open-X style 样本；先报告大小/用途/必要性；读取、可视化、对比契约；不可得则明确未验证 |
 | S0.5 Continuous Action Representation | 1 | absolute joint/joint delta/Cartesian delta/normalized/chunk 对比与 embodiment mismatch |
