@@ -211,9 +211,14 @@ S0.5将学习动作表示，本任务到真实inspection为止。
 
 ## My Verification
 
-- [ ] Run：运行新输出目录，打开HTML/PNG/report，定位28rows、task0、last action与blockers。
-- [ ] Modify：先预测stride7→14的显示行号/数量及raw、clock、shape、diagnostic，再运行核对。
-- [ ] Explain：独立回答上面五问，区分bytes/structure、time匹配与producer语义证据。
+- [x] Run：运行新输出目录，打开HTML/PNG/report，定位28rows、task0、last action与blockers。
+- [x] Modify：先预测stride7→14的显示行号/数量及raw、clock、shape、diagnostic，再运行核对。
+- [x] Explain：独立回答上面五问，区分bytes/structure、time匹配与producer语义证据。
+
+2026-10-14 用户明确确认实验和预测均已完成，并提交五项 Explain：固定转存文件检查不等于原始RLDS验证，
+N/N无法确定末动作有效性或终点，PTS匹配不证明采集同步，MAE仅是offset诊断且视频不替代success，
+stride7→14只改变预览5→3帧，raw/clock/统计/诊断/blockers保持不变，未生成训练动作标签。
+Learning Mastered依据用户报告确认；本轮未重新运行实验。
 
 Current Task = S0.4；Next Task = S0.5 — Continuous Action Representation。
-Engineering Complete；Learning待用户确认。STOP，不自动进入S0.5。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认）。STOP，不自动进入S0.5。

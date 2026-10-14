@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前实现数据契约、episode / sequence dataset、RLDS/OXE概念adapter与一条真实Bridge转存样本检查。
+以上是最终能力链；当前实现数据契约、episode / sequence dataset、RLDS/OXE概念adapter、真实Bridge转存样本检查与连续动作表示toy实验。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
-| 0 | Embodied AI Data & Action Representation | S0.1 / S0.2 / S0.3 Mastered；S0.4 Engineering Complete |
+| 0 | Embodied AI Data & Action Representation | S0.1–S0.4 Mastered；S0.5 Engineering Complete |
 | 1 | Tiny Vision-Language-Action Policy | Planned |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S0.4 — Real Robot Dataset Inspection**
-Next Task = **S0.5 — Continuous Action Representation**（等待用户明确选择）
+Current Task = **S0.5 — Continuous Action Representation**
+Next Task = **S0.6 — Discrete Action Tokenization**（等待用户明确选择）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,33 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S0.5 status and Run
+
+Engineering:
+
+- [x] Code — joint absolute / two delta anchors / Cartesian views、train-only normalizers、S0.2 chunks
+- [x] Experiment — correct decode/replay、gain .5→1、frame/embodiment/leakage、11 rejection cases、H1/H6
+- [x] Docs — [S0.5 learning package](docs/vla/s0_5_continuous_action_representation.md)、physical/raw与derived语义
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+Engineering Complete（2026-10-14）；Learning待用户确认。只使用已有NumPy，无下载或安装。
+四条手写servo toy episodes（train3 / validation1），不是Bridge转换或learned policy。
+output必须为新目录；先预测gain变化，再运行第二条：
+
+```bash
+.venv/bin/python scripts/s0_5_action_representation.py --output tmp/my_s0_5
+.venv/bin/python scripts/s0_5_action_representation.py --gain 1 --output tmp/my_s0_5_gain1
+```
+
+查看report.json、raw episodes、representations.npz、normalizers.json和train_chunks.npz。
+gain=.5时reference≠下一测量，两种delta须分别解码；normalization只fit原始train actions，padding不参与。
+Cartesian views仅为XY目标，无IK/controller执行转换。完成Run/Modify/五项Explain后等待选择S0.6。
+
 ## S0.4 status and Run
 
 Engineering:
@@ -56,11 +83,11 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
-Engineering Complete（2026-10-14）；Learning待用户确认。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认实验、预测及五项 Explain）。
 首次下载四文件共1,923,948bytes（约1.93MB）：社区BridgeData V2 LeRobot转存的一条episode、
 单相机视频和schema/task索引；不是原始RLDS。NumPy/PyArrow/av/Pillow，CPU；不下载全集或模型。
 本机隔离环境现为Python3.12.3；输出目录必须不存在：

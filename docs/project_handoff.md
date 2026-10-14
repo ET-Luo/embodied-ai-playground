@@ -2,11 +2,12 @@
 
 Updated 2026-10-14 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S0.4 — Real Robot Dataset Inspection**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+Current Task = **S0.5 — Continuous Action Representation**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+S0.4 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.3 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.2 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
-Next Task = **S0.5 — Continuous Action Representation**，仅计划，不授权自动进入。
+Next Task = **S0.6 — Discrete Action Tokenization**，仅计划，不授权自动进入。
 当前没有 Tiny VLA、OpenVLA、World Model 实现；后续阶段只有 roadmap 与空目录。
 
 ## Initialization and inherited experience
@@ -237,3 +238,69 @@ Run：新目录运行`--download`（已有source只核验），打开HTML/PNG/re
 Modify：先预测preview stride7→14的行号/显示数和raw/clock/shape/diagnostic，再离线运行核对。
 Explain：学习包五问，重点是snapshot与producer、N/N与T/T+1、PTS与采集因果、diagnostic与语义。
 Current Task = S0.4；Next Task = S0.5。Engineering Complete；Learning三项未勾选，STOP等待用户。
+
+## S0.4 learning confirmation — 2026-10-14
+
+用户明确确认实验和预测均已完成；五项 Explain 准确覆盖固定revision社区转存与原始producer/RLDS证据的区别，
+N/N无法确定末action有效性或缺终点（不擅自丢弃/补造boundary），
+PTS与记录clock匹配不等于采集/状态/下发同步，不能排除延迟或转存重标时，
+逐通道MAE仅提供offset诊断，不凭最小值推断shift/controller，视频外观不替代独立success，
+以及stride7→14预览[0,7,14,21,27]→[0,14,27]，raw/5fps/clock/统计/diagnostic/blockers均保持不变。
+README和学习包Run/Modify/Explain已全部勾选，roadmap同步S0.4 Learning Mastered。
+启动pwd正确、git status --short为空；本轮仅修改四份状态文档，未重新执行Python实验、安装依赖或下载数据。
+环境与工程结果沿用上述S0.4记录（Python3.12.3 / NumPy2.5.4 / PyArrow24.0.0 / av17.1.0 / Pillow12.3.0）；
+仍未验证原始RLDS/producer语义，未生成内部训练episode，不增加机器人成功或泛化声明。
+验证命令：`git diff --check`（通过）；`git diff --stat` / `git status --short`核对四份文档变更。
+Current Task = S0.4（已掌握）；Next Task = S0.5。等待用户明确选择，不自动开始下一任务；未commit/push。
+
+## S0.5 Engineering — 2026-10-14
+
+用户明确请求“继续推进S0.5”，只实现当前小任务；保留启动时S0.4学习确认的四份文档修改。
+pwd正确，读取AGENTS/README/handoff/roadmap/data contract/S0.1模板与现有S0.1/S0.2代码；S0.5此前无package。
+[学习包](vla/s0_5_continuous_action_representation.md)、[script](../scripts/s0_5_action_representation.py)。
+独立NumPy脚本，不导入或修改旧仓库，不下载数据/权重，不重解释S0.4 Bridge source。
+
+执行前核对`.venv/bin/python` Python3.12.3，sys.prefix本repo `.venv` / sys.base_prefix `/usr`；
+NumPy2.5.4实际module path=`.venv/lib/python3.12/site-packages/numpy/__init__.py`。
+requirements只更新覆盖任务注释，无新依赖、安装或环境repair；其它依赖仍仅供S0.4使用。
+
+数据/语义：四独立reset，train servo_0/1/2、validation servo_3；各T4/T+1=5。
+q1/q2 rad，links .3/.2m，dt .1s，r_t absolute reference经q_next=q+gain*(r−q)执行。
+raw以embodied_episode/1.0存物理单位、normalized=false，S0.1 validator与NPZ+JSON round-trip通过。
+measured/previous-reference两种delta、Cartesian absolute/delta五view；位置仅XY FK，无IK或姿态controller。
+raw与view分离，各view train-only zscore sidecar保留signature与fit IDs，ddof0，constant std0→scale1原单位，no clip。
+S0.2 make_windows/audit_windows复用；normalization只处理真实mask，不用重叠chunks或padding拟合。
+
+Executed final experiments:
+
+```bash
+.venv/bin/python scripts/s0_5_action_representation.py --output tmp/s0_5_final_checked
+.venv/bin/python scripts/s0_5_action_representation.py --gain 1 --output tmp/s0_5_gain1_checked
+.venv/bin/python scripts/s0_5_action_representation.py --horizon 1 --output tmp/s0_5_h1_checked
+.venv/bin/python scripts/s0_5_action_representation.py --horizon 6 --output tmp/s0_5_h6_checked
+.venv/bin/python -m pip check
+git diff --check
+```
+
+四次均PASS raw/view/chunk round-trip、correct delta decode与toy servo重放、train-only normalization，11/11拒绝。
+default gain.5：q_final≈[.39375,.35625]rad，r_last−q_final≈[.10625,−.15625]rad；四episode toy tracking success均False。
+gain1：q_final≈[.5,.2]rad，base最大tracking error1.49e−8rad；四episode toy success均True。
+两anchor delta最大差.125→0rad，command vs measured displacement最大差.15625003→0rad。
+四步预算末boundary一直truncated；toy success独立；没有learned policy或真实robot success评价。
+wrong delta-as-absolute末状态相对正确trace差≈[−.2375,−.43125]rad；全序列复用q0的stale anchor reference最大分量差≈[.1875,.1125]rad。
+换link长度same-shaped reference产生XY最大分量差.04878067m；固定local delta误作world最大分量差.20428187m。
+metadata错embodiment/order/unit/frame/controller/anchor均拒绝，不将normalized representation统一视为相同语义。
+
+joint_absolute fit12原始训练行，mean≈[.35,.41666668]rad；错误all-data mean≈[.55,.3875]，
+validation q1+ .2rad使错误mean变≈[.60,.3875]，train stats不变；validation z最大≈6.86199且未clip。
+五view inverse最大float32误差≈7.45e−9原单位；constant训练副本重新servo，std0/scale1/z0通过，原始文件未变。
+H3/H1/H6：shape(12,3,2)/(12,1,2)/(12,6,2)，valid tokens27/12/30，anchors均12，normalizers相同。
+独立inline手算q trace、train/all-data mean oracle、跨gain/reference/chunk不变与跨H统计比较通过。
+pip check无冲突；Markdown本地链接检查、git diff --check通过，全部artifacts/env ignored。
+限制：无真实动力学/接触/包角处理，Cartesian view不唯一反推joint，离线delta重放不证明受扰动鲁棒性；
+没有model loss/inference latency/泛化或真实robot success声明，S0.4未知语义仍未解决。
+
+Run：新目录默认执行，查看raw、五view、normalizer/chunk与错误解释report。
+Modify：先预测gain.5→1对state/delta/reference/joint_absolute stats/chunk/boundary/success的影响，再运行核对。
+Explain：回答五问并手算t1 delta两anchor恢复r1。
+Current Task = S0.5；Next Task = S0.6。Engineering Complete；Learning三项未勾选，STOP；未commit/push。

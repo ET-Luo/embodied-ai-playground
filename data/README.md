@@ -34,3 +34,10 @@ S0.3当时未安装TensorFlow/TFDS/RLDS、未下载真实robot dataset；后续S
 raw保留原样，HTML/PNG/JSON是派生inspection，不是本地训练episode。
 source转存代码、原始episode/reset group、action units/frame/controller、success与boundary未明确；不猜测转换。
 PyArrow/av/Pillow仅为读取和预览，未使用TensorFlow/TFDS、未训练模型或执行机器人命令。
+
+## S0.5 raw action and derived views
+
+[学习包](../docs/vla/s0_5_continuous_action_representation.md)：four-command joint_absolute servo toy，四独立resets，先固定train3/validation1。
+raw NPZ+JSON仍为embodied_episode/1.0，rad references/measurements、T/T+1、显式controller与boundary/success。
+derived joint/Cartesian views、各自normalizer和chunk存独立ignored tmp artifacts；不覆盖raw或读取真实Bridge样本。
+统计只fit原始train actions各一次；validation、padding、重叠window复制不参与；无clip，constant channel政策显式。

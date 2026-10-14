@@ -84,3 +84,13 @@ success = final x ≥ 0.03m；这里只是显式 toy score。`move left` 对应�
 缺明确有效终点、terminated/truncated、独立success及动作单位/frame/controller/anchor，producer映射也未知。
 存储clock/视频PTS匹配只证明记录时间对应。当前只保存inspection report与preview，不生成embodied_episode/1.0。
 本契约未扩展、未放宽；不补造信息，不将inspection检查通过等同语义适配通过。
+
+## S0.5 action views (raw contract unchanged)
+
+[连续动作表示实验](vla/s0_5_continuous_action_representation.md)创建synthetic two-joint servo的joint_absolute raw episodes。
+动作r_t为rad reference，经显式q_next=q+gain*(r−q)执行；T4/T+1=5，末budget truncated、success独立。
+derived measured-anchor delta=r_t−q_t；previous-reference delta=r_t−r_(t−1)，显式r_-1=q_0。
+Cartesian views为已知planar FK下的XY目标/目标差值[m]；不提供唯一逆映射或可执行Cartesian controller。
+五view各有独立train-only normalizer sidecar，normalized值不覆盖raw NPZ，不改变normalized=false规则。
+chunk复用S0.2，按mask处理真实槽；future measured-anchor delta不能总加chunk起点测量。
+这些语义只属于本toy；S0.4未知producer样本不因此变得可转换。未升级或放宽embodied_episode/1.0。
