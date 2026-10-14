@@ -2,9 +2,10 @@
 
 Updated 2026-10-14 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S0.2 — Episode / Sequence Dataset**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+Current Task = **S0.3 — RLDS / Open X-Embodiment Concepts**。Engineering Complete；Learning Run/Modify/Explain 未确认。
+S0.2 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
 S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
-Next Task = **S0.3 — RLDS / Open X-Embodiment Concepts**，仅计划，不授权自动进入。
+Next Task = **S0.4 — Real Robot Dataset Inspection**，仅计划，不授权自动进入。
 当前没有 Tiny VLA、OpenVLA、World Model 实现；后续阶段只有 roadmap 与空目录。
 
 ## Initialization and inherited experience
@@ -102,9 +103,63 @@ padded NaN不影响masked loss，全空mask拒绝。
 validation x+100m不改train mean x=0.2545454502105713m；错误all-data mean变47.619049072265625m。
 这些只验证dataset与loss边界，不是学习到的模型结果或robot success。
 pip check、Markdown本地链接、git diff --check通过；所有输出ignored tmp/。
-README双状态已更新；Learning三项仍未确认。未开始S0.3。
+工程完成时 README双状态已更新；当时 Learning三项未确认。后续学习确认见下文，未开始S0.3。
 
 Run：`.venv/bin/python scripts/s0_2_sequence_dataset.py --output tmp/my_s0_2`，检查report和第一条window。
 Modify：预测H4→H2对split/N/history/action shape/有效token数的影响，再新目录运行核对。
 Explain：回答学习包五问，特别说明mask不等于非零，以及episode split与reset-group split差别。
 Current Task = S0.2；Next Task = S0.3。完成工程后STOP，等待用户学习确认与选择。
+
+## S0.2 learning confirmation — 2026-10-14
+
+用户确认实验和预测均已完成；五项 Explain 准确覆盖因果 history/terminal anchor、
+T1/L3/H4 的 mask/index、真实零值与 masked MSE 分母、episode vs reset-group split、
+H4→H2 保持22/20anchors及history，target shape变化、valid action tokens48/56→36/36、
+train-only真实状态统计避免验证泄漏与重叠/padding偏差。
+README和学习包 Run/Modify/Explain 已全部勾选，S0.2 Learning Mastered。
+本轮仅同步四份状态文档，git diff --check通过；未重新运行Python实验，runtime沿用上述2026-10-14工程验证。
+Current Task = S0.2（已掌握）；Next Task = S0.3。等待用户选择，不自动实现下一任务。
+
+## S0.3 Engineering — 2026-10-14
+
+用户明确请求推进S0.3。启动工作区已有S0.2学习确认的四份文档修改，保留全部工作。
+读规则/README/handoff/data contract/S0.2 package；当前只实现本任务。
+[学习包](vla/s0_3_rlds_oxe_concepts.md)、[adapter](../data/adapters/rlds_toy.py)、
+[experiment](../scripts/s0_3_rlds_concepts.py)、[schema notes](../data/adapters/oxe_schema_notes.json)。
+
+官方source study：RLDS README/rlds_types.py，OXE README，TFDS Fractal/Bridge catalog。
+通过git ls-remote HEAD确认并浏览固定revision：
+RLDS b35dac3a6b73396b0cb8773095999c4b5d70947c；OXE 9eeb68b989efbcf474e8fb9019e01d02b962a604。
+两份catalog version0.1.0，页面更新时间2024-09-03/2024-05-16；2026-10-14查阅。
+人工metadata摘要记录language位置/action结构/state/image shape，非下载的真实样本。
+未运行producer/builder，未读取TFRecord；schema study不能证明真实episode全符合canonical语义。
+官方大notebook未使用（web返回content too large），不需要为本任务下载它。
+
+关键规则：loaded RLDS step action作用于同step observation，最后step action/reward/discount无效。
+最后observation的is_terminal映射到内部最后transition；is_last不是success。
+本adapter仅synthetic_loaded_rlds_xy/1.0，已知world XY delta[m]/10Hz/ideal point。
+要求有效终点、恒定语言、显式success；未知语义/invalid/缺终点不能靠补零修复。
+Reward/discount丢弃在metadata中明确记录，本转换不声称全字段无损。
+
+环境重新检查：`.venv/bin/python`，Python3.14.7、NumPy2.5.4，actual NumPy path在本venv内。
+未安装新依赖、未下载真实dataset或weights，未修改旧repo。
+
+Executed (final version):
+
+```bash
+.venv/bin/python scripts/s0_3_rlds_concepts.py --output tmp/s0_3_verified
+.venv/bin/python scripts/s0_3_rlds_concepts.py --ending truncated --output tmp/s0_3_truncated_verified
+.venv/bin/python -m pip check
+```
+
+两方向ending都PASS：4steps→(4,2)observations/(3,2)actions；末[999,999]与后续NaN占位均被忽略；
+terminal/truncated标志正确，success True保持独立，额外False标注也独立保留。
+各10/10坏输入拒绝；本地NPZ+JSON round-trip/S0.1 validator/S0.2 window audit通过。
+S0.2 L3/H4生成3anchors、6valid action tokens；数值payload94bytes，默认synthetic JSON4039bytes。
+pip check、Markdown本地链接、schema-notes JSON读取和git diff --check通过。
+以上验证只覆盖toy concept profile，不是TFDS/真实OXE adapter或robot success证据。
+
+Run：默认新目录运行，查看source最后step与local最后transition。
+Modify：先预测 `--ending truncated` 对boundary/success/shape/window数量影响，然后运行核对。
+Explain：回答学习包五问，特别区分格式统一/语义统一、loaded/original时序与last/terminal/success。
+Current Task = S0.3；Next Task = S0.4。Learning三项未勾选，工程后STOP。

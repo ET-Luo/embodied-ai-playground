@@ -234,9 +234,11 @@ L3/H4默认有22/20窗口，修改H不改split或窗口数，只改标签长度�
 
 ## My Verification
 
-- [ ] Run：默认运行，查看 report.json 与第一条 window 的 mask/index。
-- [ ] Modify：先预测 H4→H2 对 N、history、target shape、valid token总数的影响，然后新目录运行核对。
-- [ ] Explain：独立回答五问，画一个短episode的边界窗口。
+- [x] Run：默认运行，查看 report.json 与第一条 window 的 mask/index。
+- [x] Modify：先预测 H4→H2 对 N、history、target shape、valid token总数的影响，然后新目录运行核对。
+- [x] Explain：独立回答五问，画一个短episode的边界窗口。
 
 Current Task = S0.2；Next Task = S0.3 — RLDS / Open X-Embodiment Concepts。
-Engineering Complete；Learning 待用户确认。STOP，不自动进入下一任务。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认实验、预测及五项 Explain）。
+解释覆盖因果 history、T1 边界 mask/index、有效动作标量均值、reset-group 隔离及 H4→H2 数量变化。
+STOP，等待用户选择下一任务。

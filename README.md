@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前实现数据契约与 episode / sequence dataset。
+以上是最终能力链；当前实现数据契约、episode / sequence dataset 与 RLDS/OXE schema 学习及合成 adapter。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
-| 0 | Embodied AI Data & Action Representation | S0.1 Mastered；S0.2 Engineering Complete |
+| 0 | Embodied AI Data & Action Representation | S0.1 / S0.2 Mastered；S0.3 Engineering Complete |
 | 1 | Tiny Vision-Language-Action Policy | Planned |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S0.2 — Episode / Sequence Dataset**
-Next Task = **S0.3 — RLDS / Open X-Embodiment Concepts**（等待用户明确选择）
+Current Task = **S0.3 — RLDS / Open X-Embodiment Concepts**
+Next Task = **S0.4 — Real Robot Dataset Inspection**（等待用户明确选择）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,31 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S0.3 status and Run
+
+Engineering:
+
+- [x] Code — explicit synthetic loaded-RLDS adapter / local contract validation
+- [x] Experiment — last action invalid、terminal/truncated、independent success、10 rejection cases
+- [x] Docs — [S0.3 learning package](docs/vla/s0_3_rlds_oxe_concepts.md)、two official catalog schema notes
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+Engineering Complete（2026-10-14）；Learning待用户确认。
+只使用已有NumPy；没有TensorFlow/TFDS/RLDS安装或真实数据下载。输出目录必须不存在：
+
+```bash
+.venv/bin/python scripts/s0_3_rlds_concepts.py --output tmp/my_s0_3
+.venv/bin/python scripts/s0_3_rlds_concepts.py --ending truncated --output tmp/my_s0_3_truncated
+```
+
+Run后看source四steps与本地三actions；Modify前预测boundary/success/shape变化；Explain回答学习包五问。
+本例是合成概念验证，未声称完整OXE转换或真实机器人能力。完成后等待选择S0.4。
+
 ## S0.2 status and Run
 
 Engineering:
@@ -56,11 +81,11 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
-Engineering Complete（2026-10-14）；Learning 尚未 Mastered。
+Engineering Complete + Learning Mastered（2026-10-14 用户确认实验、预测及五项 Explain）。
 只需要已有 NumPy，不增加依赖。仓库根目录执行，输出目录须不存在：
 
 ```bash

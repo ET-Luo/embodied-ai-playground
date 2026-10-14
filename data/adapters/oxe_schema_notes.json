@@ -1,0 +1,31 @@
+{
+  "kind": "manually curated official catalog schema notes; not robot sample data",
+  "checked_date": "2026-10-14",
+  "rlds_commit": "b35dac3a6b73396b0cb8773095999c4b5d70947c",
+  "oxe_commit": "9eeb68b989efbcf474e8fb9019e01d02b962a604",
+  "datasets": [
+    {
+      "name": "fractal20220817_data",
+      "catalog_version": "0.1.0",
+      "source_url": "https://www.tensorflow.org/datasets/catalog/fractal20220817_data",
+      "catalog_last_updated": "2024-09-03",
+      "language_path": "steps/observation/natural_language_instruction",
+      "image": {"path": "steps/observation/image", "shape": [256, 320, 3], "dtype": "uint8"},
+      "pose": {"path": "steps/observation/base_pose_tool_reached", "shape": [7], "dtype": "float32"},
+      "action_example": {"path": "steps/action/world_vector", "shape": [3], "dtype": "float32", "catalog_semantics": "end-effector displacement in base-relative frame; name does not imply world frame"},
+      "mapping_status": "study only; dt, units, calibration, boundary implementation and provenance require producer audit"
+    },
+    {
+      "name": "bridge",
+      "catalog_version": "0.1.0",
+      "source_url": "https://www.tensorflow.org/datasets/catalog/bridge",
+      "catalog_last_updated": "2024-05-16",
+      "language_path": "steps/language_instruction",
+      "state": {"path": "steps/observation/state", "shape": [7], "dtype": "float32"},
+      "action": {"path": "steps/action", "shape": [7], "dtype": "float32"},
+      "image_example": {"path": "steps/observation/image_0", "shape": [256, 256, 3], "dtype": "uint8"},
+      "availability_metadata": ["episode_metadata/has_language", "episode_metadata/has_image_0"],
+      "mapping_status": "study only; shape is insufficient to infer state/action units, frame, control_dt or success"
+    }
+  ]
+}

@@ -74,5 +74,5 @@ success = final x ≥ 0.03m；这里只是显式 toy score。`move left` 对应�
 | S22.6 dexterous_bc.py / dexterous_task.py | 50Hz 因果状态、past ctrl/phase，6维 absolute joint reference [rad] | 明确观测字段与 joint order/servo，保留 reset group；避免把 S22.5 1kHz audit proxy 误当因果 policy observation |
 
 旧 manifest 没有自然语言，不能声称其原本带有 human language annotations；人工补充需记录来源。
-不运行或修改旧 repo exporter，本轮只是设计边界。未来 RLDS adapter 转换到本契约，内部不绑定 RLDS。
+不运行或修改旧 repo exporter，本轮只是设计边界。S0.3已实现 [合成RLDS概念adapter](vla/s0_3_rlds_oxe_concepts.md)：canonical loaded steps的最后action无效，最后observation的is_terminal映射至内部最后transition。实际RLDS/TFDS/OXE reader尚未实现，内部不绑定RLDS；缺有效terminal observation、success、dt或单位时不编造。
 原始数据不归一化；训练统计仅从 train episode 拟合并独立存储，验证/test 不参与。
