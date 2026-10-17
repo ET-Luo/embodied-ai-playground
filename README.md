@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0及S1.1工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP；未实现learned VLA或world model。
+以上是最终能力链；当前完成Stage0及S1.1–S1.2工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP和tiny learned word embedding；未实现learned VLA或world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
-| 1 | Tiny Vision-Language-Action Policy | S1.1 Engineering Complete；Learning待确认 |
+| 1 | Tiny Vision-Language-Action Policy | S1.1 Engineering Complete + Learning Mastered；S1.2 Engineering Complete，Learning待确认 |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S1.1 — Language-conditioned State Policy**
-Next Task = **S1.2 — Tiny Language Representation**（仅计划）
+Current Task = **S1.2 — Tiny Language Representation**
+Next Task = **S1.3 — Tiny Visual Encoder**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,33 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S1.2 status and Run
+
+Engineering:
+
+- [x] Code — train-only tokenizer、4维learned embedding、masked mean、310参数state policy
+- [x] Experiment — embedding反向核验、PAD/UNK/词序诊断、held-out闭环与完整OOV失败
+- [x] Docs — [S1.2学习包](docs/vla/s1_2_tiny_language_representation.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，无安装/下载；repo .venv Python3.14.7 / NumPy2.5.4。
+先读学习包Problem→Mathematics，第二条先预测reject→map的影响：
+
+```bash
+.venv/bin/python scripts/s1_2_language_representation.py --output tmp/my_s1_2
+.venv/bin/python scripts/s1_2_language_representation.py --unk-policy map --output tmp/my_s1_2_map
+```
+
+两模式权重和known结果一致：validation raw MSE≈1.607e−6m²、toy success12/12。
+OOV两模式均0/24：默认全部tokenization拒绝，map则全部在10步终点失败。
+查看tokenizer.json、report diagnostics及train/validation_tokens.npz；PAD不计入mean，零UNK仍计入。
+仅固定两指令toy证据，不是自然语言泛化。Learning待用户Run/Modify/Explain确认；S1.3仅计划。
+
 ## S1.1 status and Run
 
 Engineering:
@@ -56,9 +83,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU，无新依赖或下载；实测repo .venv Python3.14.7 / NumPy2.5.4。
 先读学习包Problem→Mathematics，再运行；第二条先预测训练步数的影响：
@@ -70,7 +97,8 @@ CPU，无新依赖或下载；实测repo .venv Python3.14.7 / NumPy2.5.4。
 
 默认含语言/无语言validation raw MSE≈1.349e−6/4.669e−4 m²，toy闭环12/12与6/12；
 20步为3/12与1/12。只证明固定literal两目标的理想点任务，不是视觉语言泛化。
-查看report.json、raw episodes与NPZ，完成Run/Modify/五问后报告；不自动进入S1.2。
+Engineering Complete + Learning Mastered（2026-10-17 用户确认实验、预测及五项 Explain）。
+当前S1.1已掌握；S1.2仅计划，等待用户选择。
 
 ## S0.7 status and Run
 

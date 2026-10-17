@@ -144,8 +144,17 @@ report另存执行限幅后的MSE，避免掩盖raw超限误差。所有失败st
 
 ## My Verification
 
-- [ ] Run：运行默认实验，读两模型metrics、同state动作和12条rollout。
-- [ ] Modify：预测2000→20步对数据、参数量、loss、同state动作、success的影响，再运行核对。
-- [ ] Explain：独立回答上述五问。
+- [x] Run：运行默认实验，读两模型metrics、同state动作和12条rollout。
+- [x] Modify：预测2000→20步对数据、参数量、loss、同state动作、success的影响，再运行核对。
+- [x] Explain：独立回答上述五问。
 
-Current Task = S1.1；Next Task = S1.2（仅计划）。工程完成，学习等待用户报告，不自动推进。
+Current Task = S1.1；Next Task = S1.2（仅计划）。Engineering Complete + Learning Mastered（2026-10-17 用户确认），不自动推进。
+
+2026-10-17 用户确认实验和预测均已完成，五项 Explain 准确覆盖输入shape与固定尺度、
+raw/训练/执行动作的单位和时间语义、literal one-hot的能力边界、reset-group split与train-only统计，
+以及减少更新次数保持数据/初始化/参数量/执行条件不变。
+用户进一步指出：确定性无语言policy对同一起点的左右任务产生相同轨迹，两个目标相距.48m，
+成功容差仅.01m，因此每对最多一个成功，当前完整分母成功上限6/12。
+正确区分offline误差与闭环分布偏移，并说明失败stage及median/P95 latency的评价作用。
+推理计时只覆盖encode+MLP+clip，完整控制周期还需计入环境/传感/controller等成本。
+学习状态依据用户报告确认，本轮未重跑实验。

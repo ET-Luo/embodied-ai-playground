@@ -2,10 +2,11 @@
 
 Updated 2026-10-17 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S1.1 — Language-conditioned State Policy**，Engineering Complete，Learning Run/Modify/Explain均待用户确认。
+Current Task = **S1.2 — Tiny Language Representation**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S1.2 — Tiny Language Representation**，仅计划，不授权自动进入。
-已实现literal条件state MLP；没有learned visual VLA、OpenVLA或World Model。
+Next Task = **S1.3 — Tiny Visual Encoder**，仅计划，不授权自动进入。
+已实现literal条件state MLP和tiny learned word embedding；没有learned visual VLA、OpenVLA或World Model。
 
 ## Initialization and inherited experience
 
@@ -488,3 +489,58 @@ no-language=4.28348e−4/4.66927e−4m²，6/12。20步分别3/12、1/12。
 reset overlap=0、model reload通过；最终脚本另拒绝unknown literal/float64/nonfinite三个输入。
 限制：同分布6新reset，固定两目标/literal/ideal dynamics，不是paraphrase/vision/real robot泛化证据。
 Learning未勾选；下一步用户Run→预测20epochs→Modify→回答学习包五问。Next S1.2只计划，STOP。
+
+## S1.1 learning confirmation — 2026-10-17
+
+用户明确确认实验和预测均已完成，五项 Explain 准确覆盖state/one-hot输入，
+physical与dimensionless动作尺度、T/T+1及H=E=1；literal条件响应不等于自然语言泛化；
+reset-group split与固定尺度/train-only fitted normalizer区别；无语言策略的位置相关性与MSE折中。
+用户给出确定性无语言基线的6/12上界：同reset两指令产生相同轨迹，无法同时达到两个相距.48m的目标。
+正确说明2000→20只改变更新次数，以及offline loss、闭环分布偏移、失败stage和延迟的评价区别。
+补充边界：报告的encode+MLP+clip计时不能单独证明完整系统满足.1s控制周期。
+README和学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮只改四份状态文档，未执行Python实验、安装或下载。
+实验环境/结果沿用上节Python3.14.7 / NumPy2.5.4记录，不增加真实robot或泛化声明。
+验证：`git diff --check`通过；`git diff --stat`及`git status --short`核对四份文档。
+Current Task = S1.1（已掌握）；Next Task = S1.2（仅计划），等待用户选择；未commit/push。
+
+## S1.2 Engineering — 2026-10-17
+
+用户明确授权“继续推进S1.2”。启动pwd正确，已有S1.1学习确认的四份文档修改，全部保留。
+读取AGENTS/README/handoff/roadmap、S1.1包/代码和S0.1模板；S1.2原无学习包。
+新增[学习包](vla/s1_2_tiny_language_representation.md)、[script](../scripts/s1_2_language_representation.py)。
+只当前任务，不进入S1.3/S1.6；没有浏览外部资料、数据/权重下载或依赖安装。
+环境执行前确认repo .venv Python3.14.7，NumPy2.5.4，actual path在.venv/lib/python3.14/site-packages/numpy/__init__.py。
+本轮NumPy可运行，未来Torch兼容仍需另核验；requirements只改任务注释。
+
+复用S1.1 raw generator（旧脚本未改），60episodes、30paired reset groups，train480/validation120actions。
+read_batches从raw NPZ+JSON读取，不用generator附带的one-hot derived features。
+train-only lower/split词表PAD0/UNK1/left2/move3/right4；max4tokens，空/过长拒绝，不截断。
+4维embedding masked mean + p/.3→6→32 tanh→2，310参数，手写embedding反向/Adam，输出×.06m再clip。
+初始PAD/UNK零；PAD无梯度，UNK无训练样本；重复ID用np.add.at累加。
+masked mean丢失词序，零UNK仍进入分母；map/reject只改推理，不改训练词表/权重。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s1_2_language_representation.py --output tmp/s1_2_verified
+.venv/bin/python scripts/s1_2_language_representation.py --unk-policy map --output tmp/s1_2_map_verified
+.venv/bin/python scripts/s1_2_language_representation.py --output tmp/s1_2_final
+.venv/bin/python scripts/s1_2_language_representation.py --unk-policy map --output tmp/s1_2_map_final
+.venv/bin/python -m pip check
+git diff --check
+```
+
+两模式train/validation raw MSE=1.374777e−6/1.606606e−6m²，validation executed MSE=1.291406e−6m²；
+known held-out6resets共12条success12/12。四类OOV每类6条共24，reject全部拒绝、success0/24；
+map无拒绝、success0/24，全部10步终点误差，保留全部trace/commands/error/stage。
+probe goal是评价器人工约定，不传policy；port/starboard共同ID[3,1,0,0]，同state动作相同。
+please+原句在零UNK下句向量缩放2/3；right!因保留标点也变UNK。
+known局部推理120samples，map OOV240samples，report保存median/p95；reject OOV无推理计时null。
+梯度finite difference最大差9.01e−13，含重复词；PAD NaN不变、词序置换、零UNK缩放、碰撞和7拒绝检查通过。
+raw契约/转移/终点/round-trip复用S1.1；tokenizer/weights/token arrays重载逐值一致。
+独立inline验证跨UNK模式metrics/history/weights/tokens一致、词表仅train、map轨迹加法和动作限幅通过。
+Markdown本地链接检查、pip check和git diff --check通过；输出/.venv ignored，未commit/push。
+限制：一个seed、两种训练文本、固定目标/ideal point；不是同义词、语法、真实robot或VLA泛化证据。
+Current Task S1.2工程完成，Learning未勾选；Next Task S1.3仅计划。
+用户下一步Run→先预测reject/map不变量和OOV机制→Modify→回答五问，STOP等待用户。
