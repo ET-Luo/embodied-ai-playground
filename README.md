@@ -26,7 +26,7 @@ flowchart TD
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
-| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.3 Engineering Complete + Learning Mastered；S1.4 Engineering Complete，Learning待确认 |
+| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.4 Engineering Complete + Learning Mastered |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
@@ -56,9 +56,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，无安装/下载；Python3.14.7 / NumPy2.5.4。视觉含固定R/B channel-swap先验，语言固定two-class one-hot。
 先读学习包的输入契约与proposal/executed区别，再运行；第二条先预测实际外扰的影响：
@@ -71,7 +71,7 @@ CPU NumPy，无安装/下载；Python3.14.7 / NumPy2.5.4。视觉含固定R/B ch
 最终float32、seed7：concat610参数/Transformer618参数，full toy成功44/48与8/48，三种模态置零均0/48。
 同样结果不代表架构优劣；oracle与冻结视觉+手写颜色选择均48/48，失败/error/trace完整保存。
 第4次转移后的+.12m实际world x扰动不改权重或offline loss，本次full成功数不变；看trace核对反馈。
-查看report.json、*_fusion.npz、attention_probe.npz和scenes.png。Engineering Complete，Learning待用户确认；S1.5仅计划。
+查看report.json、*_fusion.npz、attention_probe.npz和scenes.png。Engineering Complete + Learning Mastered（2026-10-17 用户确认实验、预测及五项 Explain）；S1.5仅计划。
 
 ## S1.3 status and Run
 

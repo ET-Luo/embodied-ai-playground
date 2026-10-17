@@ -239,8 +239,17 @@ probe只取一组两条指令，文件N=2；训练N768、validation N192。
 
 ## My Verification
 
-- [ ] Run：运行默认，查看两模型shape trace、同RGB/state不同指令、offline与四条件rollout。
-- [ ] Modify：先预测kick0→.12对data/weights/offline/trace/success的影响，再运行并核对第4次转移。
-- [ ] Explain：独立回答五问，画出concat与Transformer数据流并解释未成功的样本。
+- [x] Run：运行默认，查看两模型shape trace、同RGB/state不同指令、offline与四条件rollout。
+- [x] Modify：先预测kick0→.12对data/weights/offline/trace/success的影响，再运行并核对第4次转移。
+- [x] Explain：独立回答五问，画出concat与Transformer数据流并解释未成功的样本。
 
-Current Task = S1.4；Next Task = S1.5（仅计划）。Engineering Complete，Learning等待用户确认，不自动推进。
+Current Task = S1.4；Next Task = S1.5（仅计划）。Engineering Complete + Learning Mastered（2026-10-17 用户确认），不自动推进。
+
+2026-10-17 用户确认实验和预测均已完成，五项 Explain 准确覆盖冻结CNN预测红蓝位置与固定R/B先验、
+真实当前state、literal one-hot及四角色token；监督标签不进入融合输入，left/right embedding不具有已验证的color语义迁移能力。
+准确展开concat与Transformer的shape、参数量、type embedding、pre-LN、Q/K/V、key轴softmax、residual与FFN。
+准确区分完整位移proposal和限幅后的executed delta，说明无量纲loss与物理MSE的.09比例及闭环误差来源。
+正确解释三模态post-encoding置零干预、paired no-language确定性轨迹冲突，以及干预敏感性不等于一般语义理解或重训结论。
+明确kick在tick3动作后即第4次转移后施加，下一步才读取受扰state；保持训练/权重/offline不变量，闭环成功数未必改变。
+正确界定44/48与8/48为float32单seed证据，Transformer训练误差亦高，oracle/视觉参考与局部latency各有明确限制。
+学习状态依据用户Run/Modify/Explain报告确认，本轮仅更新文档，未重新执行实验。

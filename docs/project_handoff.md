@@ -2,7 +2,7 @@
 
 Updated 2026-10-17 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S1.4 — Multimodal Fusion**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+Current Task = **S1.4 — Multimodal Fusion**，Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
@@ -671,3 +671,19 @@ artifacts/.venv ignored，无commit/push。限制：一个seed、两literal、�
 不是raw-image/text端到端VLA、language泛化或真实robot证据；更复杂架构没有在本设置中更好，失败如实保留。
 Current Task S1.4 Engineering Complete，Learning未勾选；Next Task S1.5仅计划。
 下一步用户Run→先预测kick不变量/实际反馈→Modify→回答包中五问，STOP等待用户。
+
+## S1.4 learning confirmation — 2026-10-17
+
+用户明确确认实验和预测均已完成；五项 Explain 准确覆盖CNN红蓝预测/通道交换先验、真实当前state、
+literal条件与四角色token，监督标签隔离及left/right embedding无法直接声称color语义迁移。
+准确列出concat610/Transformer618参数及逐层shape，解释type embedding、Q/K/V、key轴softmax、
+pre-LN、residual、FFN与state readout；区分proposal与executed delta，loss无量纲、MSE单位m²和.09换算。
+正确解释三模态置零为推理干预、不重训，no-language配对同输入同轨迹不能同时达到分离目标，
+0/48仅为指定干预的证据，不等于一般语义理解或无模态重训失败。
+明确kick在tick3执行后/第4次转移后加入world X，下一步才读取真实受扰state；训练与offline不变。
+正确界定44/48与8/48是float32单seed配置结果、Transformer训练误差亦高，oracle/视觉参考48/48与局部latency的限制。
+README与学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastered。
+启动pwd正确、git status --short为空；本轮只改四份状态文档，未重跑实验、安装或下载。
+环境/实验沿用上节S1.4记录（Python3.14.7 / NumPy2.5.4）；不增加VLA泛化或真实robot能力声明。
+验证命令：`git diff --check`（通过）；`git diff --stat`、`git status --short`（仅四份文档）。
+Current Task = S1.4（已掌握）；Next Task = S1.5（仅计划），等待用户选择；未commit/push。
