@@ -2,11 +2,12 @@
 
 Updated 2026-10-17 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S1.2 — Tiny Language Representation**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+Current Task = **S1.3 — Tiny Visual Encoder**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S1.3 — Tiny Visual Encoder**，仅计划，不授权自动进入。
-已实现literal条件state MLP和tiny learned word embedding；没有learned visual VLA、OpenVLA或World Model。
+Next Task = **S1.4 — Multimodal Fusion**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding和独立tiny CNN定位；没有learned visual VLA、OpenVLA或World Model。
 
 ## Initialization and inherited experience
 
@@ -544,3 +545,61 @@ Markdown本地链接检查、pip check和git diff --check通过；输出/.venv i
 限制：一个seed、两种训练文本、固定目标/ideal point；不是同义词、语法、真实robot或VLA泛化证据。
 Current Task S1.2工程完成，Learning未勾选；Next Task S1.3仅计划。
 用户下一步Run→先预测reject/map不变量和OOV机制→Modify→回答五问，STOP等待用户。
+
+## S1.2 learning confirmation — 2026-10-17
+
+用户明确确认实验和预测均已完成；五项 Explain 准确覆盖tokenization/embedding/pooling/state融合/
+物理action的数据流、shape/dtype/unit、310参数和ID不可微；PAD与UNK的mask区别及零UNK平均分母。
+用户正确手算please move right的句向量为原句2/3；指出port/starboard碰撞后同state输入及确定性轨迹相同，
+增加MLP更新不能恢复编码时已丢失的信息；说明词序不变性与重复词的相对权重变化。
+准确区分reject/map保持训练/known结果不变，0/24分别为tokenization拒绝和10步执行后的终点失败；
+明确输入接受、动作产生与语义理解三个层次，未过称自然语言泛化。
+README与学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅改四份状态文档，未重跑实验、安装或下载。
+环境与工程结果沿用上述S1.2记录（Python3.14.7 / NumPy2.5.4），能力限制保持不变。
+验证命令：`git diff --check`（通过）、`git diff --stat`、`git status --short`（仅四份文档）。
+Current Task = S1.2（已掌握）；Next Task = S1.3（仅计划），等待用户选择；未commit/push。
+
+## S1.3 Engineering — 2026-10-17
+
+用户授权“继续推进S1.3”。启动pwd正确，已有S1.2学习确认四份文档修改，全部保留。
+读取AGENTS/README/handoff/roadmap、S1.2包和S0.1 validator，当前无S1.3包。
+新增[学习包](vla/s1_3_tiny_visual_encoder.md)、[script](../scripts/s1_3_visual_encoder.py)，仅S1.3，不接语言/fusion。
+环境确认repo .venv Python3.14.7（base_prefix miniconda3但sys.prefix本repo隔离venv）、NumPy2.5.4，
+actual NumPy path在.venv/lib/python3.14/site-packages/numpy/__init__.py。
+初始检查import PIL发现ModuleNotFoundError；无需Pillow，向用户解释后采用stdlib PNG，无修复/安装/下载。
+requirements只改覆盖任务注释，不移除旧实验的Pillow依赖；当前pip check仅证明已装依赖无冲突，不证明全部历史任务可跑。
+
+数据为synthetic_visual_scene/1.0，独立static场景，不是episode训练集；输出dataset_contract.json显式记录。
+120个unique red中心，train96/validation24，scene/target中心不重叠，blue位置可跨split复用。
+RGB32×32 uint8，red/blue3×3 squares，固定背景/颜色、odd center3…27、中心距离>=6pixels。
+CNN学27×4 kernel+4bias+4head共116参数，3×3 stride2 valid→15×15×4 tanh→空间heatmap。
+中心格CE监督，full batch400epochs Adam lr.03 seed7；soft-argmax grid和world映射固定，非learned action policy。
+feature map/tokens/GAP输出，label仅loss/评价；CNN只读当时RGB。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s1_3_visual_encoder.py --output tmp/s1_3_verified
+.venv/bin/python scripts/s1_3_visual_encoder.py --observation occluded --output tmp/s1_3_occluded_verified
+.venv/bin/python scripts/s1_3_visual_encoder.py --output tmp/s1_3_final
+.venv/bin/python scripts/s1_3_visual_encoder.py --observation occluded --output tmp/s1_3_occluded_final
+.venv/bin/python -m pip check
+git diff --check
+```
+
+visible validation world MSE5.18778e−8m²，mean norm error.000309335m/.0154668pixels，peak24/24；
+train MSE4.90538e−8m²。train-mean baseline validation MSE.025387m²。
+每条件24条10步rollout、dt.1s、world delta clip.06m、same measured start[0,-.12]，final max error<=.01m。
+visible24/24，occluded0/24，blank0/24，oracle24/24；全部commands/trace/estimates/error/stage保存，末budget truncated。
+scene静态、agent不画在RGB，state每次真实读取；不是moving-camera/动态视觉feedback测试。
+每条件240次CNN+controller局部推理保存median/P95，不含render/environment；oracle跳过CNN。
+flag只选主报告条件，三对照每次全部保存，原始目标不因遮挡更改。
+GAP target内部平移最大差5.96e−8，而predicted x跟随+.12m；R/B交换目标转到原blue处，max定位误差.000234m。
+finite difference全部116参数最大差2.19e−11；patch stride/order、pixel-world oracle与5拒绝输入通过。
+raw/weights/features round-trip通过；独立inline核对跨flag原始数组/weights/features相同、rollout加法/T+1/限幅/全分母。
+已查看preview.png：六行RGB/相对归一化heatmap/遮红，目标与热图一致；预览不是置信度图。
+Markdown本地链接、pip check和git diff --check通过；artifacts/.venv ignored，无commit/push或旧repo修改。
+限制：一个seed、精确颜色/尺寸/格点与已知相机、ideal dynamics；不是real robot/VLA泛化或亚像素真实精度证据。
+当前只Engineering Complete；用户下一步Run→预测visible/occluded不变量→Modify→五问Explain，Learning不勾选。
+Current Task S1.3；Next Task S1.4仅计划，STOP等待用户。

@@ -205,8 +205,15 @@ ID≠语义；PAD≠UNK；零向量≠不存在；mean丢词序；词表train-on
 
 ## My Verification
 
-- [ ] Run：运行默认，读tokenizer/embedding/token mask与known/OOV报告。
-- [ ] Modify：先预测reject→map的权重/known/OOV结果与失败stage，再运行核对。
-- [ ] Explain：独立回答五问，手算零UNK平均与两个OOV的ID碰撞。
+- [x] Run：运行默认，读tokenizer/embedding/token mask与known/OOV报告。
+- [x] Modify：先预测reject→map的权重/known/OOV结果与失败stage，再运行核对。
+- [x] Explain：独立回答五问，手算零UNK平均与两个OOV的ID碰撞。
 
-Current Task = S1.2；Next Task = S1.3（仅计划）。Engineering Complete，Learning等待用户确认，不自动推进。
+Current Task = S1.2；Next Task = S1.3（仅计划）。Engineering Complete + Learning Mastered（2026-10-17 用户确认），不自动推进。
+
+2026-10-17 用户明确确认实验和预测均已完成，五项 Explain 准确覆盖token IDs→embedding→masked mean→
+state融合→物理动作的shape/dtype/unit，以及310个浮点参数可学习、离散ID不可微。
+正确手算零UNK下please使句向量变为原句2/3，区分PAD不存在与UNK存在；解释OOV碰撞丢失的信息
+无法靠增加MLP训练恢复，mean忽略词序、重复词改变权重。
+准确说明reject→map保持训练数据/词表/权重/known结果不变，并区分0/24的tokenization拒绝与执行后终点失败。
+用户明确区分输入被接受、能产生动作与理解指令。学习状态依据用户报告确认，本轮未重跑实验。

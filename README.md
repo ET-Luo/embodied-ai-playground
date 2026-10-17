@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0及S1.1–S1.2工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP和tiny learned word embedding；未实现learned VLA或world model。
+以上是最终能力链；当前完成Stage0及S1.1–S1.3工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding和tiny CNN定位；未实现learned VLA或world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
-| 1 | Tiny Vision-Language-Action Policy | S1.1 Engineering Complete + Learning Mastered；S1.2 Engineering Complete，Learning待确认 |
+| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.2 Engineering Complete + Learning Mastered；S1.3 Engineering Complete，Learning待确认 |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S1.2 — Tiny Language Representation**
-Next Task = **S1.3 — Tiny Visual Encoder**（仅计划）
+Current Task = **S1.3 — Tiny Visual Encoder**
+Next Task = **S1.4 — Multimodal Fusion**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,32 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S1.3 status and Run
+
+Engineering:
+
+- [x] Code — 116参数NumPy CNN、15×15×4空间features、heatmap与显式pixel/world映射
+- [x] Experiment — 未见目标中心定位、GAP/颜色probe、oracle与visible/occluded/blank完整闭环
+- [x] Docs — [S1.3学习包](docs/vla/s1_3_tiny_visual_encoder.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，无安装/下载；Python3.14.7 / NumPy2.5.4。PNG使用标准库，不依赖当前缺失的Pillow。
+先读学习包，再运行；第二条先预测主条件切换的不变量和失败：
+
+```bash
+.venv/bin/python scripts/s1_3_visual_encoder.py --output tmp/my_s1_3
+.venv/bin/python scripts/s1_3_visual_encoder.py --observation occluded --output tmp/my_s1_3_occluded
+```
+
+每次都保存三条件对照，flag只选主报告条件，不改变训练。validation24个未见中心，visible平均定位误差.000309m，
+toy闭环24/24；occluded/blank均0/24。查看preview.png（三列RGB/相对热图/遮红）、features与report。
+只证明固定颜色格点renderer的CNN定位+固定控制器；不是learned VLA或真实视觉精度。S1.4仅计划。
+
 ## S1.2 status and Run
 
 Engineering:
@@ -56,9 +82,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，无安装/下载；repo .venv Python3.14.7 / NumPy2.5.4。
 先读学习包Problem→Mathematics，第二条先预测reject→map的影响：
@@ -71,7 +97,7 @@ CPU NumPy，无安装/下载；repo .venv Python3.14.7 / NumPy2.5.4。
 两模式权重和known结果一致：validation raw MSE≈1.607e−6m²、toy success12/12。
 OOV两模式均0/24：默认全部tokenization拒绝，map则全部在10步终点失败。
 查看tokenizer.json、report diagnostics及train/validation_tokens.npz；PAD不计入mean，零UNK仍计入。
-仅固定两指令toy证据，不是自然语言泛化。Learning待用户Run/Modify/Explain确认；S1.3仅计划。
+仅固定两指令toy证据，不是自然语言泛化。Engineering Complete + Learning Mastered（2026-10-17 用户确认实验、预测及五项 Explain）；S1.3仅计划。
 
 ## S1.1 status and Run
 
