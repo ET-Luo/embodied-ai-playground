@@ -197,8 +197,16 @@ feature不是物理坐标；空间token不是时间；pooling会丢位置；有�
 
 ## My Verification
 
-- [ ] Run：运行默认，打开preview和raw/features/report，追踪RGB→CNN→grid→world→controller。
-- [ ] Modify：先预测occluded主条件切换的训练不变量和失败，再运行核对。
-- [ ] Explain：独立回答五问，手算15×15与pixel[7,5]→world[−.18,.22]m。
+- [x] Run：运行默认，打开preview和raw/features/report，追踪RGB→CNN→grid→world→controller。
+- [x] Modify：先预测occluded主条件切换的训练不变量和失败，再运行核对。
+- [x] Explain：独立回答五问，手算15×15与pixel[7,5]→world[−.18,.22]m。
 
-Current Task = S1.3；Next Task = S1.4（仅计划）。Engineering Complete，Learning等待用户确认，不自动推进。
+Current Task = S1.3；Next Task = S1.4（仅计划）。Engineering Complete + Learning Mastered（2026-10-17 用户确认），不自动推进。
+
+2026-10-17 用户确认实验和预测均已完成；五项 Explain 准确覆盖RGB/patch/CNN/spatial token/
+heatmap/pixel/world/action的shape、dtype、单位与frame，15×15输出计算，116参数与固定几何/控制边界。
+正确区分CE无量纲分类损失与world MSE[m²]；解释GAP内部平移近似不变及row-major索引恢复空间位置。
+用户正确描述可见与遮红条件下推理RGB/feature/目标估计的差异、训练不变量，以及softmax必有输出不等于看见目标。
+两CLI运行均保存全部三条件，flag仅选择主报告条件，不会重训遮挡模型或覆盖visible特征。
+用户准确界定24/24与平均欧氏误差.31mm的synthetic证据范围，说明oracle、blank、独立目标中心split和局部latency的限制。
+学习依据用户Run/Modify/Explain报告确认；本轮只更新文档，未重新执行实验。

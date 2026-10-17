@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0及S1.1–S1.3工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding和tiny CNN定位；未实现learned VLA或world model。
+以上是最终能力链；当前完成Stage0及S1.1–S1.4工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；未实现patch-token VLA/action chunk或world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
-| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.2 Engineering Complete + Learning Mastered；S1.3 Engineering Complete，Learning待确认 |
+| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.3 Engineering Complete + Learning Mastered；S1.4 Engineering Complete，Learning待确认 |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S1.3 — Tiny Visual Encoder**
-Next Task = **S1.4 — Multimodal Fusion**（仅计划）
+Current Task = **S1.4 — Multimodal Fusion**
+Next Task = **S1.5 — Tiny Transformer VLA**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,33 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S1.4 status and Run
+
+Engineering:
+
+- [x] Code — 冻结CNN红蓝位置summary + literal条件 + 当前XY，concat与单block pre-LN Transformer
+- [x] Experiment — 全参数梯度核验、scene held-out、三模态消融、扰动及两种参考控制器
+- [x] Docs — [S1.4学习包](docs/vla/s1_4_multimodal_fusion.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，无安装/下载；Python3.14.7 / NumPy2.5.4。视觉含固定R/B channel-swap先验，语言固定two-class one-hot。
+先读学习包的输入契约与proposal/executed区别，再运行；第二条先预测实际外扰的影响：
+
+```bash
+.venv/bin/python scripts/s1_4_multimodal_fusion.py --output tmp/my_s1_4
+.venv/bin/python scripts/s1_4_multimodal_fusion.py --kick-x .12 --output tmp/my_s1_4_kick
+```
+
+最终float32、seed7：concat610参数/Transformer618参数，full toy成功44/48与8/48，三种模态置零均0/48。
+同样结果不代表架构优劣；oracle与冻结视觉+手写颜色选择均48/48，失败/error/trace完整保存。
+第4次转移后的+.12m实际world x扰动不改权重或offline loss，本次full成功数不变；看trace核对反馈。
+查看report.json、*_fusion.npz、attention_probe.npz和scenes.png。Engineering Complete，Learning待用户确认；S1.5仅计划。
+
 ## S1.3 status and Run
 
 Engineering:
@@ -56,9 +83,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，无安装/下载；Python3.14.7 / NumPy2.5.4。PNG使用标准库，不依赖当前缺失的Pillow。
 先读学习包，再运行；第二条先预测主条件切换的不变量和失败：
@@ -70,7 +97,7 @@ CPU NumPy，无安装/下载；Python3.14.7 / NumPy2.5.4。PNG使用标准库，
 
 每次都保存三条件对照，flag只选主报告条件，不改变训练。validation24个未见中心，visible平均定位误差.000309m，
 toy闭环24/24；occluded/blank均0/24。查看preview.png（三列RGB/相对热图/遮红）、features与report。
-只证明固定颜色格点renderer的CNN定位+固定控制器；不是learned VLA或真实视觉精度。S1.4仅计划。
+只证明固定颜色格点renderer的CNN定位+固定控制器；不是learned VLA或真实视觉精度。Engineering Complete + Learning Mastered（2026-10-17 用户确认实验、预测及五项 Explain）；S1.4仅计划。
 
 ## S1.2 status and Run
 

@@ -2,12 +2,13 @@
 
 Updated 2026-10-17 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S1.3 — Tiny Visual Encoder**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+Current Task = **S1.4 — Multimodal Fusion**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S1.4 — Multimodal Fusion**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding和独立tiny CNN定位；没有learned visual VLA、OpenVLA或World Model。
+Next Task = **S1.5 — Tiny Transformer VLA**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；没有patch-token VLA/action chunk、OpenVLA或World Model。
 
 ## Initialization and inherited experience
 
@@ -603,3 +604,70 @@ Markdown本地链接、pip check和git diff --check通过；artifacts/.venv igno
 限制：一个seed、精确颜色/尺寸/格点与已知相机、ideal dynamics；不是real robot/VLA泛化或亚像素真实精度证据。
 当前只Engineering Complete；用户下一步Run→预测visible/occluded不变量→Modify→五问Explain，Learning不勾选。
 Current Task S1.3；Next Task S1.4仅计划，STOP等待用户。
+
+## S1.3 learning confirmation — 2026-10-17
+
+用户明确确认实验和预测均已完成；五项 Explain 准确覆盖RGB→patch→CNN→空间tokens→heatmap→
+pixel uv→world goal→delta controller的数据流、shape/dtype/unit/frame与15×15计算。
+准确列出116可学习参数，区分固定soft-argmax/grid/calibration/controller，以及CE与物理world MSE。
+正确解释GAP在指定平移probe中丢位置、225 tokens为空间而非时间，索引j→r/c→pixel center。
+准确区分可见/遮红推理条件变化与训练/split/weights/真实目标不变量，softmax输出不是目标存在检测。
+补充记录：CLI两次均执行三条件，flag仅选主报告；visible特征与各既定条件结果不因flag改变。
+用户正确界定24/24、.31mm为固定renderer证据，解释oracle可达、blank无信息仍输出、split与latency的实际限制。
+README与学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅改四份状态文档，未重跑实验、安装或下载。
+环境/工程证据沿用上述S1.3记录（Python3.14.7 / NumPy2.5.4），不增加真实robot或视觉泛化声明。
+验证命令：`git diff --check`（通过）；`git diff --stat`、`git status --short`（仅四份文档）。
+Current Task = S1.3（已掌握）；Next Task = S1.4（仅计划），等待用户选择；未commit/push。
+
+## S1.4 Engineering — 2026-10-17
+
+用户授权“继续推进S1.4”。启动pwd正确，保留已有S1.3学习确认四文档修改；读AGENTS/README/
+handoff/roadmap/S1.3包与代码，本任务原无package。不启动S1.5，不修改旧源码或sibling repo。
+新增[学习包](vla/s1_4_multimodal_fusion.md)、[script](../scripts/s1_4_multimodal_fusion.py)。
+执行前确认repo .venv Python3.14.7、NumPy2.5.4，实际numpy path为.venv/lib/python3.14/site-packages/numpy/__init__.py。
+只用现有NumPy/stdlib；无依赖安装、数据/weights下载；requirements只改task注释。
+
+复用S1.3确定scene generator，train96/validation24场景，scene及red中心不重叠，blue中心可重复。
+每scene4个随机当前XY（seed23）×2literal color条件，train768/validation192独立snapshot；不是训练episode。
+先只用train red监督重训116参数CNN400步，随后冻结；同一CNN在R/B通道交换RGB上检测blue，显式颜色先验。
+视觉输入是两个预测world XY summary，不是真实label或完整225patch token；language为两literal one-hot，不宣称文本语义学习。
+raw4tokens×4features=[red,blue,language,state]，fixed XY/.3m、色marker；两模型共享表示。
+concat flatten16→32 tanh→2共610参数；Transformer4→8+type4×8，pre-LN单headQ/K/V8，
+attention4×4+残差，FFN8→16 tanh→8+残差，state token→2共618参数；LN无affine。
+训练proposal=真实selected goal−current state，m，输出×.3m恢复；执行才clip±.06m/dt.1s。
+独立fusion_contract明确proposal不是executed action，不改source scene_contract或raw物理数据。
+full batch1600epochs Adam lr.003/seed7，验证集不调checkpoint；无框架/autograd。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s1_4_multimodal_fusion.py --output tmp/s1_4_verified
+.venv/bin/python scripts/s1_4_multimodal_fusion.py --kick-x .12 --output tmp/s1_4_kick_verified
+.venv/bin/python scripts/s1_4_multimodal_fusion.py --output tmp/s1_4_final
+.venv/bin/python scripts/s1_4_multimodal_fusion.py --kick-x .12 --output tmp/s1_4_kick_final
+.venv/bin/python -m pip check
+git diff --check
+```
+
+前两次初版attention因np.sqrt(8)的np.float64 scalar把中间运算提升到float64，初步Transformer23/48；
+检查dtype后修成Python常数8**.5，加入runtime float32断言，最终两次重跑结果才作为正式证据。
+最终concat train/validation proposal MSE=1.85651e−5/3.65902e−5m²，validation executed MSE4.85314e−6m²；
+Transformer=2.34639e−4/2.46857e−4m²，executed4.69856e−5m²。数值精度敏感，不能称多seed稳定结论。
+每条件24scene×2color=48条，10commands/11states，起点[0,-.12]、dt.1s、末maxerror<=.01m。
+concat full44/48、Transformer8/48；no_vision/no_language/no_state各0/48，保留全部trace/proposals/commands/error/stage。
+所有失败stage=final goal error after 10-step budget，末均truncated，success独立；concat full error median/max.004079/.017667m，
+Transformer .016509/.053685m。oracle与冻结视觉+手写颜色路由48/48，nominal/kick均如此。
++.12m外扰发生第4次转移后，只改physical state，下一步真实feedback；最终两模型full成功数仍44/48与8/48。
+三模态消融为推理后编码内容置零、保留type/markers，未重训no-modality baseline；0/48不能单独证明语义理解。
+每模型每条件480次推理记录median/P95，含两CNN+tokens+fusion+clip，不含render/environment；消融仍跑CNN。
+参考controller用cached视觉，不做latency比较；静态RGB无agent，未测试动态视觉反馈。
+
+全部fusion参数finite difference最大差concat1.03e−11、Transformer2.02e−9，5拒绝输入通过；
+raw/fusion arrays和model reload通过，CNN冻结逐值验证。独立inline检查跨kick权重/data/attention/offline不变、
+no_language pair输入/输出相同、attention row sum1、runtime float32、rollout外扰时序/T+1/加法/限幅/完整分母通过。
+已查看scenes.png，确认红蓝目标场景；本地Markdown links、pip check、git diff --check通过。
+artifacts/.venv ignored，无commit/push。限制：一个seed、两literal、固定renderer/颜色先验、summary token，
+不是raw-image/text端到端VLA、language泛化或真实robot证据；更复杂架构没有在本设置中更好，失败如实保留。
+Current Task S1.4 Engineering Complete，Learning未勾选；Next Task S1.5仅计划。
+下一步用户Run→先预测kick不变量/实际反馈→Modify→回答包中五问，STOP等待用户。
