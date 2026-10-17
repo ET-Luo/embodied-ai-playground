@@ -1,7 +1,7 @@
 # P4 roadmap
 
 每行是用户 0.5～2 小时的阅读/运行/修改/解释任务，不是自动执行队列。
-Current Task S0.7（已掌握）；Next Task S1.1。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1及后续任务 Planned。
+Current Task S1.1（Engineering Complete，Learning待确认）；Next Task S1.2（仅计划）。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1的S1.1工程完成，S1.2及后续任务 Planned。
 所有任务最终都有 Engineering Code/Experiment/Docs 与 Learning Run/Modify/Explain 双状态。
 不重学 P0–P3；只在新语境中引用既有知识。
 
@@ -21,7 +21,7 @@ Current Task S0.7（已掌握）；Next Task S1.1。S0.1 Engineering Complete + 
 
 | Task | h | 目标与可检查产物 |
 |---|---:|---|
-| S1.1 Language-conditioned State Policy | 1.5 | 小 MLP，same state/different instruction→different behavior；训练与 held-out 评价 |
+| S1.1 Language-conditioned State Policy | 1.5 | [学习包](vla/s1_1_language_conditioned_state_policy.md)：NumPy MLP / 无语言基线；reset-held-out物理误差与完整toy闭环；学习待确认 |
 | S1.2 Tiny Language Representation | 1 | tokenization/embedding/sentence representation；tiny learned embedding 优先，未知词诊断 |
 | S1.3 Tiny Visual Encoder | 1.5 | 32×32/64×64 RGB→tiny CNN feature/token；可见物体实验与 held-out 评价 |
 | S1.4 Multimodal Fusion | 1.5 | concatenate 与 token Transformer 对比；模态消融、shape trace |

@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。未实现learned VLA或world model。
+以上是最终能力链；当前完成Stage0及S1.1工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP；未实现learned VLA或world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
-| 1 | Tiny Vision-Language-Action Policy | Planned |
+| 1 | Tiny Vision-Language-Action Policy | S1.1 Engineering Complete；Learning待确认 |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S0.7 — Action Chunk Representation**
-Next Task = **S1.1 — Language-conditioned State Policy**（等待用户明确选择）
+Current Task = **S1.1 — Language-conditioned State Policy**
+Next Task = **S1.2 — Tiny Language Representation**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -45,6 +45,32 @@ S0.1 Learning:
 - [x] Explain
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
+
+## S1.1 status and Run
+
+Engineering:
+
+- [x] Code — 226参数NumPy MLP、手写反向/Adam、literal one-hot与无语言基线
+- [x] Experiment — reset-group held-out、梯度核验、物理MSE、完整闭环/失败/延迟
+- [x] Docs — [S1.1学习包](docs/vla/s1_1_language_conditioned_state_policy.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU，无新依赖或下载；实测repo .venv Python3.14.7 / NumPy2.5.4。
+先读学习包Problem→Mathematics，再运行；第二条先预测训练步数的影响：
+
+```bash
+.venv/bin/python scripts/s1_1_language_state_policy.py --output tmp/my_s1_1
+.venv/bin/python scripts/s1_1_language_state_policy.py --epochs 20 --output tmp/my_s1_1_short
+```
+
+默认含语言/无语言validation raw MSE≈1.349e−6/4.669e−4 m²，toy闭环12/12与6/12；
+20步为3/12与1/12。只证明固定literal两目标的理想点任务，不是视觉语言泛化。
+查看report.json、raw episodes与NPZ，完成Run/Modify/五问后报告；不自动进入S1.2。
 
 ## S0.7 status and Run
 

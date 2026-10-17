@@ -1,17 +1,11 @@
 # P4 project handoff
 
-Updated 2026-10-14 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
+Updated 2026-10-17 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S0.7 — Action Chunk Representation**。Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
-S0.6 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
-S0.5 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
-S0.4 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
-S0.3 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
-S0.2 Engineering Complete + Learning Mastered（2026-10-14 用户确认）。
-S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）。
-Next Task = **S1.1 — Language-conditioned State Policy**，仅计划，不授权自动进入。
-当前没有 Tiny VLA、OpenVLA、World Model 实现；后续阶段只有 roadmap 与空目录。
-Stage0（S0.1–S0.7）Engineering Complete + Learning Mastered；Stage1尚未启动。
+Current Task = **S1.1 — Language-conditioned State Policy**，Engineering Complete，Learning Run/Modify/Explain均待用户确认。
+Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
+Next Task = **S1.2 — Tiny Language Representation**，仅计划，不授权自动进入。
+已实现literal条件state MLP；没有learned visual VLA、OpenVLA或World Model。
 
 ## Initialization and inherited experience
 
@@ -460,3 +454,37 @@ README与学习包Run/Modify/Explain全部勾选，roadmap同步S0.7 Learning Ma
 环境与工程结果沿用上述S0.7记录（Python3.12.3 / NumPy2.5.4 / Pillow12.3.0）；不增加learned VLA或真实robot能力声明。
 验证命令：`git diff --check`（通过）；`git diff --stat` / `git status --short`核对四份文档变更。
 Current Task = S0.7（已掌握）；Next Task = S1.1。等待用户明确选择，不自动开始Stage1；未commit/push。
+
+## S1.1 Engineering — 2026-10-17
+
+用户授权“继续推进S1.1的学习”，仅推进本任务。启动pwd正确，git status --short为空。
+读取AGENTS/README/roadmap/handoff、S0.1模板与S0.7包及相关源码；此前无S1.1包。
+新增[学习包](vla/s1_1_language_conditioned_state_policy.md)与[script](../scripts/s1_1_language_state_policy.py)。
+CPU NumPy 4→32 tanh→2 MLP，226参数，手写backprop/Adam；固定one-hot，不实现S1.2。
+30 reset groups、左右paired共60episodes，每条T10/T+1；train24groups/480actions，validation6groups/120actions。
+固定scale .3m/.06m，不fit统计；raw保留physical world delta、10Hz、末truncated与独立success。
+无语言同结构重新训练，输入language位清零；固定epochs不做validation调参。
+
+执行前核实repo .venv Python3.14.7、NumPy2.5.4，sys.prefix和numpy actual path都在repo .venv。
+与此前3.12记录不同，以本轮实测为准；未安装/下载，未来Torch兼容未验证。
+未改旧repo，无commit/push；生成数据、权重、日志均ignored tmp。
+
+执行命令（最终代码另以final目录重跑）：
+
+```bash
+.venv/bin/python scripts/s1_1_language_state_policy.py --output tmp/s1_1_verified
+.venv/bin/python scripts/s1_1_language_state_policy.py --epochs 20 --output tmp/s1_1_short_verified
+.venv/bin/python scripts/s1_1_language_state_policy.py --output tmp/s1_1_final
+.venv/bin/python scripts/s1_1_language_state_policy.py --epochs 20 --output tmp/s1_1_short_final
+.venv/bin/python -m pip check
+git diff --check
+```
+
+默认conditioned train/validation raw MSE=1.04754e−6/1.34870e−6m²，toy success12/12；
+no-language=4.28348e−4/4.66927e−4m²，6/12。20步分别3/12、1/12。
+同state[0,0]含语言x≈−.06/+.06m，无语言两次+.003695m。
+所有失败均保留trace/commands/error/stage（10步预算终点误差）；report另存clip后MSE与120次推理median/p95。
+有限差分逐参数gradient最大差1.40e−11；raw contract/transition/final expert goal、round-trip、
+reset overlap=0、model reload通过；最终脚本另拒绝unknown literal/float64/nonfinite三个输入。
+限制：同分布6新reset，固定两目标/literal/ideal dynamics，不是paraphrase/vision/real robot泛化证据。
+Learning未勾选；下一步用户Run→预测20epochs→Modify→回答学习包五问。Next S1.2只计划，STOP。
