@@ -27,12 +27,12 @@ flowchart TD
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
-| 2 | Modern VLA Architecture Study | S2.1 Engineering Complete；Learning pending |
+| 2 | Modern VLA Architecture Study | S2.1已掌握；S2.2 Engineering Complete，Learning pending |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S2.1 — RT-1 / RT-2 Overview**
-Next Task = **S2.2 — Octo Study**（仅计划）
+Current Task = **S2.2 — Octo Study**
+Next Task = **S2.3 — OpenVLA Architecture Trace**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,32 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S2.2 status and Run
+
+Engineering:
+
+- [x] Code — NumPy block mask/readout、missing payload隔离、head shape与扩散正向代数
+- [x] Experiment — present/missing、未来/只读反事实、NaN边界、八类checks与NPZ重载
+- [x] Docs — [S2.2学习包](docs/vla/s2_2_octo_study.md)，原版论文与固定Octo源码trace
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、dataset或weights下载，无训练策略。
+先读学习包；第二条先预测selected模式、mask/readout和不变量：
+
+```bash
+.venv/bin/python scripts/s2_2_octo_trace.py --output tmp/my_s2_2
+.venv/bin/python scripts/s2_2_octo_trace.py --wrist missing --output tmp/my_s2_2_missing
+```
+
+trace.npz包含两条件mask/attention/embeddings和独立扩散fixture；flag只选择report.selected。
+7槽shape不变，valid7→5、allowed edges28→14；head shape与oracle噪声恢复不证明适配/生成能力。
+Engineering Complete；Run/Modify/Explain待用户确认；S2.3仅计划。
+
 ## S2.1 status and Run
 
 Engineering:
@@ -56,9 +82,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、dataset或weights下载。不训练RT模型。
 先读学习包Problem→Architecture，再运行；第二条先预测bins变化：
@@ -69,7 +95,7 @@ CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、dataset或weights下载。�
 ```
 
 查看report.json/codec.npz：格式转换不证明语义迁移，合法token不证明robot success。
-Engineering Complete；Learning待用户Run/Modify/五问Explain确认；不自动进入S2.2。
+Engineering Complete + Learning Mastered（2026-10-18 用户确认实验、预测及五项Explain）；S2.2仅计划。
 
 ## S1.7 status and Run
 
@@ -98,7 +124,7 @@ Learned nominal/disturbed/shifted_start均0/16，unsupported为拒绝0/16；orac
 Offline executed MSE≈.000564m²，nominal visited MSE≈.00453m²，状态与动作槽不同，不能当同一loss直接相减。
 查看source_evidence.json、protocol.json、summary.csv与完整report/raw episodes；Stage1工程包完成，控制能力仍未达标。
 Engineering Complete + Learning Mastered（2026-10-18 用户确认实验、预测及五项 Explain）。
-Stage1工程与学习包全部完成，VLA控制仍失败；S2.1仅计划，不自动进入Stage2。
+Stage1工程与学习包全部完成，VLA控制仍失败；当前任务状态见上方S2.1。
 
 ## S1.6 status and Run
 

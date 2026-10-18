@@ -174,8 +174,12 @@ S1.7中offline误差和visited-state误差已不同，换成action tokens也不�
 
 ## My Verification
 
-- [ ] Run：自己运行默认实验，读report/NPZ，解释同一raw的两种ID。
-- [ ] Modify：先预测B变化，再运行并核对不变量、误差界。
-- [ ] Explain：用自己的话回答以上五问，区分论文结论与本地证据。
+- [x] Run：自己运行默认实验，读report/NPZ，解释同一raw的两种ID。
+- [x] Modify：先预测B变化，再运行并核对不变量、误差界。
+- [x] Explain：用自己的话回答以上五问，区分论文结论与本地证据。
 
-Engineering Complete；Learning未确认。Current Task=S2.1；Next Task=S2.2，仅计划。STOP。
+2026-10-18 用户明确确认实验和预测完成，并准确回答五项Explain；Learning Mastered。
+解释覆盖两种预训练/条件路径、视觉token与动作字段/时间轴、VLM token映射、
+B256→16不变量和半bin界，以及格式合法/语义迁移/新运动技能/闭环成功的证据边界。
+
+Engineering Complete + Learning Mastered。Current Task=S2.1；Next Task=S2.2，仅计划。STOP。

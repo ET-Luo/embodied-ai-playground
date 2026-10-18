@@ -2,7 +2,8 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.1 — RT-1 / RT-2 Overview**，Engineering Complete；Learning Run/Modify/Explain未确认。
+Current Task = **S2.2 — Octo Study**，Engineering Complete；Learning未确认。
+S2.1 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S1.7 Engineering Complete + Learning Mastered（2026-10-18 用户确认；策略仍失败）。
 S1.6 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S1.5 Engineering Complete（闭环仍失败）+ Learning Mastered（2026-10-18 用户确认）。
@@ -11,7 +12,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S2.2 — Octo Study**，仅计划，不授权自动进入。
+Next Task = **S2.3 — OpenVLA Architecture Trace**，仅计划，不授权自动进入。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有OpenVLA或World Model。
 
 ## Initialization and inherited experience
@@ -921,3 +922,56 @@ B256/B16均PASS；Markdown本地links及跨B raw/range/shape不变量独立检�
 限制：只有codec/格式边界证据，不是RT架构前向/预训练迁移/真实robot复现。
 Current Task=S2.1 Engineering Complete，Learning pending；Next Task=S2.2仅计划。
 下一步用户阅读学习包、Run、预测B变化后Modify、回答五项Explain；STOP等待用户。
+
+
+## S2.1 learning confirmation — 2026-10-18
+
+用户明确确认实验和预测均已完成，五项Explain准确覆盖：
+RT-1 sentence embedding/FiLM视觉条件化与robot监督，RT-2 VLM和web/robot co-fine-tuning；
+48视觉tokens、11/8当前动作字段与未来horizon是不同轴；bin ID、数字字符串与内部token ID不同，
+PaLI-X整数token和PaLM-E低频token映射、本地parser不等于VLM tokenizer。
+正确说明B256→16保持raw/shape/dtype/range/字段/H1/rad语义，channel空间512→32、半bin界扩大16倍，
+实际误差不必同比变化且界仅对in-range成立。
+准确区分合法token、语义迁移、新运动技能与真实robot success；明确本地只有codec/量化/词表证据。
+README与学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅更新四份状态文档，未运行Python实验、安装或下载。
+环境/实验沿用S2.1工程记录（Python3.14.7 / NumPy2.5.4），未新增模型或能力声明。
+验证：git diff --check通过；git diff --stat与git status --short核对仅四份文档。
+Current Task=S2.1（已掌握）；Next Task=S2.2 — Octo Study（仅计划），等待用户选择；未commit/push。
+
+
+## S2.2 Engineering — 2026-10-18
+
+用户授权继续S2.2。启动pwd正确，保留S2.1学习确认的四份文档修改。
+读取AGENTS/README/handoff/roadmap/S0.1模板；此前无S2.2 package。
+新增[学习包](vla/s2_2_octo_study.md)、[script](../scripts/s2_2_octo_trace.py)。仅推进S2.2。
+官方来源：Octo项目与arXiv2405.12213v1；git ls-remote核对HEAD
+241fb3514b7c40957a86d869fecb7c7fc353f540，读取固定octo_module.py、action_heads.py、
+scripts/configs/octo_pretrain_config.py、octo_model.py。前三份小源码保存ignored tmp/s2_2_source供阅读，非dataset/weights。
+猜测examples/finetune_new_observation_action.py返回404，没有以其作为适配证据。
+区分论文/HEAD配置；选MLP DiffusionActionHead，不混UNet。官方W2/H4/A7、repeat task、goal stacking、
+readout因果同组访问、sample_actions反归一化与全模型微调均在文档解释；未运行JAX/Flax/官方checkpoint。
+
+执行前核对repo .venv Python3.14.7 / NumPy2.5.4，实际模块
+.venv/lib/python3.14/site-packages/numpy/__init__.py。requirements不变，无安装/数据或weights下载。
+本地7×4随机embedding、两层identity-QKV residual attention、单task prefix，非完整Transformer。
+两条件present/missing有效tokens7/5、allowed edges28/14；未来隔离、readout不影响obs/task、
+task改变readout、masked weights0、missing NaN不影响输出、valid NaN拒绝均PASS。
+同一readout随机head输出(3,2)/(3,3)，仅验证shape适配，不是learned动作。
+独立物理fixture(1,2,3,2)float32 worldXY delta[m]/dt.1s，以固定.06m单位尺度归一化，
+alpha_bar.64+seed11噪声后oracle反解误差<=1e-7；不训练/采样denoiser，不导出伪episode。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s2_2_octo_trace.py --output tmp/s2_2_verified
+.venv/bin/python scripts/s2_2_octo_trace.py --wrist missing --output tmp/s2_2_missing_verified
+.venv/bin/python -m pip check
+git diff --check
+```
+
+两run八类checks与逐数组NPZ重载PASS；独立inline检查mask精确key集合、跨flag全部数组不变、
+cases相同/selected不同、扩散物理往返，Markdown本地links通过。pip check无冲突。
+无learned policy/控制/语义迁移/latency或论文复现声明，S1.5闭环失败不变。
+产物ignored tmp/，无commit/push。README/roadmap同步S2.2工程完成，学习三项未勾选。
+Current Task=S2.2；Next Task=S2.3仅计划。用户下一步Run→预测wrist模式后Modify→五问Explain；STOP。
