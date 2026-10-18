@@ -1,14 +1,15 @@
 # P4 project handoff
 
-Updated 2026-10-17 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
+Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S1.4 — Multimodal Fusion**，Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
+Current Task = **S1.5 — Tiny Transformer VLA**，Engineering Complete（闭环失败实验）；Learning Run/Modify/Explain待用户确认。
+S1.4 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S1.5 — Tiny Transformer VLA**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；没有patch-token VLA/action chunk、OpenVLA或World Model。
+Next Task = **S1.6 — Language Generalization**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；没有OpenVLA或World Model。
 
 ## Initialization and inherited experience
 
@@ -687,3 +688,53 @@ README与学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastere
 环境/实验沿用上节S1.4记录（Python3.14.7 / NumPy2.5.4）；不增加VLA泛化或真实robot能力声明。
 验证命令：`git diff --check`（通过）；`git diff --stat`、`git status --short`（仅四份文档）。
 Current Task = S1.4（已掌握）；Next Task = S1.5（仅计划），等待用户选择；未commit/push。
+
+## S1.5 Engineering — 2026-10-18
+
+用户授权“继续推进S1.5的学习”。启动pwd正确、git status --short为空；读AGENTS/README/handoff/
+roadmap/S1.4学习包和代码、S0.2窗口源码，无现存S1.5包。仅本任务，不进入S1.6/S1.7。
+新增[学习包](vla/s1_5_tiny_transformer_vla.md)、[script](../scripts/s1_5_tiny_transformer_vla.py)。
+执行前确认repo .venv Python3.14.7、NumPy2.5.4，actual path在.venv/lib/python3.14/site-packages/numpy/__init__.py。
+无安装/数据或weights下载；stdlib PNG，requirements只改任务注释；不改旧脚本或sibling repo。
+
+新patch-center renderer：RGB32×32，red/blue3×3 squares，中心{4,12,20,28}²，fixed .02m/pixel。
+240有序不同中心layouts中seed11抽40，train32/validation8布局不重叠，单物体中心允许复用。
+每layout红蓝2episode，T8/9observations，dt.1s、world delta clip.06m、预算truncated、success独立。
+raw embodied_episode/1.0 round-trip后，复用S0.2 history1/H3 causal windows/audit；train64episodes512anchors，
+validation16episodes128anchors，valid action tokens1344/336。raw physical units不覆盖，label mask不入policy。
+16个8×8meanRGB/255+fixed xy网格patch features→learned projection；3个train-only word embeddings；1个state投影。
+context20×16，单pre-LN attention+FFN，颜色词index18 readout，parallel head H3×2 actual delta，输出×.06m后clip。
+所有2454参数由masked action MSE联合训练，没有CNN定位/颜色swap/object truth/camera goal-error controller进入policy。
+Adam lr.002、batch32、2400updates，init7/sampler8；一seed，不按validation挑checkpoint，但原型曾共用validation。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s1_5_tiny_transformer_vla.py --output tmp/s1_5_verified
+.venv/bin/python scripts/s1_5_tiny_transformer_vla.py --output tmp/s1_5_color_readout
+.venv/bin/python scripts/s1_5_tiny_transformer_vla.py --output tmp/s1_5_final
+.venv/bin/python scripts/s1_5_tiny_transformer_vla.py --execute 3 --output tmp/s1_5_e3_final
+.venv/bin/python -m pip check
+git diff --check
+```
+
+首版proprio readout train MSE5.010e−4、closed-loop0/16；发现单block query尚未带语言条件，
+改成颜色词readout、同数据/预算重跑，仍0/16；不声称结构修改解决了问题或更优。
+最终2400steps train raw/clipped MSE5.49110e−4/5.47313e−4m²，validation5.66041e−4/5.64488e−4m²；
+zero baseline train9.83482e−4/validation6.01190e−4m²，验证只略优于零动作。不同指令chunk数值不同不足证明grounding。
+E1与E3 nominal/disturbed均0/16，oracle均16/16；第2次transition后world x+.12m。
+E1 calls8，E3 calls3（prefix3/3/2），feedback.1→.3s，8steps/9states，末maxgoalerror<=.01m。
+nominal median/max terminal error E1 .24250/.40148m、E3 .25048/.39201m；disturbed .31005/.54857与.31625/.47499m。
+完整failure stage=final goal error after 8-step budget，所有trace/commands/decision chunk、goal/error/success/truncated保留。
+report逐rollout记录局部latency median/P95，含patch/text/model/clip，不含render/environment；oracle跳过模型。
+最终模型欠拟合/闭环失败，不将Engineering Complete表述成task success或Learning Mastered。
+
+最终全2454参数finite difference最大误差1.08e−10；padding NaN不改loss/grad、5拒绝输入通过。
+raw/schema/physical transition/round-trip、window source-index/scene-group split、weights reload通过。
+独立inline确认跨E数据/weights/curve/offline/attention逐值不变、attention float32/row sum1、
+T/T+1/actual prefix/budget/clip/外扰时序/加法/完整分母通过；train有效chunk中768行真实zero，末mask[T,F,F]/idx[7,-1,-1]。
+已查看scenes.png，四个validation红蓝格点layout正确；Markdown本地链接、pip check、git diff --check通过。
+artifacts/.venv保持ignored，未commit/push。限制：mean-patch丢内部位置、只有两literal、单seed、静态RGB/ideal point，
+不是预训练VLA/真实robot/语言泛化证据；oracle成功与梯度PASS不能补救模型失败。
+Current Task S1.5 Engineering Complete（失败实验），Learning三项未勾选；Next S1.6仅计划。
+下一步用户Run→预测E1/E3不变量与feedback→Modify→五问Explain，STOP等待用户；不自动扩张修复或进入后续任务。

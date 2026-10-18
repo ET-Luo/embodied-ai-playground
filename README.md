@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0及S1.1–S1.4工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；未实现patch-token VLA/action chunk或world model。
+以上是最终能力链；当前完成Stage0及S1.1–S1.5工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；未实现world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
-| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.4 Engineering Complete + Learning Mastered |
+| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.4 Engineering Complete + Learning Mastered；S1.5 Engineering Complete（失败实验），Learning待确认 |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S1.4 — Multimodal Fusion**
-Next Task = **S1.5 — Tiny Transformer VLA**（仅计划）
+Current Task = **S1.5 — Tiny Transformer VLA**
+Next Task = **S1.6 — Language Generalization**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -45,6 +45,33 @@ S0.1 Learning:
 - [x] Explain
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
+
+## S1.5 status and Run
+
+Engineering:
+
+- [x] Code — 16image patches + 3learned word + proprio token → 2454参数Transformer → H3实际delta
+- [x] Experiment — raw/group/windows/masks、全参数梯度、零动作与oracle对照、E1/E3完整失败rollout
+- [x] Docs — [S1.5学习包](docs/vla/s1_5_tiny_transformer_vla.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，无安装/下载；Python3.14.7 / NumPy2.5.4。固定平均patch和2D网格，训练image/text/state投影与Transformer。
+**工程链路完成，模型未学会控制**：seed7 nominal/disturbed均0/16，oracle均16/16，验证loss仅略优于零动作基线。
+先读学习包，再运行；第二条先预测H固定、E变化：
+
+```bash
+.venv/bin/python scripts/s1_5_tiny_transformer_vla.py --output tmp/my_s1_5
+.venv/bin/python scripts/s1_5_tiny_transformer_vla.py --execute 3 --output tmp/my_s1_5_e3
+```
+
+E1→3保持data/weights/offline loss不变，calls8→3、反馈.1→.3s，error/trace变化但本次仍0/16。
+查看report.json、raw episodes、train/validation_chunks.npz和attention_probe.npz；完整失败是学习材料。
+Engineering Complete（含失败实验），Learning待用户Run/Modify/Explain确认；S1.6仅计划。
 
 ## S1.4 status and Run
 
