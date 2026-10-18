@@ -2,7 +2,7 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.3 — OpenVLA Architecture Trace**，Engineering Complete；Learning未确认。
+Current Task = **S2.3 — OpenVLA Architecture Trace**，Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.2 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.1 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S1.7 Engineering Complete + Learning Mastered（2026-10-18 用户确认；策略仍失败）。
@@ -1037,3 +1037,23 @@ Markdown本地links、来源manifest JSON、pip check、git diff --check通过�
 无模型loss、闭环success/latency或真实OpenVLA复现声明；未修复S1.5，未修改sibling repo，无commit/push。
 README/roadmap工程状态已同步，Learning三项未勾选。Current Task=S2.3；Next Task=S2.4仅计划。
 用户下一步Run→预测统计key变化再Modify→五问Explain，STOP。
+
+
+## S2.3 learning confirmation — 2026-10-18
+
+用户明确确认实验和预测完成，五项Explain准确覆盖原版单图/image+text输入、DINOv2/SigLIP/projector/
+Llama2/action codec/统计/controller路径；load_proprio=False，unnorm_key选统计和A而非state token，
+低层controller仍可使用实际state。正确区分(B,6,224,224)两分支预处理与双camera/时间，
+256patch沿feature拼1024+1152=2176，HF fused projector2176→8704→4096→4096；本地随机代理非原模型。
+准确定位23槽中BOS0/patch1–16/text17–19/action20–21/EOS22，输出19/20预测label20/21；
+teacher forcing非生成，EOS非robot terminate。
+正确解释32064−64=32000、256grid points/255centers、ID31744–31999、末端31745/31744碰撞，
+以及非法text ID1被宽松解码为边缘数值不证明合法性。
+准确解释compact→wide不改输入/features/序列/ID/normalized/H1/A2，统计与selected物理数值变2倍，
+flag仅改selected且trace相同；真实key若改变A也改变生成长度，统计正确不等于语义/frame/控制成功。
+README与学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅更新四份状态文档，未重跑实验、安装或下载。
+环境/工程证据沿用上节Python3.14.7 / NumPy2.5.4，不增加真实OpenVLA/robot能力声明。
+验证：git diff --check通过；git diff --stat、git status --short核对仅四份文档。
+Current Task=S2.3（已掌握）；Next Task=S2.4 — FAST / π0-FAST Action Representation（仅计划）。
+等待用户选择；未commit/push。

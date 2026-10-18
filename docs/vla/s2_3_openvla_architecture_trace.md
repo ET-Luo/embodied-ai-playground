@@ -243,8 +243,12 @@ projector和codec边界验证也无法说明视觉语义或动作预测正确，
 
 ## My Verification
 
-- [ ] Run：读trace/report，画真实静态shape与本地23槽序列。
-- [ ] Modify：先预测wide模式，再运行核对normalized/physical不变量和变化。
-- [ ] Explain：回答以上五问，明确原版、固定代码、教学代理与真实控制证据的边界。
+- [x] Run：读trace/report，画真实静态shape与本地23槽序列。
+- [x] Modify：先预测wide模式，再运行核对normalized/physical不变量和变化。
+- [x] Explain：回答以上五问，明确原版、固定代码、教学代理与真实控制证据的边界。
 
-Engineering Complete；Learning未确认。Current Task=S2.3；Next Task=S2.4，仅计划。STOP。
+2026-10-18 用户明确确认实验和预测完成，并准确回答五项Explain；Learning Mastered。
+解释覆盖原版image/text与外部统计/低层state边界、双视觉feature轴、BOS插入与causal shift、
+有效词表和255中心/末端碰撞，以及统计选择影响物理动作但不证明控制成功。
+
+Engineering Complete + Learning Mastered。Current Task=S2.3；Next Task=S2.4，仅计划。STOP。
