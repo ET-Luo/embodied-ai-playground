@@ -2,14 +2,15 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S1.5 — Tiny Transformer VLA**，Engineering Complete（闭环失败实验）；Learning Run/Modify/Explain待用户确认。
+Current Task = **S1.6 — Language Generalization**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+S1.5 Engineering Complete（闭环仍失败）+ Learning Mastered（2026-10-18 用户确认）。
 S1.4 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S1.6 — Language Generalization**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；没有OpenVLA或World Model。
+Next Task = **S1.7 — Closed-loop VLA Rollout**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断，未修复S1.5；没有OpenVLA或World Model。
 
 ## Initialization and inherited experience
 
@@ -738,3 +739,70 @@ artifacts/.venv保持ignored，未commit/push。限制：mean-patch丢内部位�
 不是预训练VLA/真实robot/语言泛化证据；oracle成功与梯度PASS不能补救模型失败。
 Current Task S1.5 Engineering Complete（失败实验），Learning三项未勾选；Next S1.6仅计划。
 下一步用户Run→预测E1/E3不变量与feedback→Modify→五问Explain，STOP等待用户；不自动扩张修复或进入后续任务。
+
+## S1.5 learning confirmation — 2026-10-18
+
+用户明确确认实验和预测均已完成，五项 Explain 准确覆盖RGB平均patch/固定坐标、train-only word embedding、
+proprio投影、20×16 context和2454参数，区分固定预处理与learned action-loss通路。
+正确解释index18颜色词query的语言条件与单block proprio query限制；明确修改后仍0/16、train loss更高，不能称有效。
+准确手算末anchor7 mask/index、单样本分母2、train1344/2688及validation336/672有效token/scalar分母，
+区分实际delta chunk与S1.4 proposal，并保留真实zero labels。
+正确说明E1→3不改data/tokenizer/weights/H/mask/offline，calls8→3、prefix3/3/2、反馈最多.1→.3s，
+第2次转移后外扰，E1在tick2重观测、E3到tick3；同0/16不表示trace/error相同。
+用户用train/validation loss、zero baseline与oracle16/16准确界定当前模型未学会控制；
+欠拟合/表示/优化/漂移需要受控排查，梯度PASS、不同指令输出和局部latency均不能证明能力达标。
+README/学习包Run/Modify/Explain勾选，roadmap同步Learning Mastered；0/16闭环失败结论不变。
+启动pwd正确，git status --short为空；本轮仅改四份文档，未重跑实验、安装或下载。
+环境/工程证据沿用上节（Python3.14.7 / NumPy2.5.4），无新增成功/泛化声明。
+验证命令：`git diff --check`（通过）；`git diff --stat`、`git status --short`（仅四份文档）。
+Current Task = S1.5（学习已掌握，模型控制仍失败）；Next Task = S1.6（仅计划），等待用户选择；未commit/push。
+
+## S1.6 Engineering — 2026-10-18
+
+用户授权“继续推进S1.6学习”。启动pwd正确，保留S1.5学习确认的四份文档修改。
+读取AGENTS/README/handoff/roadmap/S1.5包、S1.2文本实现与requirements；无现成S1.6包。
+新增[学习包](vla/s1_6_language_generalization.md)、[script](../scripts/s1_6_language_generalization.py)。
+只当前任务，不修复S1.5或启动S1.7；不改旧源码/sibling repo。执行前确认repo .venv Python3.14.7、
+NumPy2.5.4，actual path在.venv/lib/python3.14/site-packages/numpy/__init__.py。无安装/数据或weights下载。
+requirements只改覆盖任务注释；PNG复用stdlib helper，不依赖Pillow。
+
+独立42参数text-only learned embedding(8,4)+masked mean+2class head，由4句/800updates/seed7/Adam lr.03训练。
+train pick red/blue cube、move red/blue object；train-only vocab PAD/UNK/blue/cube/move/object/pick/red。
+probe预先固定，seen4、新known-word组合4、OOV verb/noun4、OOV color4、order stress2。
+除seen外规范化完整句与train交集0，未知词不加入词表；PAD/UNK零、UNK推理仍参与mean。
+probe颜色别名/排除关系由评价者标注，expected class不进入decide；所有verb仅作synthetic go-to-color任务，不实现抓取。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s1_6_language_generalization.py --output tmp/s1_6_verified
+.venv/bin/python scripts/s1_6_language_generalization.py --unk-policy map --output tmp/s1_6_map_verified
+.venv/bin/python scripts/s1_6_language_generalization.py --output tmp/s1_6_final
+.venv/bin/python scripts/s1_6_language_generalization.py --unk-policy map --output tmp/s1_6_map_final
+.venv/bin/python scripts/s1_6_language_generalization.py --output tmp/s1_6_checked
+.venv/bin/python scripts/s1_6_language_generalization.py --unk-policy map --output tmp/s1_6_map_checked
+.venv/bin/python -m pip check
+git diff --check
+```
+
+最终checked包含exact baseline失败stage细分、tokenizer/diagnostic NPZ reload验证。train CE首步.67385→7.641e−5。
+reject与map seen4/4、recombination4/4；exact lookup只有seen4/4，其他整句miss。
+reject其余4/4/2句均拒绝；map OOV verb/noun4/4、OOV color2/4、order1/2。
+unknown颜色同ID pairs均选red，约.5002概率；order pair同mean均选blue约.50636（舍入微差），达到碰撞上限，不是同义词/关系理解。
+OOV verb/noun成功保留known颜色，不能声称理解grab/block/item；只一seed/极小人工phrase列表。
+
+桥接6个seed41布局（复用S1.5 renderer/world，无其weights），oracle red/blue位置+固定goal-error controller，
+按predicted class选目标，expected class仅评分；每接受句8actions/9states，dt.1s、world delta clip.06m、终点阈值.01m。
+reject seen/recombination各24/24，OOV分别0/24、0/24、0/12（0动作/1state/truncatedFalse，仍留全分母）；
+map对应24/24、12/24、6/12。错误分类stage=language_target_selection，拒绝tokenization_rejected；
+exact baseline未见整句stage=exact_instruction_lookup_miss；oracle expected-class参考每组全成功。
+桥接是语言正确率的六场景重复，不是独立learned视觉/控制证据，不冒充S1.5 VLA修复；S1.5仍0/16。
+局部text推理每unique phrase一次，组内2或4samples median/P95，拒绝组null；不含bridge，不能称性能benchmark。
+
+全42参数finite difference最大差7.10e−12、PAD NaN不变、OOV/mean order collision、phrase/vocab隔离、5拒绝输入通过。
+weights/tokenizer/diagnostic NPZ重载通过；独立inline跨policy weights/vocab/history/diagnostics逐值相同，
+所有桥接的拒绝无动作/8步执行/物理加法/限幅/成功阈值/全分母/oracle可达通过。
+已查看scenes.png六layout红蓝位置；Markdown本地链接、pip check、git diff --check通过，artifacts/.venv ignored，无commit/push。
+限制：人工四train句/14held-out句、mean表示、oracle几何与控制器、没有语法/真实技能或VLA泛化证据。
+Current Task S1.6 Engineering Complete，Learning未勾选；Next S1.7仅计划。
+用户下一步Run→先预测reject/map分组结果与失败stage→Modify→五问Explain，STOP等待用户。

@@ -237,8 +237,17 @@ VLA处于任务/视觉/state到动作的接口层，真实执行仍需controller
 
 ## My Verification
 
-- [ ] Run：运行默认，追踪raw/window/tokens/chunk与完整0/16失败，读oracle及zero baseline。
-- [ ] Modify：先预测H3固定、E1→3不变量、calls/feedback/error，再运行并核对第2次转移扰动。
-- [ ] Explain：独立回答五问，说明为什么工程验证通过却不能称学会控制。
+- [x] Run：运行默认，追踪raw/window/tokens/chunk与完整0/16失败，读oracle及zero baseline。
+- [x] Modify：先预测H3固定、E1→3不变量、calls/feedback/error，再运行并核对第2次转移扰动。
+- [x] Explain：独立回答五问，说明为什么工程验证通过却不能称学会控制。
 
-Current Task = S1.5；Next Task = S1.6（仅计划）。Engineering Complete（含失败实验），Learning等待用户确认，不自动推进。
+Current Task = S1.5；Next Task = S1.6（仅计划）。Engineering Complete（闭环失败）+ Learning Mastered（2026-10-18 用户确认），不自动推进。
+
+2026-10-18 用户确认实验和预测均已完成，五项 Explain 准确覆盖16patch/3word/proprio→20×16 context，
+固定预处理与2454可学习参数的边界；说明颜色词query与单block proprio query的差别，且没有过称读出修改有效。
+准确区分S1.5实际delta chunk与S1.4剩余位移proposal，末anchor7 indices[7,-1,-1]/mask[T,F,F]，
+单样本分母2、train1344slots/2688scalars、validation336slots/672scalars，真实zero不作padding。
+正确解释E1→3训练/offline不变量、calls8→3/prefix3,3,2，以及第2次转移受扰后E1在tick2、E3在tick3重新观察。
+用户依据train/validation、zero baseline、learned0/16与oracle16/16说明模型未学会可靠控制，
+提出欠拟合/表示/优化/闭环漂移应做受控排查，未把梯度PASS、不同输出或局部latency当成功证据。
+学习状态依据用户报告确认；模型0/16失败结论保留，本轮仅同步文档、未重新执行实验。
