@@ -27,12 +27,12 @@ flowchart TD
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
-| 2 | Modern VLA Architecture Study | Planned |
+| 2 | Modern VLA Architecture Study | S2.1 Engineering Complete；Learning pending |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S1.7 — Closed-loop VLA Rollout**
-Next Task = **S2.1 — RT-1 / RT-2 Overview**（仅计划）
+Current Task = **S2.1 — RT-1 / RT-2 Overview**
+Next Task = **S2.2 — Octo Study**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -45,6 +45,31 @@ S0.1 Learning:
 - [x] Explain
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
+
+## S2.1 status and Run
+
+Engineering:
+
+- [x] Code — 复用train-only joint codec，对照channel IDs/数字字段与词表限制
+- [x] Experiment — B256/B16、半bin界、6类拒绝、NPZ round-trip
+- [x] Docs — [S2.1学习包](docs/vla/s2_1_rt_overview.md)，原版论文与固定RT-1源码对照
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、dataset或weights下载。不训练RT模型。
+先读学习包Problem→Architecture，再运行；第二条先预测bins变化：
+
+```bash
+.venv/bin/python scripts/s2_1_rt_overview.py --output tmp/my_s2_1
+.venv/bin/python scripts/s2_1_rt_overview.py --bins 16 --output tmp/my_s2_1_b16
+```
+
+查看report.json/codec.npz：格式转换不证明语义迁移，合法token不证明robot success。
+Engineering Complete；Learning待用户Run/Modify/五问Explain确认；不自动进入S2.2。
 
 ## S1.7 status and Run
 

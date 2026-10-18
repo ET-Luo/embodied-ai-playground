@@ -2,7 +2,8 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S1.7 — Closed-loop VLA Rollout**，Engineering Complete + Learning Mastered（2026-10-18 用户确认；策略仍失败）。
+Current Task = **S2.1 — RT-1 / RT-2 Overview**，Engineering Complete；Learning Run/Modify/Explain未确认。
+S1.7 Engineering Complete + Learning Mastered（2026-10-18 用户确认；策略仍失败）。
 S1.6 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S1.5 Engineering Complete（闭环仍失败）+ Learning Mastered（2026-10-18 用户确认）。
 S1.4 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
@@ -10,7 +11,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S2.1 — RT-1 / RT-2 Overview**，仅计划，不授权自动进入。
+Next Task = **S2.2 — Octo Study**，仅计划，不授权自动进入。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有OpenVLA或World Model。
 
 ## Initialization and inherited experience
@@ -887,3 +888,36 @@ README/学习包Run/Modify/Explain全部勾选，roadmap同步S1.7与Stage1 Lear
 验证命令：`git diff --check`（通过）；`git diff --stat`、`git status --short`（仅四份文档）。
 Current Task = S1.7（已掌握）；Stage1工程与学习包全部完成、策略能力仍未达标。
 Next Task = S2.1（仅计划），等待用户选择，不自动进入Stage2；未commit/push。
+
+
+## S2.1 Engineering — 2026-10-18
+
+用户明确请求继续S2.1学习；启动pwd正确、git status --short为空。
+读取AGENTS/README/handoff/roadmap及S0.1模板；此前没有S2.1包。
+新增[学习包](vla/s2_1_rt_overview.md)和[script](../scripts/s2_1_rt_overview.py)。
+只推进S2.1，不修复S1.5、不进入Octo、不改sibling repo。
+官方来源：RT-1 arXiv2212.06817v1、RT-2 arXiv2307.15818v1、两个官方project站；
+RT-1 git ls-remote确认HEAD 4569641b8111f3f402c32d8e24becd2a6e952ecc，浏览固定revision的
+transformer_network.py/action_tokenizer.py；未执行TF或验证RT-2完整源码。
+区分论文视觉摘要48tokens与完整动作槽、当前动作字段与未来chunk、token约束与语义迁移。
+
+执行前验证repo .venv Python3.14.7 / NumPy2.5.4，实际NumPy路径为
+.venv/lib/python3.14/site-packages/numpy/__init__.py。无安装/公开dataset或weights下载。
+复用S0.5三train episode、12raw命令拟合S0.6 ranges；取首episode4×2float32 joint absolute rad命令。
+channel offset ID与共享bin有序字符串往返一致、中心解码半bin界、6坏字符串拒绝、合成logits词表限制通过。
+两次输出NPZ raw/decoded重载一致；无learned模型、闭环success或模型latency声明。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s2_1_rt_overview.py --output tmp/s2_1_verified
+.venv/bin/python scripts/s2_1_rt_overview.py --bins 16 --output tmp/s2_1_b16_verified
+.venv/bin/python -m pip check
+git diff --check
+```
+
+B256/B16均PASS；Markdown本地links及跨B raw/range/shape不变量独立检查通过。
+产物ignored tmp/；README为状态源，学习三项保持未勾选；无commit/push。
+限制：只有codec/格式边界证据，不是RT架构前向/预训练迁移/真实robot复现。
+Current Task=S2.1 Engineering Complete，Learning pending；Next Task=S2.2仅计划。
+下一步用户阅读学习包、Run、预测B变化后Modify、回答五项Explain；STOP等待用户。
