@@ -27,12 +27,12 @@ flowchart TD
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
-| 2 | Modern VLA Architecture Study | S2.1–S2.3 Engineering Complete + Learning Mastered |
+| 2 | Modern VLA Architecture Study | S2.1–S2.3已掌握；S2.4 Engineering Complete，Learning pending |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S2.3 — OpenVLA Architecture Trace**
-Next Task = **S2.4 — FAST / π0-FAST Action Representation**（仅计划）
+Current Task = **S2.4 — FAST / π0-FAST Action Representation**
+Next Task = **S2.5 — π0 Architecture Trace**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -45,6 +45,33 @@ S0.1 Learning:
 - [x] Explain
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
+
+## S2.4 status and Run
+
+Engineering:
+
+- [x] Code — 显式NumPy时间DCT、量化、train-only整数pair BPE与逆变换
+- [x] Experiment — smooth/rough heldout、scalar bins对照、scale10/20、六类拒绝与重载
+- [x] Docs — [S2.4学习包](docs/vla/s2_4_fast_action_representation.md)、[固定来源manifest](docs/vla/s2_4_fast_sources.json)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、真实dataset或模型/发布字典下载。
+本地整数BPE是教学版，不是官方byte-level FAST+；没有VLA策略训练或控制。
+第二条先预测scale对系数、字典、token数与误差界的影响：
+
+```bash
+.venv/bin/python scripts/s2_4_fast_tokenization.py --output tmp/my_s2_4
+.venv/bin/python scripts/s2_4_fast_tokenization.py --scale 20 --output tmp/my_s2_4_s20
+```
+
+看report/tokenizer.json/trace.npz：smooth tokens2→6而RMSE不变；rough两次32tokens，保留失败case。
+BPE对量化整数无损，不代表物理动作无损或robot success；Engineering Complete，学习三项待用户确认。
+S2.5仅计划，不自动进入。
 
 ## S2.3 status and Run
 

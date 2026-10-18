@@ -2,7 +2,8 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.3 — OpenVLA Architecture Trace**，Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
+Current Task = **S2.4 — FAST / π0-FAST Action Representation**，Engineering Complete；Learning未确认。
+S2.3 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.2 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.1 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S1.7 Engineering Complete + Learning Mastered（2026-10-18 用户确认；策略仍失败）。
@@ -13,7 +14,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S2.4 — FAST / π0-FAST Action Representation**，仅计划，不授权自动进入。
+Next Task = **S2.5 — π0 Architecture Trace**，仅计划，不授权自动进入。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA或World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -1057,3 +1058,48 @@ README与学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastere
 验证：git diff --check通过；git diff --stat、git status --short核对仅四份文档。
 Current Task=S2.3（已掌握）；Next Task=S2.4 — FAST / π0-FAST Action Representation（仅计划）。
 等待用户选择；未commit/push。
+
+
+## S2.4 Engineering — 2026-10-18
+
+用户授权继续S2.4。启动pwd正确、git status --short为空；读AGENTS/README/handoff/roadmap，当前包此前不存在。
+新增[学习包](vla/s2_4_fast_action_representation.md)、[source manifest](vla/s2_4_fast_sources.json)、
+[script](../scripts/s2_4_fast_tokenization.py)。仅FAST/π0-FAST表示，不进入S2.5或修改旧控制模型。
+官方FAST arXiv2501.09747v1、pi.website/research/fast；git ls-remote核对openpi HEAD
+215abfb217dbac7d5f1273282331b9b1866c0479，读tokenizer.py/pi0_fast.py。
+HF API固定physical-intelligence/fast revision ec4d7aa71691cac0b8bed6942be45684db2110f4，
+仅取processing_action_tokenizer.py6145bytes/processor_config.json253bytes/API metadata。
+最初preprocessor_config.json为404，依据API列表更正文件名。源码/metadata存ignored tmp/s2_4_source，
+未下载发布BPE字典tokenizer.json、策略权重或真实dataset，未执行trust_remote_code。
+文档区分FAST/FAST+/π0-FAST、state文本prefix与动作FAST IDs、PaliGemma映射跳过128 special，
+官方Unicode偏移/低域clip/坏decode零fallback、scale10/vocab2048与类默认1024区别。
+
+执行前核对repo .venv Python3.14.7 / NumPy2.5.4，actual module为
+.venv/lib/python3.14/site-packages/numpy/__init__.py；requirements未改，无安装/环境修复。
+NumPy显式正交DCT-II沿H16时间轴、A2worldXY delta[m]、dt.1s，固定.06m归一化；不拟合验证统计。
+8个synthetic train chunks拟合整数pair BPE（固定基础字母−128…128，最多24 merges），
+smooth/seed31 rough两个heldout独立chunk仅评价。raw/coeff/Q/IDs/decoded/baseline全部保存，不伪造episode。
+本地不是Unicode/byte-level FAST+、没有VLA或动作生成；BPE整数无损但量化有损。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s2_4_fast_tokenization.py --output tmp/s2_4_verified
+.venv/bin/python scripts/s2_4_fast_tokenization.py --scale 20 --output tmp/s2_4_s20_verified
+.venv/bin/python -m pip check
+git diff --check
+```
+
+两run正交/逆DCT/BPE整数往返、RMSE上界、6类拒绝、JSON字典/NPZ重载PASS。
+scale10/20各10/9merges、vocab267/266；32个系数槽不变。
+smooth tokens2→6，RMSE均.0002436865934m、积分位移误差.0048m；rough均32tokens，
+RMSE.0016901615374→.0009441706822m、积分偏差.0077020950→.0049056572m。
+scalar bins256固定32tokens，smooth/rough RMSE.0001440436/.0001385139m；不声称精度匹配对照。
+理论RMSE上界.003→.0015m，不是单component最大误差界，也不保证实际误差减半。
+积分是ideal additive point数值诊断，不是真实闭环success；N不含字典/prompt/framing，不是bytes或速度倍数。
+
+独立inline检查跨scale raw/连续DCT/scalar baseline不变量、正交能量、DC决定积分偏差、
+重载merge重编码与整数恢复、train-only refit字典、manifest JSON及Markdown本地链接通过。
+pip check无冲突、git diff --check通过。无policy loss/robot success/latency或官方提速复现声明。
+所有产物ignored tmp/，无commit/push。README/roadmap同步工程完成，学习三项未勾选。
+Current Task=S2.4；Next Task=S2.5仅计划。用户Run→先预测scale再Modify→五问Explain，STOP。
