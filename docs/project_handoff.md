@@ -2,7 +2,7 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.2 — Octo Study**，Engineering Complete；Learning未确认。
+Current Task = **S2.2 — Octo Study**，Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.1 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S1.7 Engineering Complete + Learning Mastered（2026-10-18 用户确认；策略仍失败）。
 S1.6 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
@@ -975,3 +975,20 @@ cases相同/selected不同、扩散物理往返，Markdown本地links通过。pi
 无learned policy/控制/语义迁移/latency或论文复现声明，S1.5闭环失败不变。
 产物ignored tmp/，无commit/push。README/roadmap同步S2.2工程完成，学习三项未勾选。
 Current Task=S2.2；Next Task=S2.3仅计划。用户下一步Run→预测wrist模式后Modify→五问Explain；STOP。
+
+
+## S2.2 learning confirmation — 2026-10-18
+
+用户明确确认实验和预测均完成，五项Explain准确覆盖Octo条件输入/分组mask/Transformer/readout/
+conditional diffusion/反归一化到执行，与RT-2离散自回归路径区别；goal为条件、readout非动作。
+准确列出present/missing primary0与readout1可读key集合，shape7×4保持、valid7→5、edges28→14；
+明确mask隔离不补全感知。正确区分本地W2/H3/A2与官方W2/H4/A7、20去噪步及k非物理时刻。
+正确解释cases每次都算、flag只选selected，mask改变softmax和readout；invalid NaN需先清理、valid NaN拒绝。
+准确区分A2→A3 shape适配与sensor/action/unit/frame/controller/统计/训练/微调及闭环能力；
+oracle知道epsilon的0.8a+0.6epsilon反解仅验证代数，真实策略需学习条件预测并反向采样。
+用户明确真实成功仅限对应测试条件，不外推任意技能、跨机器人泛化或安全实时性。
+README与学习包Run/Modify/Explain勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅更新四份状态文档，未重跑实验、安装或下载。
+环境/工程证据沿用上节Python3.14.7 / NumPy2.5.4，不增加模型或控制能力声明。
+验证：git diff --check通过；git diff --stat、git status --short核对仅四份文档。
+Current Task=S2.2（已掌握）；Next Task=S2.3 — OpenVLA Architecture Trace（仅计划）。等待用户选择；未commit/push。

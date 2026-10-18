@@ -205,8 +205,12 @@ Octo论文真实机器人结果是外部证据，本地没有复现这些结果�
 
 ## My Verification
 
-- [ ] Run：读report/trace并画七槽attention mask。
-- [ ] Modify：先预测missing模式变化，再运行并比较selected与cases。
-- [ ] Explain：用自己的话回答五问，明确原版/固定代码/本地简化边界。
+- [x] Run：读report/trace并画七槽attention mask。
+- [x] Modify：先预测missing模式变化，再运行并比较selected与cases。
+- [x] Explain：用自己的话回答五问，明确原版/固定代码/本地简化边界。
 
-Engineering Complete；Learning未确认。Current Task=S2.2；Next Task=S2.3，仅计划。STOP。
+2026-10-18 用户明确确认实验与预测完成，并准确回答五项Explain；Learning Mastered。
+解释覆盖Octo与RT-2路径区别、present/missing精确mask与7→5 tokens、28→14 edges，
+W/H/A/k轴、flag只切selected、NaN隔离，以及shape适配/噪声代数/真实控制的证据边界。
+
+Engineering Complete + Learning Mastered。Current Task=S2.2；Next Task=S2.3，仅计划。STOP。

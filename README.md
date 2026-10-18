@@ -27,7 +27,7 @@ flowchart TD
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
-| 2 | Modern VLA Architecture Study | S2.1已掌握；S2.2 Engineering Complete，Learning pending |
+| 2 | Modern VLA Architecture Study | S2.1–S2.2 Engineering Complete + Learning Mastered |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
@@ -56,9 +56,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、dataset或weights下载，无训练策略。
 先读学习包；第二条先预测selected模式、mask/readout和不变量：
@@ -70,7 +70,7 @@ CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、dataset或weights下载，�
 
 trace.npz包含两条件mask/attention/embeddings和独立扩散fixture；flag只选择report.selected。
 7槽shape不变，valid7→5、allowed edges28→14；head shape与oracle噪声恢复不证明适配/生成能力。
-Engineering Complete；Run/Modify/Explain待用户确认；S2.3仅计划。
+Engineering Complete + Learning Mastered（2026-10-18 用户确认实验、预测及五项Explain）；S2.3仅计划。
 
 ## S2.1 status and Run
 
