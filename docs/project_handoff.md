@@ -2,7 +2,8 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.4 — FAST / π0-FAST Action Representation**，Engineering Complete；Learning未确认。
+Current Task = **S2.5 — π0 Architecture Trace**，Engineering Complete；Learning未确认。
+S2.4 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.3 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.2 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.1 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
@@ -14,7 +15,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S2.5 — π0 Architecture Trace**，仅计划，不授权自动进入。
+Next Task = **S2.6 — π0.5 Study**，仅计划，不授权自动进入。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA或World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -1103,3 +1104,60 @@ scalar bins256固定32tokens，smooth/rough RMSE.0001440436/.0001385139m；不�
 pip check无冲突、git diff --check通过。无policy loss/robot success/latency或官方提速复现声明。
 所有产物ignored tmp/，无commit/push。README/roadmap同步工程完成，学习三项未勾选。
 Current Task=S2.4；Next Task=S2.5仅计划。用户Run→先预测scale再Modify→五问Explain，STOP。
+
+
+## S2.4 learning confirmation — 2026-10-18
+
+用户明确确认实验和预测完成，五项Explain准确区分FAST方法、FAST+通用词表、π0-FAST自回归策略；
+训练chunk编码为监督标签，推理生成token再解码，robot state属于策略条件而非动作codec主体。
+正确描述H16/A2在DCT后时间轴变频率轴、flatten32与变长N，不将N=2当成两个物理控制步。
+明确无裁剪归一化/DCT/flatten可逆、BPE对量化整数无损、round和clipping有损，RMSE小仍可积分偏移。
+准确解释scale10→20保持raw/H/A/dt/尺度/DCT连续系数，Q变化后同train重fit字典；
+理论RMSE界.003→.0015m不保证实际误差减半，smooth误差不变而token2→6展示压缩取舍。
+正确说明完整train chunks拟合、heldout不调字典/字母域，rough32→32是未压缩而非decode失败；
+坏流拒绝仅验证契约，token数/bytes/policy latency/robot success不能互相替代，本地只有codec证据。
+README与学习包Run/Modify/Explain勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅更新四份状态文档，未重跑实验、安装或下载。
+环境/工程证据沿用上节Python3.14.7 / NumPy2.5.4，不增加FAST+或VLA控制复现声明。
+验证：git diff --check通过；git diff --stat、git status --short核对仅四份文档。
+Current Task=S2.4（已掌握）；Next Task=S2.5 — π0 Architecture Trace（仅计划），等待用户选择；未commit/push。
+
+
+## S2.5 Engineering — 2026-10-18
+
+用户授权继续S2.5。启动pwd正确，保留S2.4学习确认四份文档修改；读AGENTS/README/handoff/roadmap。
+新增[学习包](vla/s2_5_pi0_architecture_trace.md)、[manifest](vla/s2_5_pi0_sources.json)、
+[script](../scripts/s2_5_pi0_flow_trace.py)。当前仅原版π0，不进入π0.5。
+官方paper arXiv2410.24164v1、blog/pi0（research/pi0不可访问，沿论文blog链接跳转）；
+git ls-remote确认openpi HEAD215abfb217dbac7d5f1273282331b9b1866c0479。
+固定读取pi0.py/pi0_config.py/gemma.py，保存ignored tmp/s2_5_source与manifest hash。
+明确选择JAX Pi0Config(pi05=False)，state连续suffix、time与action拼接MLP，非pi05 adaRMS。
+静态W_vlm2048/W_expert1024经独立投影共用attention；H50/A_pad32与论文实际最大18分开。
+代码t1noise→t0action、x=t noise+(1−t)action、u=noise−action、Euler负步长，与论文τ方向配套转换；
+记录v1印刷公式表面符号不一致，不混用来实现。未执行JAX/Flax/Torch、未下载模型/数据。
+
+执行前核对repo .venv Python3.14.7 / NumPy2.5.4，actual module
+.venv/lib/python3.14/site-packages/numpy/__init__.py；无安装/修复，requirements不变。
+本地prefix3×6/suffix4×4（state1/action3）、共同QKV宽3、两层随机attention；mask34边，
+full/cache差0、prefix不受suffix影响、state不受action影响、state影响action通过。
+独立raw3×2 worldXY delta[m]/dt.1s，.06m固定尺度、seed29噪声，非episode/rollout。
+常量oracle需特权clean/noise，K10/20 normalized RMSE5.78e−17/8.92e−17；biased oracle +.1均RMSE.1。
+解析场v=x−mu的精确终点mu+(noise−mu)e^(−1)，不是clean；Euler误差.00927026136→.00453519969。
+无learned velocity、策略训练或实际控制，因此不报告policy loss/robot success/latency。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s2_5_pi0_flow_trace.py --output tmp/s2_5_verified
+.venv/bin/python scripts/s2_5_pi0_flow_trace.py --steps 20 --output tmp/s2_5_k20_verified
+.venv/bin/python -m pip check
+git diff --check
+```
+
+两run三类拒绝/NPZ重载通过；独立inline检查mask精确key集合、固定prefix多suffix缓存等价、
+跨K全部固定输入不变、负时间网格、oracle/biased终点、解析Euler封闭式与误差改善通过。
+隔离已读官方make_attn_mask函数以NumPy代替jnp，mask与本地逐值相同；没有导入上游依赖/运行模型。
+Markdown links、manifest JSON、pip check与git diff --check通过，产物ignored tmp/，无commit/push。
+限制：本地attention与ODE是分开的无训练探针，不是flow策略；未修复S1.5、不改sibling repo。
+Current Task=S2.5 Engineering Complete，Learning三项未勾选；Next Task=S2.6仅计划。
+用户Run→先预测K变化再Modify→五问Explain，STOP。

@@ -27,12 +27,12 @@ flowchart TD
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
-| 2 | Modern VLA Architecture Study | S2.1–S2.3已掌握；S2.4 Engineering Complete，Learning pending |
+| 2 | Modern VLA Architecture Study | S2.1–S2.4已掌握；S2.5 Engineering Complete，Learning pending |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S2.4 — FAST / π0-FAST Action Representation**
-Next Task = **S2.5 — π0 Architecture Trace**（仅计划）
+Current Task = **S2.5 — π0 Architecture Trace**
+Next Task = **S2.6 — π0.5 Study**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,32 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S2.5 status and Run
+
+Engineering:
+
+- [x] Code — 不同宽度expert的共同attention、prefix cache与flow Euler数学实验
+- [x] Experiment — full/cache等价、state/action信息边界、K10/20及oracle/偏置/解析ODE
+- [x] Docs — [S2.5学习包](docs/vla/s2_5_pi0_architecture_trace.md)、[来源manifest](docs/vla/s2_5_pi0_sources.json)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，Python3.14.7 / NumPy2.5.4，无新依赖、模型或dataset下载；不训练π0。
+先读paper/code flow时间方向差别；第二条先预测K与物理时间的区别：
+
+```bash
+.venv/bin/python scripts/s2_5_pi0_flow_trace.py --output tmp/my_s2_5
+.venv/bin/python scripts/s2_5_pi0_flow_trace.py --steps 20 --output tmp/my_s2_5_k20
+```
+
+trace.npz记录mask/cache与独立手写场积分。代码noise t1→action t0，Δt_flow为负；state在原版suffix。
+K增加不改H/A/robot dt；解析ODE数值误差下降，偏置场误差不消失，不证明learned控制能力。
+Engineering Complete，学习三项待用户确认；不自动进入S2.6。
+
 ## S2.4 status and Run
 
 Engineering:
@@ -56,9 +82,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、真实dataset或模型/发布字典下载。
 本地整数BPE是教学版，不是官方byte-level FAST+；没有VLA策略训练或控制。
@@ -70,7 +96,8 @@ CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、真实dataset或模型/发�
 ```
 
 看report/tokenizer.json/trace.npz：smooth tokens2→6而RMSE不变；rough两次32tokens，保留失败case。
-BPE对量化整数无损，不代表物理动作无损或robot success；Engineering Complete，学习三项待用户确认。
+BPE对量化整数无损，不代表物理动作无损或robot success。
+Engineering Complete + Learning Mastered（2026-10-18 用户确认实验、预测及五项Explain）。
 S2.5仅计划，不自动进入。
 
 ## S2.3 status and Run

@@ -221,8 +221,12 @@ DCT不减少shape；BPE无损的是量化整数；H/A/N不同轴；train-only字
 
 ## My Verification
 
-- [ ] Run：自己运行并查看raw/coeff/Q/BPE/decoded与两case结果。
-- [ ] Modify：先预测scale变化，再运行，核对不变量、字典与误差界。
-- [ ] Explain：回答五问，区分官方FAST+、本地整数BPE与策略控制证据。
+- [x] Run：自己运行并查看raw/coeff/Q/BPE/decoded与两case结果。
+- [x] Modify：先预测scale变化，再运行，核对不变量、字典与误差界。
+- [x] Explain：回答五问，区分官方FAST+、本地整数BPE与策略控制证据。
 
-Engineering Complete；Learning未确认。Current Task=S2.4；Next Task=S2.5，仅计划。STOP。
+2026-10-18 用户明确确认实验和预测完成，并准确回答五项Explain；Learning Mastered。
+解释覆盖FAST/FAST+/π0-FAST与条件state、H/A/N及频率轴、量化损失和积分偏差、
+scale变化与train-only字典，以及token数/bytes/latency/robot success的证据边界。
+
+Engineering Complete + Learning Mastered。Current Task=S2.4；Next Task=S2.5，仅计划。STOP。

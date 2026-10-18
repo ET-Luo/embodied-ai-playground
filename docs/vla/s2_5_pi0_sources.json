@@ -1,0 +1,17 @@
+{
+  "checked_date": "2026-10-18",
+  "paper": "https://arxiv.org/html/2410.24164v1",
+  "openpi_revision": "215abfb217dbac7d5f1273282331b9b1866c0479",
+  "selected_branch": "Pi0Config(pi05=False), JAX Pi0",
+  "source_sha256": {
+    "pi0_config.py": "d321858c30b398126035ea2b6da09e1c422eeeebb5ebf8df631daf9dc77647fa",
+    "pi0.py": "24b32d7c6ed5e409459afa8ca5af96a4dae09c2dcdf48e828907e411f4f12342",
+    "gemma.py": "7e42ada4ae7e9995f0ef3e33a0c224758323c2015e2d9d72ec15726a8a001d2a"
+  },
+  "weights_downloaded": false,
+  "notes": [
+    "Static reading only; no JAX/Flax/Torch import or model initialization",
+    "Paper noise0->data1 and selected code noise1->data0 must not be mixed",
+    "Paper action dimension18 vs selected config padded32; paper H50 and selected H50"
+  ]
+}
