@@ -1,7 +1,7 @@
 # P4 roadmap
 
 每行是用户 0.5～2 小时的阅读/运行/修改/解释任务，不是自动执行队列。
-Current Task S2.5（Engineering Complete；Learning pending）；Next Task S2.6（仅计划）。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1的S1.1工程与学习完成（2026-10-17 用户确认），S1.2工程与学习完成（2026-10-17 用户确认），S1.3工程与学习完成（2026-10-17 用户确认），S1.4工程与学习完成（2026-10-17 用户确认），S1.5工程完成（闭环失败）、Learning Mastered（2026-10-18 用户确认），S1.6工程与学习完成（2026-10-18 用户确认），S1.7工程与学习完成（2026-10-18 用户确认），Stage1工程与学习包全部完成但模型控制仍失败；Stage2的S2.1工程与学习完成，S2.2工程与学习完成，S2.3工程与学习完成，S2.4工程与学习完成，S2.5工程完成、学习待确认；S2.6及后续 Planned。
+Current Task S2.5（Engineering Complete + Learning Mastered，2026-10-18用户确认）；Next Task S2.6（仅计划）。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1的S1.1工程与学习完成（2026-10-17 用户确认），S1.2工程与学习完成（2026-10-17 用户确认），S1.3工程与学习完成（2026-10-17 用户确认），S1.4工程与学习完成（2026-10-17 用户确认），S1.5工程完成（闭环失败）、Learning Mastered（2026-10-18 用户确认），S1.6工程与学习完成（2026-10-18 用户确认），S1.7工程与学习完成（2026-10-18 用户确认），Stage1工程与学习包全部完成但模型控制仍失败；Stage2的S2.1工程与学习完成，S2.2工程与学习完成，S2.3工程与学习完成，S2.4工程与学习完成，S2.5工程与学习完成；S2.6及后续 Planned。
 所有任务最终都有 Engineering Code/Experiment/Docs 与 Learning Run/Modify/Explain 双状态。
 不重学 P0–P3；只在新语境中引用既有知识。
 
@@ -41,7 +41,7 @@ Current Task S2.5（Engineering Complete；Learning pending）；Next Task S2.6�
 | S2.2 Octo Study | 1.5 | [学习包](vla/s2_2_octo_study.md)：固定源码conditioning/readout/diffusion head与NumPy mask/代数验证；Engineering Complete + Learning Mastered |
 | S2.3 OpenVLA Architecture Trace | 2 | [学习包](vla/s2_3_openvla_architecture_trace.md)：原版image/text、双视觉feature融合/BOS序列、动作codec与unnorm统计；Engineering Complete + Learning Mastered |
 | S2.4 FAST / π0-FAST Action Representation | 1.5 | [学习包](vla/s2_4_fast_action_representation.md)：DCT/量化/train-only整数BPE、heldout压缩重建与bins对照；Engineering Complete + Learning Mastered |
-| S2.5 π0 Architecture Trace | 2 | [学习包](vla/s2_5_pi0_architecture_trace.md)：原版expert/state/flow、不同宽度attention与cache、ODE数学对照；Engineering Complete，Learning pending |
+| S2.5 π0 Architecture Trace | 2 | [学习包](vla/s2_5_pi0_architecture_trace.md)：原版expert/state/flow、不同宽度attention与cache、ODE数学对照；Engineering Complete + Learning Mastered |
 | S2.6 π0.5 Study | 1 | 与选定 π0/π0-FAST 版本比较；数据/泛化主张与本实验区分 |
 | S2.7 VLA Architecture Comparison | 1.5 | OpenVLA/FAST/Octo/π0 family统一表：modality、fusion、action、continuous/discrete、AR/generative、chunk、data、adaptation、fine-tune、latency/deployment |
 

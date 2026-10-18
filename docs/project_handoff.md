@@ -2,7 +2,7 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.5 — π0 Architecture Trace**，Engineering Complete；Learning未确认。
+Current Task = **S2.5 — π0 Architecture Trace**，Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.4 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.3 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.2 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
@@ -1161,3 +1161,21 @@ Markdown links、manifest JSON、pip check与git diff --check通过，产物igno
 限制：本地attention与ODE是分开的无训练探针，不是flow策略；未修复S1.5、不改sibling repo。
 Current Task=S2.5 Engineering Complete，Learning三项未勾选；Next Task=S2.6仅计划。
 用户Run→先预测K变化再Modify→五问Explain，STOP。
+
+
+## S2.5 learning confirmation — 2026-10-18
+
+用户明确确认实验和预测完成，五项Explain准确覆盖原版VLM image/text prefix、连续state suffix、
+noisy action/time输入和velocity输出，区分π0-FAST离散自回归与pi05条件机制。
+正确解释2048/1024各自QKV投影到共同attention后再映回原宽度；H50/A_pad32/state1与实际DoF区别，
+本地prefix3/state1/action3的mask34边及双向action访问。
+准确写出代码x_t=tε+(1−t)a、u=ε−a、t1→0/负步长；换τ=1−t时velocity变a−ε、正步长0→1。
+正确解释prefix不读suffix可缓存，当前实现state在suffix每步重算不等于理论上不能缓存；
+新image/text/mask使旧cache失效，full/cache等价仅证明本地固定条件下数值路径一致。
+准确区分K与H/A/robot dt，K10→20的trace11→21及三场结果：oracle浮点误差、biased .1不消失、
+curved Euler对解析终点误差.00927026→.00453520；明确均非learned策略/闭环/latency证据。
+README与学习包Run/Modify/Explain勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅更新四份状态文档，未重跑实验、安装或下载。
+环境/工程证据沿用上节Python3.14.7 / NumPy2.5.4，不增加真实π0/robot能力声明。
+验证：git diff --check通过；git diff --stat、git status --short核对仅四份文档。
+Current Task=S2.5（已掌握）；Next Task=S2.6 — π0.5 Study（仅计划），等待用户选择；未commit/push。

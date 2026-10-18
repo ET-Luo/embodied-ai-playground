@@ -242,8 +242,12 @@ state在原版suffix；连续槽不是离散token；共同attention不要求相�
 
 ## My Verification
 
-- [ ] Run：读report/trace，画mask和noise→action路径。
-- [ ] Modify：先预测K变化，再运行比较不变量及三个场的误差。
-- [ ] Explain：回答五问，区分原版/固定代码/本地代理与控制证据。
+- [x] Run：读report/trace，画mask和noise→action路径。
+- [x] Modify：先预测K变化，再运行比较不变量及三个场的误差。
+- [x] Explain：回答五问，区分原版/固定代码/本地代理与控制证据。
 
-Engineering Complete；Learning未确认。Current Task=S2.5；Next Task=S2.6，仅计划。STOP。
+2026-10-18 用户明确确认实验和预测完成，并准确回答五项Explain；Learning Mastered。
+解释覆盖原版连续state/action expert与其他分支区别、不同宽度共同attention、
+时间方向/速度/步长配套、prefix缓存的实现与理论边界，以及三种场的数值与能力证据区别。
+
+Engineering Complete + Learning Mastered。Current Task=S2.5；Next Task=S2.6，仅计划。STOP。

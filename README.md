@@ -27,7 +27,7 @@ flowchart TD
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
-| 2 | Modern VLA Architecture Study | S2.1–S2.4已掌握；S2.5 Engineering Complete，Learning pending |
+| 2 | Modern VLA Architecture Study | S2.1–S2.5 Engineering Complete + Learning Mastered |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
@@ -56,9 +56,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，Python3.14.7 / NumPy2.5.4，无新依赖、模型或dataset下载；不训练π0。
 先读paper/code flow时间方向差别；第二条先预测K与物理时间的区别：
@@ -70,7 +70,7 @@ CPU NumPy，Python3.14.7 / NumPy2.5.4，无新依赖、模型或dataset下载；
 
 trace.npz记录mask/cache与独立手写场积分。代码noise t1→action t0，Δt_flow为负；state在原版suffix。
 K增加不改H/A/robot dt；解析ODE数值误差下降，偏置场误差不消失，不证明learned控制能力。
-Engineering Complete，学习三项待用户确认；不自动进入S2.6。
+Engineering Complete + Learning Mastered（2026-10-18 用户确认实验、预测及五项Explain）；S2.6仅计划。
 
 ## S2.4 status and Run
 
