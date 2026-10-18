@@ -2,7 +2,7 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S1.7 — Closed-loop VLA Rollout**，Engineering Complete（评价完整，策略仍失败）；Learning Run/Modify/Explain待用户确认。
+Current Task = **S1.7 — Closed-loop VLA Rollout**，Engineering Complete + Learning Mastered（2026-10-18 用户确认；策略仍失败）。
 S1.6 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S1.5 Engineering Complete（闭环仍失败）+ Learning Mastered（2026-10-18 用户确认）。
 S1.4 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
@@ -870,3 +870,20 @@ E3 .1435/.1889ms（48calls）；本机调度相关，不作性能承诺。
 限制：单checkpoint、旧validation、静态RGB/ideal point、固定kick/新起点；未修复learned VLA，不声称真实robot/泛化或实时性。
 Current Task S1.7 Engineering Complete，Learning未勾选；Stage1工程包全部完成但控制能力仍失败。
 Next S2.1仅计划；用户下一步Run→预测E1/E3指标与反馈→Modify→五问Explain，STOP，不自动进入Stage2。
+
+## S1.7 learning confirmation — 2026-10-18
+
+用户明确确认实验和预测均已完成，五项 Explain 准确覆盖冻结policy/词表/契约/split/hash/协议与四组case，
+真实目标与counterfactual expert仅供evaluator，评价中重训或接oracle bridge会改变被评对象。
+准确说明expert-state offline128anchors/336slots/672scalars与visited每完整条件256scalars的状态/动作槽/权重差异。
+正确区分三个failure stage，拒绝保持16attempts而0action/MSE null、不造T0 raw episode。
+准确描述E1/E3保持权重/数据/目标/offline/预算，calls8→3、prefix3/3/2、kick后tick2/tick3反馈；
+oracle E3 disturbed MSE.0001828125m²与终点16/16不矛盾，动作误差不等于终点成功。
+正确指出local_loop包含render/policy/apply与诊断，不能与子阶段相加；sim timestamp不等于wall time。
+明确局部overrun0、oracle全成功、hash不变和Stage1工程完成均不足证明实时性/learned能力/模型正确/真实robot泛化。
+README/学习包Run/Modify/Explain全部勾选，roadmap同步S1.7与Stage1 Learning Mastered；S1.5/S1.7策略控制失败结论不变。
+启动pwd正确，git status --short为空；本轮只改四份状态文档，未重跑实验、安装或下载。
+环境/工程证据沿用上节（Python3.14.7 / NumPy2.5.4），不增加能力声明。
+验证命令：`git diff --check`（通过）；`git diff --stat`、`git status --short`（仅四份文档）。
+Current Task = S1.7（已掌握）；Stage1工程与学习包全部完成、策略能力仍未达标。
+Next Task = S2.1（仅计划），等待用户选择，不自动进入Stage2；未commit/push。

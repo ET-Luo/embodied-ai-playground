@@ -26,7 +26,7 @@ flowchart TD
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
-| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete；S1.1–S1.6 Learning Mastered，S1.7待确认；VLA控制仍失败 |
+| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
@@ -56,9 +56,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，无训练/安装/下载；Python3.14.7 / NumPy2.5.4。需要已有S1.5 checkpoint，默认tmp/s1_5_final；
 可用`--checkpoint tmp/my_s1_5`指定自己已完成的目录，缺失不会自动重训。
@@ -72,7 +72,8 @@ CPU NumPy，无训练/安装/下载；Python3.14.7 / NumPy2.5.4。需要已有S1
 Learned nominal/disturbed/shifted_start均0/16，unsupported为拒绝0/16；oracle四组16/16（特权目标参照）。
 Offline executed MSE≈.000564m²，nominal visited MSE≈.00453m²，状态与动作槽不同，不能当同一loss直接相减。
 查看source_evidence.json、protocol.json、summary.csv与完整report/raw episodes；Stage1工程包完成，控制能力仍未达标。
-Learning待用户确认；S2.1仅计划，不自动进入Stage2。
+Engineering Complete + Learning Mastered（2026-10-18 用户确认实验、预测及五项 Explain）。
+Stage1工程与学习包全部完成，VLA控制仍失败；S2.1仅计划，不自动进入Stage2。
 
 ## S1.6 status and Run
 

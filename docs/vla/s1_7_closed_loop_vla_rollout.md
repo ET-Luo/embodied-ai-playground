@@ -200,7 +200,7 @@ raw validator/round-trip、hash前后一致、独立source/S1.5 trace regression
 S1.7完成了评价工程，**没有修复S1.5的控制失败**。当前证据说明原policy在这些固定条件下未达目标，
 而case/evaluator/ideal controller可达。失败阶段和visited-state误差给下一次受控排查提供证据，
 不能跳到“语言错”“视觉错”或“换大模型即可”的根因结论。
-Stage1工程包S1.1–S1.7完成，Learning只有S1.7等待用户报告，模型能力仍需与工程状态分开。
+Stage1工程与学习包S1.1–S1.7全部完成（S1.7于2026-10-18用户确认）；模型控制能力仍失败，保持双状态区分。
 
 ## Failure Analysis / Limitations
 
@@ -242,8 +242,17 @@ learned前三组0/16、unsupported拒绝0/16，oracle全可达；分开报告exp
 
 ## My Verification
 
-- [ ] Run：加载已完成S1.5 checkpoint，查看source hash、四条件summary、raw与拒绝记录。
-- [ ] Modify：先预测E1→3的offline/hash/attempts与prefix/visited error/latency变化，再运行核对。
-- [ ] Explain：独立回答五问，手算16×8×2=256个visited action scalars与offline672的差别。
+- [x] Run：加载已完成S1.5 checkpoint，查看source hash、四条件summary、raw与拒绝记录。
+- [x] Modify：先预测E1→3的offline/hash/attempts与prefix/visited error/latency变化，再运行核对。
+- [x] Explain：独立回答五问，手算16×8×2=256个visited action scalars与offline672的差别。
 
-Current Task = S1.7；Next Task = S2.1（仅计划）。Engineering Complete（评价完整、策略仍失败），Learning等待用户确认，不自动进入Stage2。
+Current Task = S1.7；Next Task = S2.1（仅计划）。Engineering Complete + Learning Mastered（2026-10-18 用户确认；策略仍失败），不自动进入Stage2。
+
+2026-10-18 用户确认实验和预测均已完成，五项 Explain 准确覆盖冻结2454参数/词表/contract/split/hash/协议，
+四条件定义与真实goal/counterfactual expert只供evaluator；不评价时重训或替换成S1.6 bridge。
+准确计算offline128anchors/336slots/672scalars与visited每完整条件16×8×2=256scalars，说明状态/槽/权重不同。
+正确区分input rejection、output contract和budget goal error，unsupported0动作→MSE null但成功分母16，不造raw T0。
+准确解释E1/E3不变量、prefix/calls与kick后tick2/tick3反馈，以及oracle E3当步MSE非零与最终恢复成功可并存。
+用户正确区分render/policy/apply/local loop的包含关系，local loop不能再与子阶段相加，sim time不等于wall time。
+明确局部overrun0、oracle成功、hash一致、Stage1工程完成均不能证明实时性/learned能力/模型正确/真实泛化。
+Run/Modify/Explain依据用户报告勾选，Stage1学习完成；策略失败结论保留，本轮未重新执行实验。
