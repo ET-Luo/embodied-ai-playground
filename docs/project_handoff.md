@@ -2,15 +2,16 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S1.6 — Language Generalization**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+Current Task = **S1.7 — Closed-loop VLA Rollout**，Engineering Complete（评价完整，策略仍失败）；Learning Run/Modify/Explain待用户确认。
+S1.6 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S1.5 Engineering Complete（闭环仍失败）+ Learning Mastered（2026-10-18 用户确认）。
 S1.4 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S1.7 — Closed-loop VLA Rollout**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断，未修复S1.5；没有OpenVLA或World Model。
+Next Task = **S2.1 — RT-1 / RT-2 Overview**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有OpenVLA或World Model。
 
 ## Initialization and inherited experience
 
@@ -806,3 +807,66 @@ weights/tokenizer/diagnostic NPZ重载通过；独立inline跨policy weights/voc
 限制：人工四train句/14held-out句、mean表示、oracle几何与控制器、没有语法/真实技能或VLA泛化证据。
 Current Task S1.6 Engineering Complete，Learning未勾选；Next S1.7仅计划。
 用户下一步Run→先预测reject/map分组结果与失败stage→Modify→五问Explain，STOP等待用户。
+
+## S1.6 learning confirmation — 2026-10-18
+
+用户明确确认实验和预测均已完成，五项 Explain 准确覆盖train-only8词表、42参数、text到class的数据流、
+shape/dtype和标签不入推理；区分seen/新词组合/OOV verb-noun/OOV color/order stress及held-out14句隔离。
+正确手算grab red block映射IDs[1,7,1,0,…]、mean=E[red]/3，与删除词不同；4/4不证明未知词或抓取语义。
+准确解释unknown-color两对ID碰撞上界2/4、order词多重集碰撞上界1/2，增加训练不能恢复已丢信息；
+新增独立颜色IDs仍需语义监督，新增instead/of不能补回mean丢失的顺序关系。
+正确说明reject/map不改data/vocab/weights/train loss/known预测，区分拒绝、错误选目标与控制终点错误stage。
+用户明确oracle bridge24/24仅重复四个正确类别到六layout，不代表视觉/动作学习或S1.5修复，未过称robot泛化。
+README和学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastered；S1.5控制0/16结论不变。
+启动pwd正确，git status --short为空；本轮仅改四份状态文档，未重跑实验、安装或下载。
+环境/实验沿用上节（Python3.14.7 / NumPy2.5.4），无新增能力声明。
+验证命令：`git diff --check`（通过）；`git diff --stat`、`git status --short`（仅四份文档）。
+Current Task = S1.6（已掌握）；Next Task = S1.7（仅计划），等待用户选择；未commit/push。
+
+## S1.7 Engineering — 2026-10-18
+
+用户授权“继续推进S1.7”。启动pwd正确，保留S1.6学习确认四份文档修改，读取AGENTS/README/handoff/
+roadmap/S1.6包、S1.5代码与checkpoint文件结构。新增[学习包](vla/s1_7_closed_loop_vla_rollout.md)、
+[script](../scripts/s1_7_closed_loop_evaluation.py)。只评价，不重训/修复、不进入Stage2，不改旧源码/sibling repo。
+执行前确认repo .venv Python3.14.7 / NumPy2.5.4，actual path在.venv/lib/python3.14/site-packages/numpy/__init__.py。
+无安装/数据或weights下载；requirements只改task注释，PNG用已有stdlib helper。
+
+加载tmp/s1_5_final frozen2454参数模型，train seed7/2400steps；内存readonly，五文件SHA256前后核对，七源码hash记录。
+weights SHA256=2538a3fff8fad49ac29f8599f98ebfb77ba473a29ab3ca21234a9c157fba5397。
+沿用旧8validation布局×2language，不称新test。四条件nominal/kick第2步+.12m/shifted start[.18,.12]/unsupported grab red-blue block。
+每策略每条件16attempts，learned/oracle/zero共192attempts/run；预算8、dt.1s、clip.06m、末maxgoalerror<=.01m。
+S1.6 bridge不接入；oracle目标特权、zero忽略语言，unsupported oracle成功不证明理解指令。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s1_7_closed_loop_evaluation.py --output tmp/s1_7_verified
+.venv/bin/python scripts/s1_7_closed_loop_evaluation.py --execute 3 --output tmp/s1_7_e3_verified
+.venv/bin/python scripts/s1_7_closed_loop_evaluation.py --output tmp/s1_7_final
+.venv/bin/python scripts/s1_7_closed_loop_evaluation.py --execute 3 --output tmp/s1_7_e3_final
+.venv/bin/python -m pip check
+git diff --check
+```
+
+最终版本增加source report hash/训练元信息与全部相关本地源码hash；未改变policy或protocol数值。
+Learned E1/E3前三组各0/16，完成8步但final_goal_error_after_budget；unsupported16/16拒绝，0commands/1state，
+stage=policy_input_rejection，MSE null、attempts仍16；不伪造raw T0。Oracle每组16/16，zero每组0/16。
+每run176条有效embodied_episode/1.0 NPZ+JSON通过validate/round-trip，16拒绝仅report；kick显式provenance，不重标action。
+Offline128anchors/336valid slots/672scalars：raw5.66041e−4、clip5.64488e−4、zero6.01190e−4m²。
+Learned visited action MSE nominal E1/E3=.00452874/.00454267m²，kick=.00468196/.00377318，
+shifted=.00417287/.00394276；每完整组128actual actions/256scalars，分布/slots不同，不可与offline差额全归因于shift。
+Oracle E3 kick visited MSE.0001828125m²但终点error0/success16，展示stale suffix动作误差与后续恢复不矛盾。
+完整trace/commands/evaluator expert/decision prefix/error/ever_goal/stage/timing保留；stage为症状非模态根因。
+
+正式计时前5warm-up（检查额外调用亦排除）；记录render/policy/apply_prefix/local evaluator loop median/P95/max/count，
+all-attempt与accepted分开，unsupported accepted null。例final E1 nominal policy median/P95 .1271/.1724ms（128calls），
+E3 .1435/.1889ms（48calls）；本机调度相关，不作性能承诺。
+本地loop含诊断/内存日志，不含raw导出/sensor/transport/plant/wait；sim timestamp与wall compute分开，无hard real-time结论。
+
+真实unsupported拒绝边界、反事实evaluator goal改变但learned commands/trace不变、4坏chunk拒绝通过。
+独立inline验证192attempts、176raw+16拒绝、source/跨Eoffline/hash不变，逐条检查raw schema、T/T+1、
+物理kick/加法、prefix、clip、实际state expert MSE、成功阈值、全分母；nominal/kick learned trace与S1.5旧报告逐值相同。
+已查看scenes.png四布局；Markdown links、pip check、git diff --check通过；artifacts/.venv ignored，无commit/push。
+限制：单checkpoint、旧validation、静态RGB/ideal point、固定kick/新起点；未修复learned VLA，不声称真实robot/泛化或实时性。
+Current Task S1.7 Engineering Complete，Learning未勾选；Stage1工程包全部完成但控制能力仍失败。
+Next S2.1仅计划；用户下一步Run→预测E1/E3指标与反馈→Modify→五问Explain，STOP，不自动进入Stage2。

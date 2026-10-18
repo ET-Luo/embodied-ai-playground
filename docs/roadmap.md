@@ -1,7 +1,7 @@
 # P4 roadmap
 
 每行是用户 0.5～2 小时的阅读/运行/修改/解释任务，不是自动执行队列。
-Current Task S1.6（Engineering Complete，Learning待确认）；Next Task S1.7（仅计划）。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1的S1.1工程与学习完成（2026-10-17 用户确认），S1.2工程与学习完成（2026-10-17 用户确认），S1.3工程与学习完成（2026-10-17 用户确认），S1.4工程与学习完成（2026-10-17 用户确认），S1.5工程完成（闭环失败）、Learning Mastered（2026-10-18 用户确认），S1.6工程完成、学习待确认，S1.7及后续任务 Planned。
+Current Task S1.7（Engineering Complete，Learning待确认；VLA控制仍失败）；Next Task S2.1（仅计划）。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1的S1.1工程与学习完成（2026-10-17 用户确认），S1.2工程与学习完成（2026-10-17 用户确认），S1.3工程与学习完成（2026-10-17 用户确认），S1.4工程与学习完成（2026-10-17 用户确认），S1.5工程完成（闭环失败）、Learning Mastered（2026-10-18 用户确认），S1.6工程与学习完成（2026-10-18 用户确认），S1.7工程完成、学习待确认，Stage1工程包全部完成但模型控制仍失败；Stage2及后续 Planned。
 所有任务最终都有 Engineering Code/Experiment/Docs 与 Learning Run/Modify/Explain 双状态。
 不重学 P0–P3；只在新语境中引用既有知识。
 
@@ -26,8 +26,8 @@ Current Task S1.6（Engineering Complete，Learning待确认）；Next Task S1.7
 | S1.3 Tiny Visual Encoder | 1.5 | [学习包](vla/s1_3_tiny_visual_encoder.md)：32×32 RGB→116参数CNN空间features/heatmap；held-out定位、GAP与遮挡/blank/oracle toy闭环；Engineering Complete + Learning Mastered |
 | S1.4 Multimodal Fusion | 1.5 | [学习包](vla/s1_4_multimodal_fusion.md)：冻结视觉summary + literal条件 + state，concat/pre-LN Transformer；三模态消融、shape trace与完整toy闭环；Engineering Complete + Learning Mastered |
 | S1.5 Tiny Transformer VLA | 2 | [学习包](vla/s1_5_tiny_transformer_vla.md)：16平均image patches/3word/proprio tokens→Transformer→H3delta；masked loss/E-prefix/oracle与完整失败评价；Engineering Complete（闭环失败）+ Learning Mastered |
-| S1.6 Language Generalization | 1 | [学习包](vla/s1_6_language_generalization.md)：train-only word selector与lookup；独立新句/词类OOV/颜色/语序对照，oracle bridge不冒充VLA；Learning待确认 |
-| S1.7 Closed-loop VLA Rollout | 1.5 | success/action error/failure stage/inference latency；不仅报告 offline loss |
+| S1.6 Language Generalization | 1 | [学习包](vla/s1_6_language_generalization.md)：train-only word selector与lookup；独立新句/词类OOV/颜色/语序对照，oracle bridge不冒充VLA；Engineering Complete + Learning Mastered |
+| S1.7 Closed-loop VLA Rollout | 1.5 | [学习包](vla/s1_7_closed_loop_vla_rollout.md)：冻结checkpoint与协议，expert-state/visited-state误差、失败stage/全分母与分阶段latency；Learning待确认 |
 
 ## Stage 2 — Modern VLA Architecture Study
 

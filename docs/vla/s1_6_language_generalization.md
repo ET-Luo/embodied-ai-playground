@@ -224,8 +224,18 @@ known词重组4/4，UNK下unknown verb/noun4/4，但unknown颜色2/4、语序1/2
 
 ## My Verification
 
-- [ ] Run：运行默认，读固定split、train-only vocab、分类与拒绝，以及oracle bridge边界。
-- [ ] Modify：先预测reject→map对weights/known/OOV分组结果和stage的影响，再运行核对。
-- [ ] Explain：独立回答五问，手算unknown-color ID碰撞与order stress的mean不变性。
+- [x] Run：运行默认，读固定split、train-only vocab、分类与拒绝，以及oracle bridge边界。
+- [x] Modify：先预测reject→map对weights/known/OOV分组结果和stage的影响，再运行核对。
+- [x] Explain：独立回答五问，手算unknown-color ID碰撞与order stress的mean不变性。
 
-Current Task = S1.6；Next Task = S1.7（仅计划）。Engineering Complete，Learning等待用户确认，不自动推进。
+Current Task = S1.6；Next Task = S1.7（仅计划）。Engineering Complete + Learning Mastered（2026-10-18 用户确认），不自动推进。
+
+2026-10-18 用户确认实验和预测均已完成，五项 Explain 准确覆盖train-only8词表、42参数、
+text/IDs/mask/embedding/sentence/logits/class的shape/dtype及标签隔离。
+正确区分seen、known-word新组合、两类OOV和order stress，说明held-out14句规范化不重叠与词表隔离。
+手算grab red block的IDs[1,7,1,0,…]及z=E[red]/3，明确零UNK并非删除词，也不证明理解grab/block。
+准确推导OOV颜色同ID的2/4上界与order mean碰撞的1/2上界；指出独立颜色ID还需语义监督，
+仅把instead/of加入词表不能解决顺序关系，需位置敏感表示与关系监督。
+正确解释reject/map训练不变量及tokenization_rejected/language_target_selection/controller_final_goal_error三个stage。
+明确oracle bridge24/24只是4分类在6layout重复，不证明真实视觉/动作学习、S1.5修复或robot泛化。
+学习依据用户报告确认，本轮未重跑实验；S1.5控制仍失败的结论保持不变。

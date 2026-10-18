@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0及S1.1–S1.6工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断；未实现world model。
+以上是最终能力链；当前完成Stage0及S1.1–S1.7工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断与冻结checkpoint闭环评价；未实现world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
-| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.4 Engineering Complete + Learning Mastered；S1.5 Engineering Complete（闭环失败）+ Learning Mastered；S1.6 Engineering Complete，Learning待确认 |
+| 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete；S1.1–S1.6 Learning Mastered，S1.7待确认；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | Planned |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S1.6 — Language Generalization**
-Next Task = **S1.7 — Closed-loop VLA Rollout**（仅计划）
+Current Task = **S1.7 — Closed-loop VLA Rollout**
+Next Task = **S2.1 — RT-1 / RT-2 Overview**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,34 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S1.7 status and Run
+
+Engineering:
+
+- [x] Code — 冻结checkpoint/hash/协议、visited-state动作误差、分阶段latency、raw与拒绝记录
+- [x] Experiment — 四条件各16attempts，learned/oracle/zero，同源E1/E3，完整失败与source回归审计
+- [x] Docs — [S1.7学习包](docs/vla/s1_7_closed_loop_vla_rollout.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，无训练/安装/下载；Python3.14.7 / NumPy2.5.4。需要已有S1.5 checkpoint，默认tmp/s1_5_final；
+可用`--checkpoint tmp/my_s1_5`指定自己已完成的目录，缺失不会自动重训。
+
+```bash
+.venv/bin/python scripts/s1_7_closed_loop_evaluation.py --output tmp/my_s1_7
+.venv/bin/python scripts/s1_7_closed_loop_evaluation.py --execute 3 --output tmp/my_s1_7_e3
+```
+
+第二条先预测hash/offline/attempts不变量及prefix/feedback/visited error变化。
+Learned nominal/disturbed/shifted_start均0/16，unsupported为拒绝0/16；oracle四组16/16（特权目标参照）。
+Offline executed MSE≈.000564m²，nominal visited MSE≈.00453m²，状态与动作槽不同，不能当同一loss直接相减。
+查看source_evidence.json、protocol.json、summary.csv与完整report/raw episodes；Stage1工程包完成，控制能力仍未达标。
+Learning待用户确认；S2.1仅计划，不自动进入Stage2。
+
 ## S1.6 status and Run
 
 Engineering:
@@ -56,9 +84,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，无安装/下载；Python3.14.7 / NumPy2.5.4。单独训练语言classifier，不修改S1.5失败模型。
 先读学习包的oracle bridge边界，第二条先预测OOV策略变化：
@@ -70,7 +98,7 @@ CPU NumPy，无安装/下载；Python3.14.7 / NumPy2.5.4。单独训练语言cla
 
 已知词新组合4/4；默认未知词拒绝；map下未知verb/noun4/4、未知颜色2/4、语序1/2。
 这可由已知颜色捷径与表示碰撞解释，不是通用语言理解。oracle位置+固定控制器桥接不代表learned VLA成功，S1.5仍0/16。
-查看probe_manifest.json、tokenizer、report分类/失败stage与text_diagnostics.npz；S1.7仅计划，Learning待确认。
+查看probe_manifest.json、tokenizer、report分类/失败stage与text_diagnostics.npz；Engineering Complete + Learning Mastered（2026-10-18 用户确认实验、预测及五项 Explain）；S1.7仅计划。
 
 ## S1.5 status and Run
 
