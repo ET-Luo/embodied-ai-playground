@@ -1,0 +1,65 @@
+{
+  "checked_date": "2026-10-18",
+  "repository_revision": "c8f03f48af692657d3060c19588038c7220e9af9",
+  "checkpoint": "openvla/openvla-7b",
+  "checkpoint_revision": "47a0ec7fc4ec123775a391911046cf33cf9ed83f",
+  "weights_downloaded": false,
+  "config_subset": {
+    "arch_specifier": "no-align+fused-gelu-mlp",
+    "architectures": [
+      "OpenVLAForActionPrediction"
+    ],
+    "auto_map": {
+      "AutoConfig": "configuration_prismatic.OpenVLAConfig",
+      "AutoModelForVision2Seq": "modeling_prismatic.OpenVLAForActionPrediction"
+    },
+    "hf_llm_id": "meta-llama/Llama-2-7b-hf",
+    "image_resize_strategy": "resize-naive",
+    "image_sizes": [
+      224,
+      224
+    ],
+    "llm_backbone_id": "llama2-7b-pure",
+    "llm_max_length": 2048,
+    "model_type": "openvla",
+    "n_action_bins": 256,
+    "output_projector_states": false,
+    "pad_to_multiple_of": 64,
+    "pad_token_id": 32000,
+    "text_config": {
+      "model_type": "llama",
+      "pad_token_id": 32000,
+      "torch_dtype": "bfloat16",
+      "vocab_size": 32064
+    },
+    "timm_model_ids": [
+      "vit_large_patch14_reg4_dinov2.lvd142m",
+      "vit_so400m_patch14_siglip_224"
+    ],
+    "timm_override_act_layers": [
+      null,
+      null
+    ],
+    "torch_dtype": "bfloat16",
+    "transformers_version": "4.40.1",
+    "use_fused_vision_backbone": true,
+    "vision_backbone_id": "dinosiglip-vit-so-224px"
+  },
+  "source_sha256": {
+    "action_tokenizer.py": "fdc98fcbf5b0926ef2181db71946d23ffbfa052cf8443dc933d52c42a191352c",
+    "config.json": "edd5c5cf6d7927e07465cf086ebe41f7b3ec8f3b128a51f71d6db14dad7ad8b1",
+    "configuration_llama.py": "ff3dd95d01b8af523cbc55e380ba06f7beadf63531225784dfd6d1958f8f64a4",
+    "data_utils.py": "631a45f38145b8e572dfee20f7b56f5806a440e8a33a6402856b7bf525aabe1a",
+    "datasets.py": "dc50a5f3a0e3834e64a7a2268ac7b4db26e92ad22fd5577981a6379cb4e33377",
+    "dinosiglip_vit.py": "8143262f1b62c1f83739a9142a8feb0c755025ce0751a476a22eb69fe5808131",
+    "modeling_prismatic.py": "9ce241c5ca09a4bed73654d0ca509baaff0fc5887d0bdd62e360ca8254f7794a",
+    "preprocessor_config.json": "bd024783fb785cbdfe35b710b621c5e8678d4c157a9ba625675e67d40d1757da",
+    "processing_prismatic.py": "2474a5c3fdd4ff15234924636dc0ead6419c89f49699193be47dbb87510a5425",
+    "timm_vision_transformer.py": "2e9e77a1092c65b7d6f09d38af69b5fbe5ac72e6d9072ef7eedb03b90945b977"
+  },
+  "notes": [
+    "config/preprocessor metadata only; no model weights or real episodes",
+    "timm v0.9.10 and Transformers v4.40.1 used for static dimension lookup",
+    "isolated official ActionTokenizer class compared with dummy tokenizer returning ID arrays; text roundtrip not tested"
+  ]
+}

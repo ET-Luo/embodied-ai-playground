@@ -2,7 +2,8 @@
 
 Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.2 — Octo Study**，Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
+Current Task = **S2.3 — OpenVLA Architecture Trace**，Engineering Complete；Learning未确认。
+S2.2 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.1 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S1.7 Engineering Complete + Learning Mastered（2026-10-18 用户确认；策略仍失败）。
 S1.6 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
@@ -12,8 +13,8 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S2.3 — OpenVLA Architecture Trace**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有OpenVLA或World Model。
+Next Task = **S2.4 — FAST / π0-FAST Action Representation**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA或World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
 
@@ -992,3 +993,47 @@ README与学习包Run/Modify/Explain勾选，roadmap同步Learning Mastered。
 环境/工程证据沿用上节Python3.14.7 / NumPy2.5.4，不增加模型或控制能力声明。
 验证：git diff --check通过；git diff --stat、git status --short核对仅四份文档。
 Current Task=S2.2（已掌握）；Next Task=S2.3 — OpenVLA Architecture Trace（仅计划）。等待用户选择；未commit/push。
+
+
+## S2.3 Engineering — 2026-10-18
+
+用户授权继续S2.3。启动pwd正确、git status --short为空；读取AGENTS/README/handoff/roadmap及模板结构。
+新增[学习包](vla/s2_3_openvla_architecture_trace.md)、[来源manifest](vla/s2_3_openvla_sources.json)、
+[script](../scripts/s2_3_openvla_trace.py)。仅原版OpenVLA-7B，不引入OFT或推进S2.4。
+官方paper arXiv2406.09246v1/project；git ls-remote HEAD核对
+c8f03f48af692657d3060c19588038c7220e9af9，读固定HF modeling/processing、action_tokenizer、
+datasets、data_utils及DINO/SigLIP vision代码。timm v0.9.10/LlamaConfig v4.40.1只作静态维度查阅。
+HF API metadata revision 47a0ec7fc4ec123775a391911046cf33cf9ed83f；web未获取HF config，
+通过只读HTTP取config60712bytes/preprocessor1650bytes及小源码，均ignored tmp/s2_3_source；无权重/tokenizer或真实dataset。
+manifest保留revision/config subset/源码SHA256，不导入上游模型，不安装Torch/timm/transformers。
+原版load_proprio=False、W1/H1；unnorm_key选择统计及动作维数、不作为LLM条件；controller state与policy输入区别已写明。
+静态shape追踪双分支(256,1024)/(256,1152)沿feature拼接→2176→projector4096→BOS后插入。
+区分论文2层projector概述与固定HF fused3层；词表32064−64=32000、256grid points/255centers，末端两ID同中心。
+
+执行前核对repo .venv Python3.14.7 / NumPy2.5.4，actual module位于
+.venv/lib/python3.14/site-packages/numpy/__init__.py；requirements未改，无环境修复。
+本地16×16 RGB、16平均patches、3/5维随机proxy、单线性projector和8维identity-QKV causal attention；
+没有真实encoder/tokenizer/LLM、训练或生成；固定teacher-forced action IDs仅作序列/codec边界。
+prefix20/teacher23槽，labels20/21由输出19/20预测，未来字段不影响之前embedding，NPZ逐值重载通过。
+101条synthetic train域worldXY delta[m]数值分别拟合compact/wide q01/q99，raw保存；同ID/normalized，wide物理数值2倍。
+strict拒绝3类坏ID；官方permissive text ID1也解成边缘数值，展示合法数值不证明合法token。
+隔离执行已读官方ActionTokenizer class，dummy tokenizer只回IDs，无transformers/tokenizer模型执行；
+本地encode1256inputs、decode全部256IDs与官方逐值等价。没有真实文本tokenizer roundtrip证据。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s2_3_openvla_trace.py --output tmp/s2_3_verified
+.venv/bin/python scripts/s2_3_openvla_trace.py --unnorm-key wide --output tmp/s2_3_wide_verified
+.venv/bin/python scripts/s2_3_openvla_trace.py --output tmp/s2_3_final
+.venv/bin/python scripts/s2_3_openvla_trace.py --unnorm-key wide --output tmp/s2_3_wide_final
+.venv/bin/python -m pip check
+git diff --check
+```
+
+最终两run加入raw train数值保存，其余计算不变；序列/causal/shift/codec端点/255中心/统计比例/mask检查PASS。
+独立inline检查所有跨key NPZ数组相同、q统计仅来自保存train、原始raw保持、label前缀遮罩、feature拼接及物理解码通过。
+Markdown本地links、来源manifest JSON、pip check、git diff --check通过，artifacts ignored。
+无模型loss、闭环success/latency或真实OpenVLA复现声明；未修复S1.5，未修改sibling repo，无commit/push。
+README/roadmap工程状态已同步，Learning三项未勾选。Current Task=S2.3；Next Task=S2.4仅计划。
+用户下一步Run→预测统计key变化再Modify→五问Explain，STOP。

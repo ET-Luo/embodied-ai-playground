@@ -27,12 +27,12 @@ flowchart TD
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
-| 2 | Modern VLA Architecture Study | S2.1–S2.2 Engineering Complete + Learning Mastered |
+| 2 | Modern VLA Architecture Study | S2.1–S2.2已掌握；S2.3 Engineering Complete，Learning pending |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S2.2 — Octo Study**
-Next Task = **S2.3 — OpenVLA Architecture Trace**（仅计划）
+Current Task = **S2.3 — OpenVLA Architecture Trace**
+Next Task = **S2.4 — FAST / π0-FAST Action Representation**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -45,6 +45,32 @@ S0.1 Learning:
 - [x] Explain
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
+
+## S2.3 status and Run
+
+Engineering:
+
+- [x] Code — 双分支proxy融合/BOS插入/causal标签shift、原版codec代数与统计选择
+- [x] Experiment — compact/wide、端点/非法ID、隔离官方codec等价、NPZ重载
+- [x] Docs — [S2.3学习包](docs/vla/s2_3_openvla_architecture_trace.md)、[来源manifest](docs/vla/s2_3_openvla_sources.json)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU NumPy，Python3.14.7 / NumPy2.5.4；无安装、真实dataset或weights下载，不运行7B模型。
+先读学习包的原版/固定实现/教学代理边界，第二条先预测统计变化：
+
+```bash
+.venv/bin/python scripts/s2_3_openvla_trace.py --output tmp/my_s2_3
+.venv/bin/python scripts/s2_3_openvla_trace.py --unnorm-key wide --output tmp/my_s2_3_wide
+```
+
+原版默认image+text，无直接proprio输入；unnorm_key选择统计及动作维数，不是state token。
+本地IDs/normalized与trace数组不变，selected物理XY命令变2倍；没有训练或生成动作能力声明。
+Engineering Complete；Run/Modify/Explain待用户确认；不自动进入S2.4。
 
 ## S2.2 status and Run
 
