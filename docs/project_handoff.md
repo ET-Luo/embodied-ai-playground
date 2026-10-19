@@ -1,8 +1,9 @@
 # P4 project handoff
 
-Updated 2026-10-18 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
+Updated 2026-10-19 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.5 — π0 Architecture Trace**，Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
+Current Task = **S2.6 — π0.5 Study**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+S2.5 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.4 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.3 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.2 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
@@ -15,7 +16,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S2.6 — π0.5 Study**，仅计划，不授权自动进入。
+Next Task = **S2.7 — VLA Architecture Comparison**，仅计划，不授权自动进入。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA或World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -1179,3 +1180,44 @@ README与学习包Run/Modify/Explain勾选，roadmap同步Learning Mastered。
 环境/工程证据沿用上节Python3.14.7 / NumPy2.5.4，不增加真实π0/robot能力声明。
 验证：git diff --check通过；git diff --stat、git status --short核对仅四份文档。
 Current Task=S2.5（已掌握）；Next Task=S2.6 — π0.5 Study（仅计划），等待用户选择；未commit/push。
+
+## S2.6 Engineering — 2026-10-19
+
+用户明确请求“推进S2.6的学习”，仅推进本任务。启动pwd正确，git status --short为空。
+读取AGENTS、README、handoff、roadmap、S0.1模板、S2.4/S2.5包；此前无S2.6包。
+新增[学习包](vla/s2_6_pi05_study.md)、[manifest](vla/s2_6_pi05_sources.json)、
+[CPU探针](../scripts/s2_6_pi05_conditions.py)。
+浏览官方arXiv2504.16054v1与pi.website/blog/pi05；固定沿用S2.5 openpi revision
+215abfb217dbac7d5f1273282331b9b1866c0479（非当前HEAD声明）。curl -fsSL读取该revision的
+src/openpi/models/{pi0.py,pi0_config.py,tokenizer.py,gemma.py}至ignored tmp/s2_6_source，hash写入manifest。
+静态选择JAX Pi0Config(pi05=True)：state文本prefix，suffix仅H动作槽，time MLP→adaRMS。
+区分论文完整异构训练/联合FAST CE与flow/高层子任务系统和所选pi0.py单flow loss实现。
+不执行上游依赖、不下载词表/权重/数据、不修改旧repo、不修复S1.5策略。
+
+本轮实际环境与历史S2.5不同：repo .venv Python3.12.3，NumPy2.5.4，
+解释器/home/lucas/projects/embodied-ai-playground/.venv/bin/python，sys.prefix为repo .venv，
+actual NumPy .venv/lib/python3.12/site-packages/numpy/__init__.py；执行前已核对，无安装或修复。
+requirements未变。默认Conda python仅查看路径，未用于运行实验或安装。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s2_6_pi05_conditions.py --output tmp/s2_6_verified
+.venv/bin/python scripts/s2_6_pi05_conditions.py --delta .02 --output tmp/s2_6_delta20_verified
+.venv/bin/python -m pip check
+git diff --check
+```
+
+当前world XY位置[m]，固定1m教学尺度，无fit：1mm改变bins仍[128,128]，20mm为[130,128]。
+上游表达式边界[-1.01,-1,0,1,1.01]→[-1,0,128,255,255]，没有双边显式clip。
+hybrid教学mask prefix3/discrete2/continuous3共36边，两层传播FAST代理标签扰动对continuous差0；
+错误开放continuous读取discrete边，差67.5。无模态语义的8×4 synthetic float64输入。
+adaRMS零初始化条件差0，seed41非零modulation差.2635350535385911；不是trained参数或完整Transformer。
+每run3类非法state拒绝、NPZ逐数组重载通过。
+独立inline检查隔离提取上游PaligemmaTokenizer.tokenize纯digitize AST表达式与本地相同，
+精确mask集合、两run固定数组不变、delta0/负/NaN拒绝、已有目录拒绝、manifest JSON及Markdown本地链接通过。
+pip check无冲突，git diff --check通过；所有运行产物ignored tmp/。未commit/push。
+
+限制：无learned模型、heldout策略评价、robot success/failure stages/latency；只能验证局部信息路径。
+README/roadmap更新Engineering Complete；Run/Modify/Explain保持未勾选，仅用户报告可确认学习。
+Current Task=S2.6；Next Task=S2.7仅计划。用户读学习包→Run→先预测delta再Modify→五问Explain；STOP。

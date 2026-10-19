@@ -1,0 +1,20 @@
+{
+  "checked_date": "2026-10-19",
+  "paper": "https://arxiv.org/html/2504.16054v1",
+  "official": "https://www.pi.website/blog/pi05",
+  "openpi_revision": "215abfb217dbac7d5f1273282331b9b1866c0479",
+  "selected_branch": "JAX Pi0Config(pi05=True); static source reading only",
+  "source_sha256": {
+    "gemma.py": "7e42ada4ae7e9995f0ef3e33a0c224758323c2015e2d9d72ec15726a8a001d2a",
+    "pi0.py": "24b32d7c6ed5e409459afa8ca5af96a4dae09c2dcdf48e828907e411f4f12342",
+    "pi0_config.py": "d321858c30b398126035ea2b6da09e1c422eeeebb5ebf8df631daf9dc77647fa",
+    "tokenizer.py": "965be8b3c393a6811875bbc32da9e01a5d01cc2f87802de801cf7293e049748c"
+  },
+  "weights_downloaded": false,
+  "datasets_downloaded": false,
+  "notes": [
+    "Revision deliberately matches S2.5; not a claim about current HEAD",
+    "Selected pi0.py flow branch is not the complete paper co-training and hierarchical system",
+    "Local probes use no upstream imports or text vocabulary"
+  ]
+}
