@@ -27,7 +27,7 @@ flowchart TD
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
-| 2 | Modern VLA Architecture Study | S2.1–S2.6 Engineering Complete + Learning Mastered；S2.7 Engineering Complete |
+| 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
@@ -56,9 +56,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 repo .venv Python3.12.3，纯标准库，无安装/模型/dataset下载。所有ms为人为假设，非真实模型测速。
 先读学习包对照表和成本公式，第二条先预测E对latency与预算的不同影响：
@@ -70,7 +70,7 @@ repo .venv Python3.12.3，纯标准库，无安装/模型/dataset下载。所有
 
 查看report.json / budget.md：四条假设latency保持185/85/85/55ms，E1→4预算100→400ms。
 scalar chunk AR为H4假设，原版OpenVLA仍H1。计算结果不代表真实模型排名或闭环成功。
-Engineering Complete；Learning等待用户Run/Modify/Explain确认。S3.1仅计划。
+Engineering Complete + Learning Mastered（2026-10-19 用户确认实验、预测及五项Explain）。Stage2全部工程与学习完成；S3.1仅计划。
 
 ## S2.6 status and Run
 

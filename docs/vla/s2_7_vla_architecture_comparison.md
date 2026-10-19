@@ -223,8 +223,12 @@ AR也是生成；codec不是policy；config不等于论文系统；H/A/E/K/N五�
 
 ## My Verification
 
-- [ ] Run：运行默认命令，逐项核对四条计算路径及成本假设。
-- [ ] Modify：先预测E1→4，再运行并检查latency不变、预算与margin增加；K可选。
-- [ ] Explain：用自己的话回答五问，给出匹配协议下的比较方式。
+- [x] Run：运行默认命令，逐项核对四条计算路径及成本假设。
+- [x] Modify：先预测E1→4，再运行并检查latency不变、预算与margin增加；K可选。
+- [x] Explain：用自己的话回答五问，给出匹配协议下的比较方式。
 
-Engineering Complete；Learning待用户确认。Current Task=S2.7；Next Task=S3.1，仅计划。STOP。
+2026-10-19 用户明确确认实验与预测完成，并准确回答五项Explain；Learning Mastered。
+解释覆盖五种策略的输入/融合/动作路径、AR与generative关系、训练并行与部署串行、
+跨机器人语义适配、E/K预算不变量，以及公平闭环评价和三类证据边界。
+
+Engineering Complete + Learning Mastered。Current Task=S2.7；Next Task=S3.1，仅计划。STOP。

@@ -2,7 +2,8 @@
 
 Updated 2026-10-19 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.7 — VLA Architecture Comparison**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+Current Task = **S2.7 — VLA Architecture Comparison**，Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
+Stage2 S2.1–S2.7全部工程与学习完成；不代表完整模型复现或机器人控制成功。
 S2.6 Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
 S2.5 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.4 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
@@ -1280,3 +1281,23 @@ pip check无冲突；git diff --check通过；生成结果ignored tmp/，require
 README/roadmap更新S2.7 Engineering Complete；学习三项未勾选，仅用户报告可确认。
 Current Task=S2.7；Next Task=S3.1 — State Dynamics，仅计划；不自动开始Stage3。
 用户阅读统一表→Run→先预测E变化再Modify→五问Explain。未commit/push。
+
+
+## S2.7 learning confirmation — 2026-10-19
+
+用户明确确认实验和预测完成；五项Explain准确比较Octo、原版OpenVLA、π0-FAST、π0、π0.5的
+modality/fusion/action路径，区分H1/A7、FAST codec与完整policy、开源分支与论文语义层级。
+正确说明AR属于generative，teacher forcing训练并行与部署串行不同，
+Octo小diffusion head和π0 family带attention的expert单步成本不可按次数直接比较。
+正确指出tokenizer/head/unnorm_key不足以完成语义适配，需审计frame/unit/anchor/controller/dt、
+数据边界与泄漏、目标域训练，并评价visited-state、闭环全分母、失败和端到端延迟。
+准确给出E1→4保持28/8/10/20调用与185/85/85/55ms假设耗时、预算100→400ms、margin均加300ms；
+K10→20仅flow变125ms、E1 margin+15→−25ms，不能推出真实速度或success。
+明确匹配版本/checkpoint、输入、任务/初态/扰动/训练预算/试验分母与硬件/dtype/batch/H/E/K/N，
+记录warmup、p50/p95、deadline miss；论文实证、静态源码与本地probe证据不可互相替代。
+README及学习包Run/Modify/Explain勾选，roadmap同步；Stage2全部Engineering Complete + Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅更新四份状态文档，未重跑实验、安装或下载。
+环境与工程结果沿用上节Python3.12.3标准库预算计算，不增加真实机器人性能或大模型复现结论。
+验证：git diff --check通过；git diff --stat、git status --short核对仅四份文档修改。
+Current Task=S2.7（已掌握）；Next Task=S3.1 — State Dynamics，仅计划。
+等待用户选择，不自动开始Stage3；未commit/push。
