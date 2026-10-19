@@ -27,12 +27,12 @@ flowchart TD
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
-| 2 | Modern VLA Architecture Study | S2.1–S2.5 Engineering Complete + Learning Mastered；S2.6 Engineering Complete |
+| 2 | Modern VLA Architecture Study | S2.1–S2.6 Engineering Complete + Learning Mastered；S2.7 Engineering Complete |
 | 3 | Robot World Models | Planned |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S2.6 — π0.5 Study**
-Next Task = **S2.7 — VLA Architecture Comparison**（仅计划）
+Current Task = **S2.7 — VLA Architecture Comparison**
+Next Task = **S3.1 — State Dynamics**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,32 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S2.7 status and Run
+
+Engineering:
+
+- [x] Code — 显式AR / flow expert / small diffusion head假设成本计算
+- [x] Experiment — E1/4预算不变量、K10/20单路径变化及非法输入检查
+- [x] Docs — [S2.7学习包](docs/vla/s2_7_vla_architecture_comparison.md)：五策略版本、模态、融合、动作、训练、适配与评价统一对照
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+repo .venv Python3.12.3，纯标准库，无安装/模型/dataset下载。所有ms为人为假设，非真实模型测速。
+先读学习包对照表和成本公式，第二条先预测E对latency与预算的不同影响：
+
+```bash
+.venv/bin/python scripts/s2_7_architecture_budget.py --output tmp/my_s2_7
+.venv/bin/python scripts/s2_7_architecture_budget.py --execute 4 --output tmp/my_s2_7_e4
+```
+
+查看report.json / budget.md：四条假设latency保持185/85/85/55ms，E1→4预算100→400ms。
+scalar chunk AR为H4假设，原版OpenVLA仍H1。计算结果不代表真实模型排名或闭环成功。
+Engineering Complete；Learning等待用户Run/Modify/Explain确认。S3.1仅计划。
+
 ## S2.6 status and Run
 
 Engineering:
@@ -56,9 +82,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU NumPy，实测Python3.12.3 / NumPy2.5.4，无安装或模型/dataset下载。
 先读学习包Problem→Architecture；第二条先预测delta变化：
@@ -70,7 +96,7 @@ CPU NumPy，实测Python3.12.3 / NumPy2.5.4，无安装或模型/dataset下载�
 
 检查report.json / trace.npz：changed bins [128,128]→[130,128]，正确mask隔离差0，错误mask泄漏67.5。
 区分论文异构训练/层级推理、开源pi05 state/time条件与无训练本地probe；不证明机器人泛化。
-Engineering Complete；Learning等待用户Run/Modify/Explain确认。S2.7仅计划。
+Engineering Complete + Learning Mastered（2026-10-19 用户确认实验、预测及五项Explain）。S2.7仅计划。
 
 ## S2.5 status and Run
 

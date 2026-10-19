@@ -2,7 +2,8 @@
 
 Updated 2026-10-19 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.6 — π0.5 Study**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+Current Task = **S2.7 — VLA Architecture Comparison**，Engineering Complete；Learning Run/Modify/Explain待用户确认。
+S2.6 Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
 S2.5 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.4 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
 S2.3 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
@@ -16,7 +17,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S2.7 — VLA Architecture Comparison**，仅计划，不授权自动进入。
+Next Task = **S3.1 — State Dynamics**，仅计划，不授权自动进入。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA或World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -1221,3 +1222,61 @@ pip check无冲突，git diff --check通过；所有运行产物ignored tmp/。�
 限制：无learned模型、heldout策略评价、robot success/failure stages/latency；只能验证局部信息路径。
 README/roadmap更新Engineering Complete；Run/Modify/Explain保持未勾选，仅用户报告可确认学习。
 Current Task=S2.6；Next Task=S2.7仅计划。用户读学习包→Run→先预测delta再Modify→五问Explain；STOP。
+
+
+## S2.6 learning confirmation — 2026-10-19
+
+用户明确确认实验和预测完成；五项Explain准确区分π0连续state suffix/action-time融合、
+π0-FAST离散state prefix与AR动作、π0.5 state prefix/连续flow/逐层adaRMS。
+明确pi05开关不包含完整论文的数据配方、联合训练、层级推理与部署。
+正确给出p(a,s|o,l)=p(a|o,s)p(s|o,l)，区分高低层条件、共享模型和刷新频率，
+以及离散预训练/联合监督与最终flow动作生成。反向时间积分指本包选定代码约定。
+正确指出FAST目标既能直接泄漏，也能经prefix多层间接泄漏，需同时隔离。
+准确解释固定1m尺度下bin宽7.8125mm、1mm与20mm对应[128,128]/[130,128]，
+bin不是SentencePiece ID，state更新需刷新受影响prefix KV。
+准确区分adaRMS零初始化与非零条件调制、随机参数与训练证据，及进度分/选物率/最终成功率。
+README与学习包Run/Modify/Explain勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅更新四份状态文档，未重跑实验、安装或下载。
+运行环境与实验结果沿用上节Python3.12.3 / NumPy2.5.4；没有新增机器人泛化或性能结论。
+验证：git diff --check通过；git diff --stat与git status --short核对仅四份文档。
+Current Task=S2.6（已掌握）；Next Task=S2.7 — VLA Architecture Comparison，仅计划。
+等待用户选择，不自动进入下一任务；未commit/push。
+
+## S2.7 Engineering — 2026-10-19
+
+用户明确请求继续S2.7；启动pwd正确，已有S2.6学习确认的四份文档修改全部保留。
+读取AGENTS、README、handoff、roadmap、S0.1模板及S2.1–S2.6学习包；此前无S2.7包。
+新增[统一对照学习包](vla/s2_7_vla_architecture_comparison.md)与[预算脚本](../scripts/s2_7_architecture_budget.py)。
+本轮浏览Octo/OpenVLA官方项目、FAST官方介绍与paper v1、π0 paper v1、π0.5官方介绍；
+源码版本沿用既有包：Octo241fb3514b7c40957a86d869fecb7c7fc353f540，
+OpenVLA c8f03f48af692657d3060c19588038c7220e9af9，openpi215abfb217dbac7d5f1273282331b9b1866c0479。
+GitHub tree浏览返回Internal Error，精确实现证据沿用既有固定源码审计/manifest，未声称重新执行上游。
+统一模态/fusion/action/distribution/chunk/data/adaptation/fine-tune/deployment比较，
+强调AR也是generative、FAST codec≠policy、原版OpenVLA H1、pi05分支≠完整论文系统。
+
+执行前核对repo .venv解释器与prefix，Python3.12.3；已有NumPy2.5.4实际模块
+.venv/lib/python3.12/site-packages/numpy/__init__.py。新脚本仅标准库，无安装、数据/权重下载。
+假设H4/A7/N8/dt.1s；prefix40ms/token5ms/expert4ms/smallhead.5ms/io5ms全部人为设定。
+四路径为教学scalar chunk AR、FAST chunk AR、flow expert、small diffusion head，不是实际模型测速。
+默认E1/K10串行次数28/8/10/20，假设耗时185/85/85/55ms，预算100ms，margin−85/15/15/45ms。
+E4保持计算路径和耗时，预算400ms、margin215/315/315/345ms；K20仅flow变125ms、E1 margin−25ms。
+E·dt只是执行/计算重叠的稳态预算，启动延迟/观测新鲜度/开环风险另需评价，不能当真实实时或成功证据。
+
+Executed:
+
+```bash
+.venv/bin/python scripts/s2_7_architecture_budget.py --output tmp/s2_7_verified
+.venv/bin/python scripts/s2_7_architecture_budget.py --execute 4 --output tmp/s2_7_e4_verified
+.venv/bin/python scripts/s2_7_architecture_budget.py --steps 20 --output tmp/s2_7_k20_verified
+.venv/bin/python -m pip check
+git diff --check
+```
+
+三run JSON重载一致。独立inline断言核对手算成本、E/K不变量、H1时7个scalar调用、
+9类非法参数拒绝、已有目录FileExistsError与原report不变、三个输出重载和Markdown本地链接，均通过。
+一次已有目录CLI调用非零退出是预期拒绝，随后subprocess核验异常类型与不覆盖。
+pip check无冲突；git diff --check通过；生成结果ignored tmp/，requirements不变。
+无真实模型forward/训练、learned评价、机器人success或latency测量；S1.5控制失败结论不变。
+README/roadmap更新S2.7 Engineering Complete；学习三项未勾选，仅用户报告可确认。
+Current Task=S2.7；Next Task=S3.1 — State Dynamics，仅计划；不自动开始Stage3。
+用户阅读统一表→Run→先预测E变化再Modify→五问Explain。未commit/push。
