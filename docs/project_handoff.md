@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S3.6 — Model-based Planning**，Engineering Complete；Learning待用户Run/Modify/Explain。
+Current Task = **S3.7 — MPC-style Replanning**，Engineering Complete；Learning待用户Run/Modify/Explain。
+S3.6 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.5 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.4 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.3 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -24,8 +25,8 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S3.7 — MPC-style Replanning**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.5合成XY模型实验及S3.6一次性候选规划的独立toy环境执行验证，但未运行真实机器人World Model；S2.3仅架构与接口学习。
+Next Task = **S3.8 — Video / Generative World Model Concepts**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.6合成XY模型/一次性规划及S3.7冻结模型的toy状态反馈重规划，但未运行真实机器人World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
 
@@ -1731,3 +1732,84 @@ README/roadmap更新Engineering Complete，Learning三项未勾选，仅用户�
 限制：固定goal/wall、20reset/单seed、有限candidate coverage；低离线loss不保证执行器变化下的规划表现，
 无视觉语言policy/真实接触力/风险校准或机器人闭环证据，也未用反馈修复weak_gain失败。
 Current Task=S3.6；Next Task=S3.7仅计划。用户读Problem→Mathematics→Run→先预测N128→32后Modify→五问Explain；STOP。
+
+## S3.6 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均已完成，五项Explain准确区分candidate generation、learned rollout、
+known cost、argmin与actual plant；oracle需要所有候选真实未来，只能作特权参照。
+正确给出world XY state/command位移[m]、dt.1s、source/train/bank/rollout/cost shape，
+说明S3.1无墙模型不匹配S3.5墙裁剪动力学，应使用对应环境数据拟合。
+准确解释无量纲cost的终点/路径/违规/能量项，区分cost最优与二值success、candidate coverage，
+以及只相对当前bank的actual regret，非全局最优差距。
+明确N128→32保持数据/统计/权重/初态与前32候选动作及预测/实际轨迹，
+嵌套bank只保证min predicted cost(128)≤min predicted cost(32)，不保证真实success单调。
+正确指出zero/random实际动作/cost不变，regret可因oracle参照变化而变；复述nominal19→13、weak_gain6→6。
+准确区分nominal19/20的toy效果、未知.65gain下6/20的执行机制失配与teacher-forced单步RMSE.373mm。
+说明episode split/train-only统计/先选择后评价的泄漏审计，利用coverage及真实cost/终点误差排查候选不足和选错。
+全程t0单次规划、整段10步执行，不是MPC或物理机器人闭环证明。
+README与学习包Run/Modify/Explain已勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅修改四份状态文档，未重跑Python实验、安装或下载。
+环境与工程结果沿用上述S3.6记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU），
+不增加未知机制鲁棒性、真实机器人、MPC或风险校准声明。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档修改。
+Current Task=S3.6（已掌握）；Next Task=S3.7 — MPC-style Replanning，仅计划。
+等待用户选择，不自动进入下一任务；未commit/push。
+
+## S3.7 Engineering — 2026-10-20
+
+用户明确请求推进S3.7；启动pwd正确，已有S3.6学习确认四份文档修改全部保留。
+读取AGENTS、README、handoff、roadmap、S3.6源码/学习包、S3.5 plant接口及既有S0.1模板约定；此前无S3.7包。
+新增[学习包](vla/s3_7_mpc_replanning.md)、[脚本](../scripts/s3_7_mpc_replanning.py)、
+[测试](../tests/test_s3_7_mpc_replanning.py)。仅本任务，不开始S3.8或Stage4。
+
+执行前核对repo `.venv/bin/python` / prefix/base_prefix，Python3.12.3 / NumPy2.5.4，实际模块路径
+`/home/lucas/projects/embodied-ai-playground/.venv/lib/python3.12/site-packages/numpy/__init__.py`。
+CPU单BLAS线程，无训练/新依赖/安装/dataset/weights下载/旧repo访问，requirements不变。
+只读冻结 `tmp/s3_6_final` model/contract/planning/report；loader检查schema/plant profile、model shape/
+finite/positive scale、source wall transition对齐、完整episode split、held-out初态及train-only统计，
+模型SHA256匹配source report，全部四文件hash前后不变；不隐式重训或估计gain。
+
+新profile s3_7_wall_feedback/1.0：相同20个held-out starts、N128、固定T10/dt.1s，raw world XY
+state/command float32[m]，模型float64。三方法open_loop(E10)、replan_no_feedback(E CLI)、mpc_feedback(E CLI)。
+每次remaining horizon=10-t，执行L=min(E,10-t)，E4在t0/4/8规划并执行4/4/2，E1十次、E10一次。
+feedback仅在规划边界接收实际当前XY；无反馈用旧计划预测prefix终点，模型/统计都不更新。
+S3.6 bank(episode_id+1000*t,N,remaining)，t0相同；后续last candidate替换为未执行旧后缀，总数仍N，
+方法间旧后缀可能因历史反馈不同而不同。所有动作均真实执行，不早停、不拼接reset。
+known cost复用S3.6但平均项按remaining length；非严格Bellman一致或稳定性保证。
+nominal、weak_gain .65（plant内部）、kick（transition4→5后y+.08m）三条件，无未来预告。
+
+Executed:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_7_mpc_replanning.py --output tmp/s3_7_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_7_mpc_replanning.py --execute 4 --output tmp/s3_7_e4_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_7_mpc_replanning.py --execute 10 --output tmp/s3_7_e10_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s3_*.py' -v
+.venv/bin/python -m pip check
+git diff --check
+```
+
+原S3.6离线RMSE .373134mm与全部source hash不变。E1 nominal open/no-feedback/feedback成功19/20/20，
+weak_gain6/3/19，kick2/0/20（各20attempts）；E4 nominal19/20/20、weak6/3/18、kick2/0/20。
+本轮各组所有失败均goal_not_reached，boundary_violation0，未删除失败；无早停，恰好10actions/11states。
+E10三方法完整轨迹逐值相同，success nominal19、weak6、kick2；nominal/weak open-loop逐值复现S3.6。
+E1 feedback平均final distance nominal/weak/kick 2.910/11.778/2.846mm，E4为4.826/17.890/11.532mm。
+feedback calls/episode E1为10、E4为3，三条件共600/180次调用，计算更多不是同预算open-loop对照。
+no-feedback实际动作跨三条件逐值一致，证明重新搜索没有引入实际state；feedback则按真实偏差修正起点。
+
+E1 feedback每次generation+selection p50/p95 ms：nominal2.072/5.132、weak2.356/4.032、kick2.321/4.098；
+每episode总量21.604/39.613、23.404/31.837、23.841/34.048ms。
+E4每episode总量7.626/11.655、6.932/9.323、7.381/10.478ms，实测两段相加后再统计，warmup0。
+按每次100ms×实际prefix长度对照的compute budget overrun均0；plant时间单列，不含sensor/I/O/调度，
+模拟plant不随compute等待继续演化，不能称真实机器人deadline或时延鲁棒性证明。
+
+27/27 Stage3测试通过（此前23项+本轮4项）：feedback起点/E4短末前缀、无反馈动作不受plant变化影响、
+E10等价退化、warm仅保留未执行后缀。独立inline逐次重建三run全部bank/cost/argmin/所选动作并核对
+observed-state vs model-belief，逐plant step重放全部raw轨迹、outcome/actual cost与20分母；
+核对source freeze、E10三方法逐值相同、S3.6 open-loop精确复现、不同E open-loop不变、
+无反馈动作跨plant不变，全部PASS。6类CLI非法/已有目录拒绝（E0/E11/N1/N513/缺source/已有output），report不覆盖。
+pip check无冲突；Markdown本地链接及git diff --check通过；生成数据/记录全部ignored tmp/，未commit/push。
+README/roadmap更新Engineering Complete，Learning三项未勾选，只有用户反馈可确认掌握。
+限制：理想无噪声XY观测、固定goal/wall/单seed20starts；MPC-style finite shrinking horizon，
+无模型适应/未知gain识别/视觉policy/真实contact或机器人实验，不提供一般稳定性或风险保证。
+Current Task=S3.7；Next Task=S3.8仅计划。用户读Problem→Mathematics→Run→先预测E1→4后Modify→五问Explain；STOP。

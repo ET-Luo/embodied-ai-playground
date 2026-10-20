@@ -251,9 +251,12 @@ observe→replan如何改善结果是S3.7的下一项问题，本轮不提前实
 
 ## My Verification / Learner Verification
 
-- [ ] Run：运行默认实验，检查五种方法、两plant条件和完整失败分母。
-- [ ] Modify：先预测N128→32的不变量与不同保证，再运行对照。
-- [ ] Explain：用自己的话回答五问，画清选择分支与plant/oracle评价分支。
+- [x] Run：运行默认实验，检查五种方法、两plant条件和完整失败分母。
+- [x] Modify：先预测N128→32的不变量与不同保证，再运行对照。
+- [x] Explain：用自己的话回答五问，画清选择分支与plant/oracle评价分支。
 
-Engineering Complete；Learning三项待用户明确报告。Current Task=S3.6；Next Task=S3.7仅计划。
+Engineering Complete + Learning Mastered（2026-10-20 用户明确确认实验和预测完成，并准确回答五项Explain）。
+解释覆盖候选/预测/评分/执行分工、oracle特权、shape与动作语义、墙动力学匹配、
+cost/success/coverage/regret区别、嵌套候选保证与不变量，以及未知gain/单步误差/open-loop证据边界。
+Current Task=S3.6；Next Task=S3.7仅计划。
 STOP，不自动开始下一任务。
