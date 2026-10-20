@@ -1,7 +1,7 @@
 # P4 roadmap
 
 每行是用户 0.5～2 小时的阅读/运行/修改/解释任务，不是自动执行队列。
-Current Task S4.1（Engineering Complete，Learning pending）；Next Task S4.2（仅计划）。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1的S1.1工程与学习完成（2026-10-17 用户确认），S1.2工程与学习完成（2026-10-17 用户确认），S1.3工程与学习完成（2026-10-17 用户确认），S1.4工程与学习完成（2026-10-17 用户确认），S1.5工程完成（闭环失败）、Learning Mastered（2026-10-18 用户确认），S1.6工程与学习完成（2026-10-18 用户确认），S1.7工程与学习完成（2026-10-18 用户确认），Stage1工程与学习包全部完成但模型控制仍失败；Stage2的S2.1工程与学习完成，S2.2工程与学习完成，S2.3工程与学习完成，S2.4工程与学习完成，S2.5工程与学习完成；S2.6 Engineering Complete + Learning Mastered（2026-10-19用户确认）；S2.7 Engineering Complete + Learning Mastered（2026-10-19用户确认）；Stage2全部工程与学习完成；S3.1 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.2 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.3 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.4 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.5 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.6 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.7 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.8 Engineering Complete + Learning Mastered（2026-10-20用户确认）；Stage3全部工程与学习完成；Stage4 S4.1 Engineering Complete，Learning pending。
+Current Task S4.3（Engineering Complete，Learning pending）；Next Task S4.4（仅计划）。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1的S1.1工程与学习完成（2026-10-17 用户确认），S1.2工程与学习完成（2026-10-17 用户确认），S1.3工程与学习完成（2026-10-17 用户确认），S1.4工程与学习完成（2026-10-17 用户确认），S1.5工程完成（闭环失败）、Learning Mastered（2026-10-18 用户确认），S1.6工程与学习完成（2026-10-18 用户确认），S1.7工程与学习完成（2026-10-18 用户确认），Stage1工程与学习包全部完成但模型控制仍失败；Stage2的S2.1工程与学习完成，S2.2工程与学习完成，S2.3工程与学习完成，S2.4工程与学习完成，S2.5工程与学习完成；S2.6 Engineering Complete + Learning Mastered（2026-10-19用户确认）；S2.7 Engineering Complete + Learning Mastered（2026-10-19用户确认）；Stage2全部工程与学习完成；S3.1 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.2 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.3 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.4 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.5 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.6 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.7 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S3.8 Engineering Complete + Learning Mastered（2026-10-20用户确认）；Stage3全部工程与学习完成；Stage4 S4.1 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S4.2 Engineering Complete + Learning Mastered（2026-10-20用户确认）；S4.3 Engineering Complete，Learning pending。
 所有任务最终都有 Engineering Code/Experiment/Docs 与 Learning Run/Modify/Explain 双状态。
 不重学 P0–P3；只在新语境中引用既有知识。
 
@@ -67,9 +67,9 @@ Future/Success/Risk→Accept/Reject→Execute Short Prefix→Observe→Replan。
 
 | Task | h | 目标与可检查产物 |
 |---|---:|---|
-| S4.1 VLA Proposal | 1 | [学习包](vla/s4_1_vla_proposal.md)：冻结tiny VLA、原始+手工bias chunks、版本化action contract；Engineering Complete，Learning pending |
-| S4.2 World-model Verification | 1 | 预测候选未来与实际未来对照 |
-| S4.3 Risk / Success Scoring | 1 | 透明评分与 held-out 校准/误报漏报 |
+| S4.1 VLA Proposal | 1 | [学习包](vla/s4_1_vla_proposal.md)：冻结tiny VLA、原始+手工bias chunks、版本化action contract；Engineering Complete + Learning Mastered（2026-10-20用户确认） |
+| S4.2 World-model Verification | 1 | [学习包](vla/s4_2_world_model_verification.md)：匹配ideal plant的冻结线性残差模型、候选AR/TF与独立实际未来、gain shift；Engineering Complete + Learning Mastered（2026-10-20用户确认） |
+| S4.3 Risk / Success Scoring | 1 | [学习包](vla/s4_3_risk_success_scoring.md)：几何margins、独立group误差校准/heldout FP/FN、success全负反例；Engineering Complete，Learning pending |
 | S4.4 Rejection / Alternate Action | 1 | reject + alternative/fallback，统计 rejected bad actions 与误拒好动作 |
 | S4.5 Receding-horizon Replanning | 1.5 | execute prefix/observe/replan，审计真实闭环和 latency |
 | S4.6 Final Benchmark | 2 | matched VLA only vs VLA+WM；success/failure/prediction error/rejected bad actions/inference+planning latency，报告种子/分母/限制 |

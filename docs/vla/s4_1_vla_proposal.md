@@ -137,8 +137,14 @@ proposal≠执行批准；合法≠成功；手工bias≠learned采样；shape�
 
 ## My Verification
 
-- [ ] Run：新目录运行，检查contract、action数组与拒绝记录、candidate0闭环失败。
-- [ ] Modify：先预测K5→1对candidate0、输入、source hash、offline、闭环commands及shape的影响，再运行核对。
-- [ ] Explain：用自己的话回答上述五问。
+- [x] Run：新目录运行，检查contract、action数组与拒绝记录、candidate0闭环失败。
+- [x] Modify：先预测K5→1对candidate0、输入、source hash、offline、闭环commands及shape的影响，再运行核对。
+- [x] Explain：用自己的话回答上述五问。
 
-Engineering Complete；Learning未确认。Current Task=S4.1；Next Task=S4.2仅计划，STOP。
+Engineering Complete + Learning Mastered（2026-10-20 用户确认）。Current Task=S4.1；Next Task=S4.2仅计划，STOP。
+
+2026-10-20 用户明确确认实验和预测均已完成，五项Explain准确覆盖当前RGB/语言/state的shape、dtype、
+单位与因果时序；candidate0的冻结learned来源与其余手工bias/clip来源；K5→1的模型、输入、
+前缀及评价不变量和H/K/E/dt区别；契约声明检查与真实安全/成功、跨plant匹配的边界；
+18次proposal输入与16次candidate0闭环的不同分母，以及输入拒绝、坏contract拒绝、offline MSE、
+本地latency与工程测试的证据限制。Run/Modify/Explain依据用户报告勾选，策略0/16失败结论保留。

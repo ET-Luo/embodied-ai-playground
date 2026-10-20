@@ -29,10 +29,10 @@ flowchart TD
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
 | 3 | Robot World Models | S3.1–S3.8 Engineering Complete + Learning Mastered |
-| 4 | VLA × World Model Integration | S4.1 Engineering Complete；Learning pending |
+| 4 | VLA × World Model Integration | S4.1–S4.2 Engineering Complete + Learning Mastered；S4.3 Engineering Complete，Learning pending |
 
-Current Task = **S4.1 — VLA Proposal**
-Next Task = **S4.2 — World-model Verification**（仅计划）
+Current Task = **S4.3 — Risk / Success Scoring**
+Next Task = **S4.4 — Rejection / Alternate Action**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,60 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S4.3 status and Run
+
+Engineering:
+
+- [x] Code — 冻结S4.2未来、离散圆盘risk/末点goal success margins、group校准裕量与诊断flags
+- [x] Experiment — 64calibration/32heldout groups、ID/gain.65、α1/0、全分母FP/FN及常量基线
+- [x] Docs — [S4.3学习包](docs/vla/s4_3_risk_success_scoring.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU .venv Python3.12.3 / NumPy2.5.4，无安装/下载/重新训练。
+默认读取`tmp/s4_2_verified`及其S4.1源文件；自己的S4.2产物用`--verification tmp/my_s4_2`。
+先读Problem→Mathematics，第二条先预测margin-scale变化：
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_3_risk_success_scoring.py --output tmp/my_s4_3
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_3_risk_success_scoring.py --margin-scale 0 --output tmp/my_s4_3_raw
+```
+
+查看contract.json、scores.npz、report.json与confusion.csv。独立heldout ID中，risk raw/裕量规则FP/FN为0/1与6/0。
+Success裕量15.516mm大于10mm容差，规则全报不成功：FP0但漏掉32/32真实成功，与constant_negative相同。
+分数不是概率；probe不是VLA成功，flags不控制执行。Learning等待Run/Modify/Explain；S4.4仅计划。
+
+## S4.2 status and Run
+
+Engineering:
+
+- [x] Code — 读取冻结S4.1文件，匹配ideal plant的10参数残差模型、AR/TF和独立候选重置执行
+- [x] Experiment — 30/10 episode split，名义/gain.65/.4、动作消融、K1回归与解析误差审计
+- [x] Docs — [S4.2学习包](docs/vla/s4_2_world_model_verification.md)
+
+Learning:
+
+- [x] Run
+- [x] Modify
+- [x] Explain
+
+CPU .venv Python3.12.3 / NumPy2.5.4，无新依赖/下载。默认读取`tmp/s4_1_verified`，
+自己的候选用`--proposals tmp/my_s4_1`。显式生成40条小型ideal XY episode，30train拟合后冻结，
+10validation独立评价；没有改VLA或使用S3墙模型。先读Problem→Mathematics，第二条先预测gain变化：
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_2_world_model_verification.py --output tmp/my_s4_2
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_2_world_model_verification.py --plant-gain .4 --output tmp/my_s4_2_g04
+```
+
+查看contract.json、verification.npz、report.json与curves.csv。K5为80条独立reset的候选执行/条件；
+名义预测接近数值舍入误差，未知gain.65下AR末步RMSE12.792mm，gain.4时21.930mm。
+这是预测对照，没有候选选择、风险批准或闭环改善；S4.2 Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及补充Explain）；用户已授权推进S4.3，见当前任务状态。
+
 ## S4.1 status and Run
 
 Engineering:
@@ -56,9 +110,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU .venv Python3.12.3 / NumPy2.5.4，无安装/下载。历史S1.5 checkpoint本地缺失，
 已显式用原seed7/2400steps重建到`tmp/s4_1_source_s1_5`；proposal阶段不训练。
@@ -71,7 +125,7 @@ OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_1_vla_proposal.py --candidate
 
 查看contract.json、proposals.npz与report.json。K5输出(16,5,3,2) world XY位移[m]；
 候选0来自learned策略，其余是手工偏置，不代表learned多模态采样。合法chunk的candidate0闭环仍0/16。
-未接world model、评分或候选选择；S4.2仅计划，等待用户学习确认及选择。
+未接world model、评分或候选选择；S4.1 Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及五项Explain）；用户已授权推进S4.2，见当前任务状态。
 
 ## S3.8 status and Run
 

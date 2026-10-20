@@ -2,7 +2,9 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S4.1 — VLA Proposal**，Engineering Complete，Learning pending。
+Current Task = **S4.3 — Risk / Success Scoring**，Engineering Complete，Learning pending。
+S4.2 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
+S4.1 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.8 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.7 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 Stage3 S3.1–S3.8全部Engineering Complete + Learning Mastered；不代表大视频模型复现或真实机器人能力。
@@ -28,7 +30,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S4.2 — World-model Verification**，仅计划，不自动推进。
+Next Task = **S4.4 — Rejection / Alternate Action**，仅计划，不自动推进。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.7合成XY模型/规划/反馈及S3.8固定视频world model架构/解析反例学习包，但未运行真实机器人或大型视频World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -1956,3 +1958,176 @@ K5 proposal median/P95 .134/.231ms，K1 .139/.190ms，各16次、5warmup排除�
 README/roadmap同步Engineering Complete，Run/Modify/Explain全部未勾选。
 Current Task=S4.1；Next Task=S4.2仅计划。
 用户先读Problem→Mathematics，Run→先预测K5→1后Modify→五问Explain；STOP等待学习确认及选择。
+
+## S4.1 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均已完成；五项Explain准确覆盖输入/预处理/候选shape、dtype、world XY单位、
+slot时序及不读未来RGB/真实goal/success；冻结candidate0与手工bias候选来源，不将确定性重复推理
+或偏置称为learned多模态采样；K5→1模型/hash/tokenizer/固定尺度/输入/candidate0/offline/拒绝/
+闭环commands与success不变量及H/K/E/dt区别，latency不保证单调。
+正确区分声明检查与能力/安全、producer真实性，以及S3墙plant与ideal point的embodiment不匹配；
+准确解释16/18输入提案与0/16闭环分母、8布局×2指令/8步、final_goal_error_after_budget，
+输入拒绝不等于风险拦截，offline MSE、本地latency、34项测试均不能证明部署成功。
+README、学习包Run/Modify/Explain已勾选，roadmap同步Learning Mastered；策略失败结论保留。
+启动pwd正确、git status --short为空；本轮仅改四份状态文档，未重新运行实验、安装或下载。
+环境和工程证据沿用S4.1记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU）。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对四份文档修改。
+Current Task=S4.1（已掌握）；Next Task=S4.2 — World-model Verification，仅计划。
+等待用户选择，不自动实施S4.2；未commit/push。
+
+## S4.2 Engineering — 2026-10-20
+
+用户明确请求继续S4.2。启动pwd正确；已有README/handoff/roadmap/S4.1 package四份学习确认修改，
+全部保留并叠加当前任务文档。读取AGENTS/README/handoff/roadmap、S0.1模板、S4.1 package/script及
+S3.1动力学源码。S4.2此前无学习包；本轮只实现本任务，未进入S4.3。
+[学习包](vla/s4_2_world_model_verification.md)、[script](../scripts/s4_2_world_model_verification.py)、
+[tests](../tests/test_s4_2_world_model_verification.py)。
+
+环境核对repo `.venv/bin/python` Python3.12.3、NumPy2.5.4，实际NumPy模块在
+`.venv/lib/python3.12/site-packages/numpy/__init__.py`，CPU；无新依赖、安装或下载。
+先向用户解释不能把S3 gain/wall模型直接接ideal point。新增匹配S4.1 plant的10系数affine residual，
+不是S3模型复用/大型world model训练：40独立episode、每20transitions；seed421数据/422整episode split，
+30train600转移fit input mean/std与least squares，10validation200转移独立评价。
+目标delta保留物理m，不fit target scaler。raw NPZ存完整episodes/split/timestamp，输出ignored tmp。
+拟合后save/reload逐值核对、readonly冻结；候选AR只读initial+actions+model，无真实goal/语言/图像/未来/gain输入。
+
+默认读取`tmp/s4_1_verified`的三份artifact，严格contract/schema/shape/dtype/finite/tick0与分母检查；
+源文件SHA256前后一致。16supported×K5=80条独立reset rollout/条件，H3/4states/dt.1s；
+2次unknown输入拒绝原样保留，不伪造未来，也不称为风险拦截。先生成AR预测再生成plant truth；
+名义gain1保持ideal point；gain.65/.4明确是仅评价用的执行机制变化，模型不知情、不改变command语义。
+另做TF真实pre-action state诊断与zero-action消融；不选候选、不做risk/success评分/拒绝或反馈replan。
+
+Executed:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_2_world_model_verification.py --output tmp/s4_2_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s4_2*.py'
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_2_world_model_verification.py --plant-gain .4 --output tmp/s4_2_gain04_verified > tmp/s4_2_gain04_stdout.txt
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_2_world_model_verification.py --proposals tmp/s4_1_k1_verified --output tmp/s4_2_k1_verified > tmp/s4_2_k1_stdout.txt
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests
+.venv/bin/python -m pip check
+git diff --check
+```
+
+默认validation单步RMSE6.823e-9m，名义候选AR RMSE2.409e-9m；zero-action消融23.984mm。
+模型类恰含线性无噪声真plant，近零误差只反映简单可识别系统，非真实物理/泛化证据。
+Gain.65 AR三个horizon RMSE2.498/6.443/12.792mm，全未来8.394mm；TF全转移4.813mm。
+Gain.4 AR三个horizon4.283/11.046/21.930mm，全未来14.391mm；TF8.251mm。
+K5每condition误差scalars480，排除共享initial；80候选来自旧8布局×2文本与相关bias，不是独立80场景。
+默认AR3 batch80 latency median/P95 .0258/.0343ms，30次/5warmup；仅normalize/matmul/state update，
+排除proposal/plant/metrics/IO/sensor/servo，无整机实时结论。无新controller，closed_loop_success=null；
+S4.1原candidate0闭环0/16能力结论保留，不以预测准确声称控制改进。
+
+5项新增测试通过，全39项测试通过：train-only fit隔离、独立reset/时间对齐、gain/未来不进入AR、
+model语义/plant/统计错配拒绝、proposal语义先于payload加载拒绝。
+独立inline解析核对gain.65/.4的AR误差≈(1−g)cumsum(actions)、TF误差≈(1−g)actions；
+跨gain model/source/训练与AR/名义真值不变，K1候选0轨迹保留，dtype/time/train统计/source hash及NPZ round-trip通过。
+额外拒绝已有output（report不被覆盖）、NaN gain、缺失source，均不创建无效output。
+pip check、本地Markdown links、git diff --check通过；无旧repo修改、commit/push。
+README/roadmap更新S4.2 Engineering Complete；学习Run/Modify/Explain全部未勾选。
+Current Task=S4.2；Next Task=S4.3 — Risk / Success Scoring仅计划。
+用户读Problem→Mathematics→Run→先预测gain.65→.4后Modify→五问Explain；STOP等待用户确认及选择。
+
+## S4.2 learner review — 2026-10-20
+
+用户明确报告实验/预测完成。Explain第3–5项正确覆盖AR/TF因果隔离、独立reset、gain误差公式与
+12/7倍率、动作相消、18/80/480/160分母、近零预测/latency/测试的能力证据限制。
+Run/Modify在README与学习包勾选；Explain未勾选，待用户补充第1–2项的实现精度：
+raw truth=(16,5,4,2)float32，AR同shape为float64，TF=(16,5,3,2)float64且无初态；
+原policy单例(3,2)、手工bank单例(5,3,2)、汇总16例(16,5,3,2)。
+phi=[normalized current XY/command XY,1]，delta=phi@coefficients；系数(5,2)共10个，
+input_mean/std各(4,)仅train拟合，30train600/10validation200，目标保留原delta[m]。
+用户2×4矩阵+bias是等价数学写法，但尚未明确本实现归一化/拼接参数化。
+保留本轮启动已有全部修改和未跟踪S4.2文件，仅调整四份状态文档；未重跑实验或训练。
+检查解释器/NumPy路径仍为repo .venv Python3.12.3 / NumPy2.5.4；只读加载
+`tmp/s4_2_verified/verification.npz`与`model.npz`，逐项打印shape/dtype，核对上述结果。
+源码核对`fit_model`/`predict_next`/保存字段；`git diff --check`通过。
+Current Task=S4.2（Explain待补充，未标Learning Mastered）；Next Task=S4.3仅计划，不自动推进。
+无安装/下载、commit/push。待用户用自己的话确认上述细节，无需重跑已完成实验或重答第3–5项。
+
+## S4.2 learning confirmation — 2026-10-20
+
+用户补充Explain准确确认：单例learned(3,2)→手工bank(5,3,2)→16例汇总(16,5,3,2)；
+AR=(16,5,4,2)float64、truth同shape为float32，均含初态；TF=(16,5,3,2)float64不含初态，
+正确区分递归预测前态与真实前态，状态单位m。
+明确phi=[(x−mu_train)/sigma_train,1]，delta=phi C，C为(5,2)共10系数，
+与2×4矩阵+bias等价但源码存储参数化不同；30train600/10validation200，整episode隔离，
+normalizer与coefficients仅train拟合。结合此前正确第3–5项和实验/预测完成报告，
+README及学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastered。
+启动pwd正确，保留已有四份tracked文档修改及三份untracked S4.2文件；本轮仅更新四份状态文档。
+未重跑Python实验、训练、安装或下载；环境与工程证据沿用S4.2记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU）。
+验证：`git diff --check`通过，`git status --short`核对既有工作保留。
+Current Task=S4.2（Engineering Complete + Learning Mastered）；Next Task=S4.3 — Risk / Success Scoring仅计划。
+本节仍只有预测对照，无候选选择/闭环改善证据；未自动推进S4.3，未commit/push。
+
+## S4.3 Engineering — 2026-10-20
+
+用户明确请求继续S4.3。启动pwd正确，保留已有README/handoff/roadmap/S4.1 package四份修改与
+S4.2 package/script/tests三份untracked文件。读取AGENTS/README/handoff/roadmap、S0.1模板、
+S4.2学习包/script/tests与产物contract。本轮只实现S4.3，不进入S4.4。
+[学习包](vla/s4_3_risk_success_scoring.md)、[script](../scripts/s4_3_risk_success_scoring.py)、
+[tests](../tests/test_s4_3_risk_success_scoring.py)。
+
+重新检查repo `.venv/bin/python` Python3.12.3、NumPy2.5.4及实际模块
+`.venv/lib/python3.12/site-packages/numpy/__init__.py`，CPU；无安装/下载/重新训练。
+严格加载冻结S4.2 model/AR/truth，检查model/proposal来源hash、schema/plant/action语义、
+shape/dtype/clock、AR重算及两条件truth重放；S4.2与其S4.1 source文件前后hash不变。
+目标从当前RGB标记+原literal语言按已知camera完美解析，不读真实未来/goal标签，明确不归功于VLA能力。
+
+Risk margin=.02m−未来h1…3到圆心[.015,−.09]m的最小L2距离；
+success margin=.01m−末h3到goal的L∞距离。两者独立、边界计入，初态不参与risk，
+仅采样点监测，不含连续segment碰撞、contact或plant约束；监测几何不改变ideal-point动力学。
+Margin是m，不是概率；flags仅诊断，不选候选/reject/fallback/replan。
+
+64calibration reset groups(seed431)×K5，32heldout reset groups(seed432)×K5，H3/dt.1s。
+Probe先定initial/goal，再生成goal-directed noisy commands，非VLA输出；raw输入完整保存。
+Calibration/ID plant gain为每group共享的独立uniform[.8,1)，另对相同heldout contexts做gain.65挑战。
+校准取每group最坏absolute margin error，再q90 higher(64项排序第58项)，两个buffer各自固定。
+Heldout/VLA labels不参与校准；group coverage与event confusion独立报告，不声称概率或正式coverage保证。
+
+Executed during development:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_3_risk_success_scoring.py --output tmp/s4_3_verified > tmp/s4_3_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s4_3*.py'
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_3_risk_success_scoring.py --output tmp/s4_3_final > tmp/s4_3_final_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_3_risk_success_scoring.py --margin-scale 0 --output tmp/s4_3_scale0_final > tmp/s4_3_scale0_stdout.json
+```
+
+Final source-provenance artifacts and validation:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_3_risk_success_scoring.py --output tmp/s4_3_final_checked > tmp/s4_3_final_checked_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_3_risk_success_scoring.py --margin-scale 0 --output tmp/s4_3_scale0_checked > tmp/s4_3_scale0_checked_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests
+.venv/bin/python -m pip check
+git diff --check
+```
+
+Risk/success buffers=5.475521/15.516195mm。
+Heldout ID risk真实24positive/136negative，raw FP/FN=0/1，margin1=6/0；
+success32positive/128negative，raw6/10，margin1=0/32。
+Heldout gain.65 risk23/137，raw2/2、margin1=7/0；success42/118，raw23/37、margin1=0/42。
+Success buffer大于10mm容差/score上界，故所有calibrated success flags必为False，
+与constant_negative基线相同；保留这一失败，不为好看而用heldout调参。
+VLA nominal/gain.65每80候选，risk分别56/24与48/32真实正负例，FP/FN分别0/0与8/0，
+两套threshold本次计数相同；success正例均0，FNR=null而不是0。
+VLA原18次输入16supported/2unknown拒绝仍完整记录；不把输入拒绝称risk拦截，不伪造score。
+
+Group error-buffer覆盖risk/success：calibration58/64、58/64；heldout ID29/32、31/32；
+heldout gain.65均8/32；VLA nominal均16/16、shift为0/16与10/16（16为contexts，仅8独立layouts）。
+覆盖率不是flag准确率，shift下risk本次0FN不构成泛化保证。
+最终batch80 scoring median/P95 .0176/.0290ms，30测量/5warmup，仅geometry+flags；
+不含prediction、goal decode、plant、IO、sensor/通信/执行器，不能证明整机实时。
+无新controller，closed_loop_success=null；原S4.1 candidate0闭环0/16不被本节chunk标签替代。
+
+6项新增tests通过，全45项tests通过：未来离散几何/初态排除/非连续碰撞、risk与success独立、
+group q90与heldout隔离、scale方向/边界、空正类null与全分母、当前观测goal解析、probe独立/可重现。
+独立inline重算几何公式、group residual第58项、TP/FP/FN/TN与常量基线；
+跨scale source/code hash、scores/labels/raw probes/buffers不变，flags单调且α0等于raw规则。
+额外已有output（report未覆盖）、NaN/negative scale、缺失source拒绝通过，不创建无效output。
+NPZ逐字段round-trip、修改文档local links、pip check、git diff --check通过。
+所有产物ignored tmp，无新依赖/旧repo修改/commit/push。
+README/roadmap同步Engineering Complete，S4.3 Learning Run/Modify/Explain均未勾选。
+Current Task=S4.3；Next Task=S4.4 — Rejection / Alternate Action仅计划。
+用户读Problem→Mathematics→Run→先预测margin-scale1→0后Modify→五问Explain；STOP等待用户确认及选择。
