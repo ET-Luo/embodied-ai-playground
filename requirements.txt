@@ -1,3 +1,4 @@
+# S3.1 state dynamics also uses only existing NumPy.
 # S0.1–S1.7 CPU experiments; S1.1–S1.7 need only NumPy; S0.5 / S0.6 need only NumPy, S0.7 also uses existing Pillow for preview.
 numpy>=1.26,<3
 # S0.4: Parquet, CPU AV1 video decode, contact sheet.

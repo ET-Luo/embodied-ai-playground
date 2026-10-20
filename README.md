@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0及S1.1–S1.7工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断与冻结checkpoint闭环评价；未实现world model。
+以上是最终能力链；当前完成Stage0及S1.1–S1.7工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断与冻结checkpoint闭环评价；现新增S3.1单步state dynamics MLP，仅合成XY验证，不代表真实机器人world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
-| 3 | Robot World Models | Planned |
+| 3 | Robot World Models | S3.1 Engineering Complete；Learning待用户核验 |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S2.7 — VLA Architecture Comparison**
-Next Task = **S3.1 — State Dynamics**（仅计划）
+Current Task = **S3.1 — State Dynamics**
+Next Task = **S3.2 — Multi-step Rollout**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -45,6 +45,34 @@ S0.1 Learning:
 - [x] Explain
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
+
+## S3.1 status and Run
+
+Engineering:
+
+- [x] Code — 226参数NumPy residual MLP、显式梯度/Adam、train-only统计
+- [x] Experiment — 完整episode held-out、两个基线、2000/20步、checkpoint重载与单步latency
+- [x] Docs — [S3.1学习包](docs/vla/s3_1_state_dynamics.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU .venv Python3.12.3 / NumPy2.5.4，无安装或下载。先读Problem→Mathematics，再运行：
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_1_state_dynamics.py --output tmp/my_s3_1
+# 先预测训练步数的影响：
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_1_state_dynamics.py --epochs 20 --output tmp/my_s3_1_short
+```
+
+40条合成XY episode；train600 / validation200转移。动作是commanded world displacement[m]，
+实际位移由位置相关gain/串扰决定。held-out单步RMSE：不动17.287mm、理想加法6.849mm、
+MLP2000步0.138mm、20步3.096mm。查看contract.json、report.json与validation_predictions.npz。
+仅同分布单步证据，无多步稳定、真实机器人或闭环success声明。
+Engineering Complete；学习三项需用户明确报告，助手执行不计掌握。S3.2仅计划。
 
 ## S2.7 status and Run
 

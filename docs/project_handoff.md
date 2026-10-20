@@ -1,8 +1,9 @@
 # P4 project handoff
 
-Updated 2026-10-19 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
+Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S2.7 — VLA Architecture Comparison**，Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
+Current Task = **S3.1 — State Dynamics**，Engineering Complete；Learning待用户Run/Modify/Explain。
+S2.7 Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
 Stage2 S2.1–S2.7全部工程与学习完成；不代表完整模型复现或机器人控制成功。
 S2.6 Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
 S2.5 Engineering Complete + Learning Mastered（2026-10-18 用户确认）。
@@ -18,8 +19,8 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S3.1 — State Dynamics**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA或World Model；S2.3仅架构与接口学习。
+Next Task = **S3.2 — Multi-step Rollout**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；新增S3.1合成XY单步world model，但未运行真实机器人World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
 
@@ -1301,3 +1302,42 @@ README及学习包Run/Modify/Explain勾选，roadmap同步；Stage2全部Enginee
 验证：git diff --check通过；git diff --stat、git status --short核对仅四份文档修改。
 Current Task=S2.7（已掌握）；Next Task=S3.1 — State Dynamics，仅计划。
 等待用户选择，不自动开始Stage3；未commit/push。
+
+## S3.1 Engineering — 2026-10-20
+
+用户明确请求推进S3.1学习；启动pwd正确、git status --short为空，读AGENTS、README、
+roadmap、handoff与S0.1模板；此前无S3.1任务包。本轮仅S3.1，未开始S3.2。
+新增[学习包](vla/s3_1_state_dynamics.md)与[脚本](../scripts/s3_1_state_dynamics.py)。
+自包含schema s3_1_xy_command_dynamics/1.0，明确commanded world XY displacement[m]不同于
+S0.1 realized ideal delta；位置相关gain与XY串扰，dt=.1s，40个独立reset、每个20转移/21状态。
+raw float32、timestamp float64；MLP/Adam float64 CPU。训练30episodes/600转移，验证10/200，
+先episode split后flatten，输入与实际位移target逐通道统计只fit train。
+4→32 tanh→2，226参数；手写反向与Adam，无新依赖、安装、dataset/weights下载或旧repo访问。
+
+执行前核对 `.venv/bin/python` / prefix，Python3.12.3、NumPy2.5.4；模块实际路径
+`/home/lucas/projects/embodied-ai-playground/.venv/lib/python3.12/site-packages/numpy/__init__.py`。
+
+Executed final code:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_1_state_dynamics.py --output tmp/s3_1_final > tmp/s3_1_final_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_1_state_dynamics.py --epochs 20 --output tmp/s3_1_short_final > tmp/s3_1_short_final_stdout.json
+.venv/bin/python -m pip check
+git diff --check
+```
+
+此前初版分别运行tmp/s3_1_verified、tmp/s3_1_short_verified，数值误差与最终版一致；
+最终版补充机器可读contract.json。默认validation MSE1.9008076e-8m²/RMSE.137870mm，
+不动17.286919mm、理想加法6.848537mm；20步MLP3.096412mm，两基线不变。
+默认train RMSE.099385mm；四tensor中心差分探针最大绝对误差2.692e-11。
+最终batch1推理p50/p95=.005813/.006945ms，30warmup/200samples，含标准化与decode，
+不含I/O、环境、policy或planning；首轮.005935/.007450ms体现运行波动。
+
+独立inline验证：raw shape、完整episode split无重叠、train统计重算、validation位置+100m不影响
+train统计、checkpoint重载精确复现预测、物理MSE重算、2000/20步全部raw/split/统计及两个基线
+不变；CLI epochs0拒绝且不创建目录、已有目录拒绝且report字节不变，全部PASS。
+pip check无冲突，文档本地链接与git diff --check通过；所有实验输出ignored tmp/。
+未测closed-loop success/failure stage、OOD或multi-step稳定；toy单步结果不能替代机器人成功。
+README/roadmap更新Engineering Complete，Learning三项保持未勾选；未commit/push。
+Current Task=S3.1；Next Task=S3.2仅计划。用户先读Problem→Architecture，再Run，
+先预测epochs变化后Modify，用自己的话回答五项Explain；等待明确学习反馈，不自动推进。

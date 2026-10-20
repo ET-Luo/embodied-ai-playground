@@ -1,7 +1,7 @@
 # P4 roadmap
 
 每行是用户 0.5～2 小时的阅读/运行/修改/解释任务，不是自动执行队列。
-Current Task S2.7（Engineering Complete + Learning Mastered，2026-10-19用户确认）；Next Task S3.1（仅计划）。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1的S1.1工程与学习完成（2026-10-17 用户确认），S1.2工程与学习完成（2026-10-17 用户确认），S1.3工程与学习完成（2026-10-17 用户确认），S1.4工程与学习完成（2026-10-17 用户确认），S1.5工程完成（闭环失败）、Learning Mastered（2026-10-18 用户确认），S1.6工程与学习完成（2026-10-18 用户确认），S1.7工程与学习完成（2026-10-18 用户确认），Stage1工程与学习包全部完成但模型控制仍失败；Stage2的S2.1工程与学习完成，S2.2工程与学习完成，S2.3工程与学习完成，S2.4工程与学习完成，S2.5工程与学习完成；S2.6 Engineering Complete + Learning Mastered（2026-10-19用户确认）；S2.7 Engineering Complete + Learning Mastered（2026-10-19用户确认）；Stage2全部工程与学习完成；S3.1及后续 Planned。
+Current Task S3.1（Engineering Complete，Learning待用户核验）；Next Task S3.2（仅计划）。S0.1 Engineering Complete + Learning Mastered（2026-10-13 用户确认）；S0.2–S0.7 Engineering Complete + Learning Mastered（2026-10-14 用户确认）；Stage0全部工程与学习完成，Stage1的S1.1工程与学习完成（2026-10-17 用户确认），S1.2工程与学习完成（2026-10-17 用户确认），S1.3工程与学习完成（2026-10-17 用户确认），S1.4工程与学习完成（2026-10-17 用户确认），S1.5工程完成（闭环失败）、Learning Mastered（2026-10-18 用户确认），S1.6工程与学习完成（2026-10-18 用户确认），S1.7工程与学习完成（2026-10-18 用户确认），Stage1工程与学习包全部完成但模型控制仍失败；Stage2的S2.1工程与学习完成，S2.2工程与学习完成，S2.3工程与学习完成，S2.4工程与学习完成，S2.5工程与学习完成；S2.6 Engineering Complete + Learning Mastered（2026-10-19用户确认）；S2.7 Engineering Complete + Learning Mastered（2026-10-19用户确认）；Stage2全部工程与学习完成；S3.1 Engineering Complete，Learning待用户核验；S3.2及后续 Planned。
 所有任务最终都有 Engineering Code/Experiment/Docs 与 Learning Run/Modify/Explain 双状态。
 不重学 P0–P3；只在新语境中引用既有知识。
 
@@ -51,7 +51,7 @@ Current Task S2.7（Engineering Complete + Learning Mastered，2026-10-19用户�
 
 | Task | h | 目标与可检查产物 |
 |---|---:|---|
-| S3.1 State Dynamics | 1.5 | (state_t,action_t)→next_state 小 MLP，baseline 与 held-out error |
+| S3.1 State Dynamics | 1.5 | [学习包](vla/s3_1_state_dynamics.md)：226参数residual MLP、episode held-out、物理误差与不动/理想加法基线；Engineering Complete，Learning待核验 |
 | S3.2 Multi-step Rollout | 1 | one/5/20/long-horizon drift，区分 teacher-forcing 与 autoregressive rollout |
 | S3.3 Model Uncertainty | 1.5 | 小 ensemble 的 ID/OOD disagreement；不能等同 calibrated risk |
 | S3.4 Latent State Representation | 2 | observation→encoder→z；(z_t,a_t)→z_t+1，重建/预测评价 |
