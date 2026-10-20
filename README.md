@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0及S1.1–S1.7工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断与冻结checkpoint闭环评价；已有S3.1单步动力学、S3.2多步漂移、S3.3分歧诊断、S3.4线性观测latent dynamics与S3.5独立定义的一步outcome heads，仅合成XY验证，不代表真实机器人world model。
+以上是最终能力链；当前完成Stage0及S1.1–S1.7工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断与冻结checkpoint闭环评价；已有S3.1–S3.5动力学/多步/分歧/latent/outcome heads与S3.6一次性候选规划的toy环境执行验证，仅合成XY验证，不代表真实机器人world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
-| 3 | Robot World Models | S3.1–S3.4 Engineering Complete + Learning Mastered；S3.5 Engineering Complete，Learning待核验 |
+| 3 | Robot World Models | S3.1–S3.5 Engineering Complete + Learning Mastered；S3.6 Engineering Complete，Learning待核验 |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S3.5 — Reward / Success / Contact Prediction**
-Next Task = **S3.6 — Model-based Planning**（仅计划）
+Current Task = **S3.6 — Model-based Planning**
+Next Task = **S3.7 — MPC-style Replanning**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,34 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S3.6 status and Run
+
+Engineering:
+
+- [x] Code — 匹配墙环境的226参数动力学、嵌套candidate bank、显式cost/argmin与独立plant执行
+- [x] Experiment — 五方法同候选、名义/未知gain、coverage/regret/全分母失败、N128/32及分阶段latency
+- [x] Docs — [S3.6学习包](docs/vla/s3_6_model_based_planning.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU .venv Python3.12.3 / NumPy2.5.4，无新依赖/下载。自包含拟合S3.5墙动力学；
+先读Problem→Mathematics，第二条先预测候选数变化：
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_6_model_based_planning.py --output tmp/my_s3_6
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_6_model_based_planning.py --candidates 32 --output tmp/my_s3_6_n32
+```
+
+默认128候选×10步，一次选择后整段open-loop执行；名义toy learned成功19/20，
+执行gain未知降至.65后6/20，尽管离线单步RMSE仅.373mm。ideal为8/20与2/20。
+查看contract.json、report.json、planning.npz；oracle只在相同bank内用真实未来cost，是特权诊断。
+候选减少只限制预测cost最小值，不保证实际success单调；未接入风险head、latent或MPC反馈。
+Engineering Complete；Learning三项待用户明确报告。S3.7仅计划，不自动进入。
+
 ## S3.5 status and Run
 
 Engineering:
@@ -56,9 +84,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU .venv Python3.12.3 / NumPy2.5.4，无新依赖或下载。先读Problem→Mathematics，
 第二条先预测threshold .5→.2的不变量与FP/FN变化方向：
@@ -73,7 +101,7 @@ OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_5_outcome_heads.py --threshol
 与独立episode结果不同。验证reward RMSE .153（无量纲），三个head FN依次26/2/6；
 动作×3时failure FN44/156，sigmoid不是校准风险或机器人成功率。
 查看contract.json、report.json、evaluation.npz；threshold只改变诊断decision，不改变权重/分数。
-Engineering Complete；Learning三项待用户明确报告。S3.6仅计划，不自动进入。
+Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及五项Explain）。S3.6仅计划，不自动进入。
 
 ## S3.4 status and Run
 

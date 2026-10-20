@@ -251,9 +251,12 @@ reward≠success≠contact≠failure；一步标签≠episode结果；sigmoid≠
 
 ## My Verification / Learner Verification
 
-- [ ] Run：运行默认实验，查标签时序、reward误差和三个head完整混淆矩阵。
-- [ ] Modify：先预测threshold .5→.2的不变量及FP/FN方向，再运行核对。
-- [ ] Explain：用自己的话回答五问，画执行/标签分支与因果预测分支。
+- [x] Run：运行默认实验，查标签时序、reward误差和三个head完整混淆矩阵。
+- [x] Modify：先预测threshold .5→.2的不变量及FP/FN方向，再运行核对。
+- [x] Explain：用自己的话回答五问，画执行/标签分支与因果预测分支。
 
-Engineering Complete；Learning三项待用户明确报告。Current Task=S3.5；Next Task=S3.6仅计划。
+Engineering Complete + Learning Mastered（2026-10-20 用户明确确认实验和预测完成，并准确回答五项Explain）。
+解释覆盖四个一步输出与episode结果/边界区别、墙执行与独立标签公式、因果输入/多任务loss、
+sigmoid/BCE与非互斥事件、阈值不变量及FP/FN单调性、动作消融/OOD与闭环证据限制。
+Current Task=S3.5；Next Task=S3.6仅计划。
 STOP，不自动开始下一任务。

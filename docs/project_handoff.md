@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S3.5 — Reward / Success / Contact Prediction**，Engineering Complete；Learning待用户Run/Modify/Explain。
+Current Task = **S3.6 — Model-based Planning**，Engineering Complete；Learning待用户Run/Modify/Explain。
+S3.5 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.4 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.3 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.2 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -23,8 +24,8 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S3.6 — Model-based Planning**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.4合成XY动力学/多步/分歧/latent实验及S3.5新wall toy一步outcome heads，但未运行真实机器人World Model；S2.3仅架构与接口学习。
+Next Task = **S3.7 — MPC-style Replanning**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.5合成XY模型实验及S3.6一次性候选规划的独立toy环境执行验证，但未运行真实机器人World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
 
@@ -1645,3 +1646,88 @@ README/roadmap更新Engineering Complete，学习三项未勾选，只有用户�
 限制：toy一步事件不等于最终任务success/failure；contact是几何截断无真实force，failure score无校准保证。
 未训练head-driven policy、未集成latent/动力学或执行规划/机器人闭环；collection结果不是head控制成功证据。
 Current Task=S3.5；Next Task=S3.6仅计划。用户读Problem→Mathematics→Run→先预测threshold.5→.2后Modify→五问Explain；STOP。
+
+## S3.5 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均已完成，五项Explain准确区分四个一步输出、episode_success与
+terminated/truncated：事件不终止本toy episode，20步time limit才截断。
+正确写出attempted nominal transition、右墙clip/contact、goal occupancy、边界failure与
+progress/contact/failure reward公式，说明正reward不等于success、contact不等于failure，
+独立语义定义不等于统计独立。
+准确给出4→32→4/292参数、输入当前state/action [m]、reward无量纲与三个sigmoid分数、
+标准化reward MSE+三head平均BCE；事件非互斥，因此不用softmax，next_state只作标签来源。
+明确threshold.5→.2时数据/权重/统计/reward/分数/Brier/BCE不变，TP/FP非减、FN/TN非增，
+复述validation success FN26→12、contact FN2→1、failure FN6不变且FP1→5。
+正确说明failure分数只预测一步边界事件，未校准为机器人未来失败风险。
+准确比较reward train/validation/OOD误差与failure FN6/138→44/156，区分保留原标签的
+zero-action输入消融和实际执行零动作；离线loss/contact accuracy/手写采集结果不构成
+head-driven policy/planner或真实机器人闭环成功、安全证据。
+README与学习包Run/Modify/Explain已勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅修改四份状态文档，未重跑Python实验、安装或下载。
+环境与工程结果沿用上述S3.5记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU），
+不增加真实contact物理、风险校准或闭环成功声明。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档修改。
+Current Task=S3.5（已掌握）；Next Task=S3.6 — Model-based Planning，仅计划。
+等待用户选择，不自动进入下一任务；未commit/push。
+
+## S3.6 Engineering — 2026-10-20
+
+用户明确请求推进S3.6学习；启动pwd正确，已有S3.5学习确认四份文档修改全部保留。
+读取AGENTS、README、handoff、roadmap、S0.1模板、S3.1/S3.3训练接口与S3.5环境/数据代码；此前无S3.6包。
+新增[学习包](vla/s3_6_model_based_planning.md)、[脚本](../scripts/s3_6_model_based_planning.py)、
+[测试](../tests/test_s3_6_model_based_planning.py)。仅本任务，未实现S3.7 feedback/replanning。
+
+执行前核对repo `.venv/bin/python` / prefix/base_prefix，Python3.12.3 / NumPy2.5.4，实际模块路径
+`/home/lucas/projects/embodied-ai-playground/.venv/lib/python3.12/site-packages/numpy/__init__.py`。
+CPU单BLAS线程，无新依赖/安装/dataset/weights下载/旧repo访问或旧checkpoint修改；requirements不变。
+重新生成S3.5 wall source seed350/split351，train40/800、held-out20/400；匹配墙数据重新训练226参数
+residual dynamics，seed360、Adam.01/2000步，train-only input/delta统计，未混用S3.1无墙checkpoint。
+数据raw float32、模型float64；action仍world commanded displacement[m]，dt.1s。
+
+新profile s3_6_wall_planning/1.0，20个held-out t0初态全部保留。默认N128/H10，候选index0零动作，
+其余按episode/candidate-specific seed生成两段随机命令与active duration，余下是真实零命令非padding。
+N32是N128严格前缀，生成器不看goal/真实未来；每轴命令≤.06m。
+learned rollout→known dimensionless task cost→argmin，仅t0规划，所选10步整段open-loop执行。
+cost=terminal距离²/.1m²+.05mean路径距离²/.1m²+5sum未来边界违规+.01mean命令²/.06m²。
+不接S3.5 learned reward/risk heads或S3.4 latent；选择先于该reset任何真实候选future评价。
+同初态/候选比较learned、ideal wall-aware addition、zero、fixed random index1、特权plant cost oracle。
+实际plant nominal为S3.5 wall step；weak_gain在plant内部将命令×.65后step，planner不知gain且选同一序列。
+成功=最终goal occupancy且10个future states无边界违规；失败分boundary_violation/goal_not_reached。
+只有toy数值plant，无真实机器人或MPC闭环success声明。oracle仅同bank最小cost，不是全局或最大成功率上界。
+
+Executed final code:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_6_model_based_planning.py --output tmp/s3_6_final
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_6_model_based_planning.py --candidates 32 --output tmp/s3_6_n32_final
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s3_*.py' -v
+.venv/bin/python -m pip check
+git diff --check
+```
+
+首版另运行tmp/s3_6_verified/tmp/s3_6_n32_verified；最终版增加candidate_success_count与coverage/selection
+诊断，模型/执行结果相同。model.npz SHA256记录report且评价末尾核验未变。
+单步held-out RMSE .373134mm。N128 nominal learned/ideal/zero/random/oracle成功19/8/0/0/19（各20次），
+weak_gain为6/2/0/0/15。learned nominal失败0 boundary/1 goal，weak_gain 0 boundary/14 goal。
+learned nominal/weak_gain平均actual cost .128948/.490862，bank regret .002018/.242964，
+selected终点预测L2均值3.768/65.097mm；预测成功均19，实际虚报0/13。
+nominal1个bank无成功candidate，learned选错可成功bank为0；weak_gain5个bank无成功candidate，
+另9个bank有成功candidate但learned选择失败。所有20初态/每组完整分母保留，不筛失败。
+N32 nominal learned/oracle13/13，7个bank无成功candidate；weak_gain learned/oracle6/8，12个bank无成功，
+learned另2个bank有成功candidate却选失败。zero/random实际轨迹与cost不变，但bank oracle变动会改变其regret。
+最终N128 learned rollout/score/select p50/p95 .683442/1.592837ms，generation1.507280/3.861850ms；
+N32对应.223997/.678625ms、.389721/1.073543ms，各20reset samples/warmup0。
+两阶段p95不可直接相加作端到端p95；不含训练、真实plant、文件I/O或robot执行，非deadline保证。
+
+23/23 Stage3测试通过（此前18项+本轮5项）：嵌套候选/限幅/零动作、递归与reset隔离、
+patch真实plant拒绝以验证选择不访问plant、argmin与失败分期、nonfinite拒绝。
+独立inline核对N128/N32模型与hash一致、source/split/初态一致、候选/ideal/真实plant前缀逐值相同、
+learned预测/score前缀atol1e-12数值等价、嵌套min predicted cost单调、train统计重算、checkpoint完整rollout逐值重放；
+每attempt所选序列重新在独立plant执行逐值重现，argmin/oracle/cost/coverage/regret/成功重算，
+各summary success+failure=20、跨plant learned choice一致、zero/random实际cost不变；全部PASS。
+5类CLI非法/已有目录拒绝（N1/N513/epochs0/10001/已有output），report不覆盖。
+pip check无冲突；Markdown本地链接及git diff --check通过；产物ignored tmp/，未commit/push。
+README/roadmap更新Engineering Complete，Learning三项未勾选，仅用户反馈可确认掌握。
+限制：固定goal/wall、20reset/单seed、有限candidate coverage；低离线loss不保证执行器变化下的规划表现，
+无视觉语言policy/真实接触力/风险校准或机器人闭环证据，也未用反馈修复weak_gain失败。
+Current Task=S3.6；Next Task=S3.7仅计划。用户读Problem→Mathematics→Run→先预测N128→32后Modify→五问Explain；STOP。
