@@ -29,10 +29,10 @@ flowchart TD
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
 | 3 | Robot World Models | S3.1–S3.8 Engineering Complete + Learning Mastered |
-| 4 | VLA × World Model Integration | S4.1–S4.3 Engineering Complete + Learning Mastered；S4.4 Engineering Complete，Learning pending |
+| 4 | VLA × World Model Integration | S4.1–S4.4 Engineering Complete + Learning Mastered；S4.5 Engineering Complete，Learning pending |
 
-Current Task = **S4.4 — Rejection / Alternate Action**
-Next Task = **S4.5 — Receding-horizon Replanning**（仅计划）
+Current Task = **S4.5 — Receding-horizon Replanning**
+Next Task = **S4.6 — Final Benchmark**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,33 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S4.5 status and Run
+
+Engineering:
+
+- [x] Code — 冻结VLA→WM→gate，execute-prefix/真实state刷新与belief-only重规划对照
+- [x] Experiment — nominal/gain/kick/unsupported，E1/3、完整失败分母/物理时序/阶段latency
+- [x] Docs — [S4.5学习包](docs/vla/s4_5_receding_horizon.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU .venv Python3.12.3 / NumPy2.5.4，无安装/下载/训练/重新校准。
+默认读取`tmp/s4_4_final`及其完整上游来源；自有产物用`--gate tmp/my_s4_4`。
+先读Problem→Mathematics，第二条先预测E1→3：
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_5_receding_horizon.py --output tmp/my_s4_5
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_5_receding_horizon.py --execute 3 --output tmp/my_s4_5_e3
+```
+
+查看contract/protocol/report.json与executions.npz。H3固定，每episode8步；E3调用ticks0/3/6、前缀3/3/2。
+Kick下真实反馈E1/E3前缀RMSE30/42.426mm，belief-only约79.373mm；任务成功仍全部0/16。
+这是反馈时序学习实验，学习待Run/Modify/Explain；S4.6最终benchmark仅计划。
+
 ## S4.4 status and Run
 
 Engineering:
@@ -56,9 +83,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU .venv Python3.12.3 / NumPy2.5.4，无安装/下载/训练/重新校准。
 默认读取`tmp/s4_3_final_checked`及其上游文件；自有S4.3 source用`--scores tmp/my_s4_3`。
@@ -71,7 +98,7 @@ OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_4_rejection_alternate.py --re
 
 查看contract.json、decisions.npz、report.json与summary.csv。默认VLA替代将本bank的unsafe chunk从16/16降至0/16，
 goal success仍0/16；probe有3个zero fallback继续停在禁入区。α1 strict全部fallback且误拒所有good。
-只有一次H3 open-loop选择/执行，没有observe/replan；学习待Run/Modify/Explain，S4.5仅计划。
+只有一次H3 open-loop选择/执行，没有observe/replan；S4.4 Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及五项Explain）；用户已授权推进S4.5，见当前任务状态。
 
 ## S4.3 status and Run
 

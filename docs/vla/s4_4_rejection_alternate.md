@@ -203,8 +203,15 @@ strict success为什么全部fallback，以及为什么拦截bad不能证明fall
 
 ## My Verification
 
-- [ ] Run：检查gate、选择index、实际commands/trajectory、bad与good分母以及fallback unsafe。
-- [ ] Modify：先预测开启require-success的原数据不变量、全拒/全fallback与good误拒，再运行新目录核对。
-- [ ] Explain：独立回答上述五问，区分候选统计、实际chunk结果与closed-loop success。
+- [x] Run：检查gate、选择index、实际commands/trajectory、bad与good分母以及fallback unsafe。
+- [x] Modify：先预测开启require-success的原数据不变量、全拒/全fallback与good误拒，再运行新目录核对。
+- [x] Explain：独立回答上述五问，区分候选统计、实际chunk结果与closed-loop success。
 
-Engineering Complete；Learning未确认。Current Task=S4.4；Next Task=S4.5 — Receding-horizon Replanning仅计划，STOP。
+Engineering Complete + Learning Mastered（2026-10-20 用户确认）。Current Task=S4.4；Next Task=S4.5 — Receding-horizon Replanning仅计划，STOP。
+
+2026-10-20 用户明确确认实验和预测均完成，五项Explain准确覆盖默认/strict gate公式、primary优先、
+eligible argmax/稳定tie和−1显式zero；selector与evaluator信息隔离，所有主要张量shape/dtype/单位/时序；
+bad/risk-free/good定义及bank/primary/实际执行不同分母；allowed_bad不包含新zero fallback，
+三个初态在圆盘内的probe零命令失败、VLA风险下降但goal仍0/16；strict保留原bank truth不变，
+改变chosen/commands及所选执行轨迹，全拒导致26/30个good全部误拒，不证明安全或控制提升。
+Run/Modify/Explain依据用户报告全部勾选；保持一次H3 open-loop范围，S4.5未开始。

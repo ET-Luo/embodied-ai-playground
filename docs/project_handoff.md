@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S4.4 — Rejection / Alternate Action**，Engineering Complete，Learning pending。
+Current Task = **S4.5 — Receding-horizon Replanning**，Engineering Complete，Learning pending。
+S4.4 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.3 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.2 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.1 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -31,7 +32,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S4.5 — Receding-horizon Replanning**，仅计划，不自动推进。
+Next Task = **S4.6 — Final Benchmark**，仅计划，不自动推进。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.7合成XY模型/规划/反馈及S3.8固定视频world model架构/解析反例学习包，但未运行真实机器人或大型视频World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -2220,3 +2221,85 @@ pip check、git diff --check通过。产物ignored tmp，未修改旧repo、comm
 README/roadmap同步S4.4 Engineering Complete，Learning Run/Modify/Explain未勾选。
 Current Task=S4.4；Next Task=S4.5 — Receding-horizon Replanning仅计划。
 用户读Problem→Mathematics→Run→先预测require-success后Modify→五问Explain；STOP等待用户确认及选择。
+
+## S4.4 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均完成；五项Explain准确说明risk-only/strict拒绝公式、primary-preserving选择、
+eligible success argmax/稳定tie、无候选−1显式zero且不能bank[-1]；selector仅读预测margin/冻结buffer/
+scale与开关、不读truth/labels/gain，bank/score/rejected/index/command/actual trajectory/clock精确契约。
+正确区分bad、risk-free、good，160/80候选与32/16每方法attempt、primary子集分母及误拒risk-free/good；
+解释allowed_bad=0不包含新增fallback，probe3个初态在圆盘内zero仍unsafe，VLA监测risk降低但goal0/16。
+明确strict改变gate/选择/实际执行，原model/source/bank AR/scores/buffers/bank truth/gain与baseline不变；
+success score上界10mm低于buffer15.516mm导致全fallback与误拒所有26/30个good，不构成安全/控制提升。
+README与学习包Run/Modify/Explain全勾选，roadmap同步Learning Mastered。
+启动pwd正确、git status --short为空；本轮仅更新四份状态文档，未重跑实验、训练、安装或下载。
+环境与工程证据沿用S4.4记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU）。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对四份文档修改。
+Current Task=S4.4（Engineering Complete + Learning Mastered）；Next Task=S4.5 — Receding-horizon Replanning仅计划。
+保留zero fallback风险、strict退化及无新闭环证据的限制；未自动推进S4.5，未commit/push。
+
+## S4.5 Engineering — 2026-10-20
+
+用户明确请求继续S4.5。启动pwd正确，保留S4.4学习确认已有README/handoff/roadmap/package四份修改。
+读取AGENTS/README/handoff/roadmap、S0.1模板、S4.4学习包/script与S3.7反馈源码，
+核对S1.7 checkpoint loader/S4.1 proposal接口；S4.5此前无包。本轮仅实现当前任务，未进入S4.6。
+[学习包](vla/s4_5_receding_horizon.md)、[script](../scripts/s4_5_receding_horizon.py)、
+[tests](../tests/test_s4_5_receding_horizon.py)。
+
+环境重新确认repo `.venv/bin/python` Python3.12.3 / NumPy2.5.4，实际NumPy模块
+`.venv/lib/python3.12/site-packages/numpy/__init__.py`，CPU；无安装/下载/训练/重新校准。
+默认source `tmp/s4_4_final`，完整沿S4.4→S4.3→S4.2→S4.1→S1.5读取与hash/语义核对；
+model/weights readonly，source前后hash一致，继承原risk-only、alpha1与buffers。
+每decision从当前RGB/text/observed-or-belief state重新提K5/H3，冻结WM预测后gate，执行min(E,8−t)，
+丢弃旧后缀；没有warm suffix或候选搜索扩张。H3预测/gate始终固定，包括episode末预算外未执行尾部，
+明确记录这一额外保守/rolling success与episode goal不同的限制。
+Observed分支在decision边界刷新actual float32 state；belief分支只沿model prefix endpoint转float32推进。
+Planning goal从当前RGB/literal解析，evaluator annotation不进控制；gain/kick只在plant。
+
+Protocol四条件各8旧validation layouts×2texts=16attempts：nominal gain1、hidden gain.65、
+hidden world-x+.12m kick在第2次transition后、unsupported grab red/blue block。
+每run双方法共128attempts，预算8、dt.1s，无early success stop；精确观测/静态RGB，不是真机器人。
+未知语言保留T0拒绝/一个初始state/空action，绝不伪造zero episode；原proposal ValueError stage
+记为policy_input_or_output_rejection，错误原因写入plan。其它stage为monitoring_risk或final_goal_error_after_budget。
+Goal success与risk-free episode success分开，实际监测风险看执行p1…p8，不看初态/连续线段。
+
+Executed:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_5_receding_horizon.py --output tmp/s4_5_verified > tmp/s4_5_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_5_receding_horizon.py --execute 3 --output tmp/s4_5_e3_verified > tmp/s4_5_e3_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s4_5*.py'
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_5_receding_horizon.py --output tmp/s4_5_final > tmp/s4_5_final_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_5_receding_horizon.py --execute 3 --output tmp/s4_5_e3_final > tmp/s4_5_e3_final_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests
+.venv/bin/python -m pip check
+git diff --check
+```
+
+两E/双方法所有组success与goal success均0/16，已执行unsafe均0/16；前三条件完整8步、
+各16个final_goal_error_after_budget；unsupported各16次输入拒绝，正常accepted latency与RMSE为null。
+E1每episode8plans、完整16case组128accepted；E3每episode3plans(ticks0/3/6)、prefix3/3/2、组48accepted。
+本次fallback0，单元测试strict模拟覆盖fallback执行/再次重规划；不据此否定S4.4 fallback风险。
+每run5次完整episode warmup排除；原source/hash/protocol与跨E首decision bank/WM/chosen不变。
+
+执行前缀RMSE[m] observed/belief E1：nominal2.794e-9/6.202e-9、gain.012354/.043198、kick.030000/.079373。
+E3：nominal2.678e-9/4.261e-9、gain.014478/.030785、kick.042426/.079373。
+仅已执行prefix、完整16case组256个物理coordinate scalars；belief误差含历史漂移，跨E也改变lead time与visited states。
+Kick解析核对：E1仅step2带120mm x误差→120/sqrt16=30mm；E3 step2/3带误差→42.426mm；
+belief step2…8七个位置均带偏差→79.373mm。真实反馈修正下一规划起点，但没有改善任务成功。
+
+Nominal observed planning per-call median/P95 E1 .2525/.3550ms(128calls)、E3 .2673/.4577ms(48calls)；
+per-episode planning median E1 2.0754ms / E3 .8056ms。
+每decision分别render/proposal/WM/score_gate、planning总和、plant apply；总和不再与子项相加。
+Score_gate含goal解析/margins/gate/gather，fallback时含zero WM预测；输入拒绝另计，不混正常推理。
+全部accepted本地compute超过n*.1s预算次数0；无sensor/通信/servo/IO等待，也没有按模拟时钟sleep，非整机实时保证。
+
+7项新增tests与全59项通过：E-prefix/末余2、kick观察边界、belief不读gain/kick实测、evaluator goal隔离/无early stop、
+strict zero持续执行/重规划、unknown零动作保留、prefix RMSE真实分母。
+独立inline审计两run共256attempt的gain/kick逐转移、T/T+1/clock/dtype、所有prefix、feedback/belief起点、
+belief跨nominal/gain/kick的bank/prediction/commands相同、跨E源hash/首decision不变、goal/risk/失败/256scalar分母。
+NPZ逐字段round-trip、已有output保护、E0/E4/缺source拒绝、文档local links、pip check、git diff --check通过。
+产物ignored tmp；未修改旧repo，未commit/push。
+README/roadmap同步S4.5 Engineering Complete，Learning Run/Modify/Explain未勾选。
+Current Task=S4.5；Next Task=S4.6 — Final Benchmark仅计划。
+用户读Problem→Mathematics→Run→先预测E1→3后Modify→五问Explain；STOP等待用户确认及选择。
