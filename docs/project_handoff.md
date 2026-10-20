@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S4.3 — Risk / Success Scoring**，Engineering Complete，Learning pending。
+Current Task = **S4.4 — Rejection / Alternate Action**，Engineering Complete，Learning pending。
+S4.3 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.2 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.1 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.8 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -30,7 +31,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S4.4 — Rejection / Alternate Action**，仅计划，不自动推进。
+Next Task = **S4.5 — Receding-horizon Replanning**，仅计划，不自动推进。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.7合成XY模型/规划/反馈及S3.8固定视频world model架构/解析反例学习包，但未运行真实机器人或大型视频World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -2131,3 +2132,91 @@ NPZ逐字段round-trip、修改文档local links、pip check、git diff --check�
 README/roadmap同步Engineering Complete，S4.3 Learning Run/Modify/Explain均未勾选。
 Current Task=S4.3；Next Task=S4.4 — Rejection / Alternate Action仅计划。
 用户读Problem→Mathematics→Run→先预测margin-scale1→0后Modify→五问Explain；STOP等待用户确认及选择。
+
+## S4.3 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均完成；五项Explain准确覆盖risk/success几何margin公式、m单位、
+边界/未来h1…3/末h3定义、两事件独立及非连续碰撞限制；scorer只用AR/current goal，
+完美合成RGB/literal解析非learned grounding，AR/truth/goal/score/flag/label的精确shape/dtype，
+TF不参与评分、未来只作校准/事后评价。
+正确计算64×5=320 calibration、32×5=160 heldout与16×5=80旧VLA候选，
+group max再q90 higher第58项、buffer5.476/15.516mm，heldout/VLA不参与拟合。
+准确说明alpha1→0原始数据/score/label/buffer/coverage不变，risk FP不增FN不减，
+success FP不减FN不增及两heldout条件的实际混淆计数；success score上界10mm低于buffer，
+alpha1全负与constant_negative等价。正确区分VLA正例0的FNR=null、group error-buffer coverage
+与分类准确率/概率校准，以及flags与控制执行、局部latency与整机时延。
+README和学习包Run/Modify/Explain全部勾选，roadmap同步Learning Mastered。
+启动pwd正确、git status --short为空；本轮仅更新四份状态文档，未重新运行实验、训练、安装或下载。
+环境与工程结果沿用S4.3记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU）。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档修改。
+Current Task=S4.3（Engineering Complete + Learning Mastered）；Next Task=S4.4 — Rejection / Alternate Action仅计划。
+保留success全负退化、机制偏移覆盖下降与无新闭环证据的限制；未自动推进S4.4，未commit/push。
+
+## S4.4 Engineering — 2026-10-20
+
+用户明确请求继续S4.4。启动pwd正确，保留S4.3学习确认遗留README/handoff/roadmap/package四份修改。
+读取AGENTS/README/handoff/roadmap、S0.1模板、S4.3 package/script/tests与source产物；
+当前S4.4此前无包。本轮只实现S4.4，未进入S4.5/S4.6。
+[学习包](vla/s4_4_rejection_alternate.md)、[script](../scripts/s4_4_rejection_alternate.py)、
+[tests](../tests/test_s4_4_rejection_alternate.py)。
+
+环境重新确认repo `.venv/bin/python` Python3.12.3、NumPy2.5.4，实际模块
+`.venv/lib/python3.12/site-packages/numpy/__init__.py`，CPU；无安装/下载/训练/重新校准。
+默认读取`tmp/s4_3_final_checked`；加载其S4.2/S4.1源文件并检查schema/geometry/plant/frame/unit/dt、
+model/proposal hashes、AR/truth/scores/labels及校准buffer重算；所有source前后hash一致。
+只读继承S4.3 buffers=5.475521/15.516195mm与scale1。
+顺手纠正S4.3 goal契约表的dtype表述为probe float32 / VLA float64，与实际NPZ一致，未改变数值或评分语义。
+
+先向用户说明默认risk-only gate与strict对照，避免把S4.3全负success藏掉。
+默认拒绝risk flags；candidate0通过即保留，否则在eligible中argmax predicted success margin，
+并列最低index，无候选输出−1 sentinel与显式(3,2)float32 zero commands。
+strict额外要求success flag。Selector只读predicted scores/buffers/scale，无actual labels/truth/gain。
+独立对照candidate0/reject_only/alternate，每条件各G个attempt，分别reset后执行完整H3。
+zero不被默认视为安全；unknown文本原2次input拒绝不进gate、不造zero episode。
+实际bad=risk事件，good=risk-free且h3 goal success，另报risk-free被拒（包括未达goal的neutral动作）。
+全bank分母G×5、primary分母G与实际每方法G个attempt分别记录。
+
+Executed:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_4_rejection_alternate.py --output tmp/s4_4_verified > tmp/s4_4_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_4_rejection_alternate.py --require-success --output tmp/s4_4_strict_verified > tmp/s4_4_strict_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s4_4*.py'
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_4_rejection_alternate.py --output tmp/s4_4_final > tmp/s4_4_final_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_4_rejection_alternate.py --require-success --output tmp/s4_4_strict_final > tmp/s4_4_strict_final_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests
+.venv/bin/python -m pip check
+git diff --check
+```
+
+Default全候选计数：probe ID160中actual bad24全拒，risk-free136中误拒6，actual good26中误拒2；
+probe gain.65的160中bad23全拒，risk-free137中拒7，good30中误拒0。
+VLA nominal80中bad56全拒/risk-free24拒0；shift80中bad48全拒/risk-free32拒8；good均0。
+allowed_bad本次均0，但不保证随后fallback安全。Primary子集统计独立见report。
+
+实际H3执行unsafe/risk-free goal successes：probe ID candidate0=5/1、reject_only=3/1、alternate=3/1，
+每方法32attempts；probe gain.65为4/4、3/4、3/4。Alternate两probe条件均27primary/1alternate/4fallback，
+各有3次zero fallback仍在监测圆盘内（初态已在圆盘），保留此失败，不加escape oracle。
+VLA两条件每方法16attempts，candidate0 unsafe16、goal success0；reject_only zero16次unsafe0/success0；
+alternate替换16次unsafe0/success0，没有任务成功改善证据。
+
+Strict因为success score≤10mm<15.516mm buffer，所有候选被拒，probe每条件32/32 fallback、
+VLA每条件16/16 fallback；probe仍unsafe3/32、goal success0，VLA unsafe0/16、success0。
+Strict误拒probe全部26/30个good；VLA good为0，误拒good0不代表完美保留有用动作。
+原source/model/buffers/raw bank/scores/labels/gain及candidate0 baseline不变。
+
+Gate-only batch latency：probe ID median/P95 .0221/.0231ms（32contexts），
+VLA nominal .0645/.0787ms（16contexts），均30测量/5warmup。
+仅flags+candidate选择，排除WM/score计算/commands/plant/IO/真实链路，不作速度排名或实时保证。
+只做一次选择后H3 open-loop replay，不读执行反馈重规划，closed_loop_success=null。
+S4.1原8步candidate0闭环0/16能力证据不被本节三步结果覆盖。
+
+7项新增测试通过，全52项通过：primary优先、eligible argmax/tie、无备选与−1显式zero、
+strict全fallback、risk-free与good分开、zero仍unsafe、selector不读实际标签及NaN拒绝。
+独立inline跨strict核对source/code hash、原始数据/score/labels不变量，重算gate与chosen、
+逐条commands→float32 plant三步、T/T+1/dtype/clock、risk/goal及所有方法分母/stage分区。
+NPZ逐字段round-trip、已有output保护、missing source与unit错配拒绝、本地Markdown链接、
+pip check、git diff --check通过。产物ignored tmp，未修改旧repo、commit/push。
+README/roadmap同步S4.4 Engineering Complete，Learning Run/Modify/Explain未勾选。
+Current Task=S4.4；Next Task=S4.5 — Receding-horizon Replanning仅计划。
+用户读Problem→Mathematics→Run→先预测require-success后Modify→五问Explain；STOP等待用户确认及选择。

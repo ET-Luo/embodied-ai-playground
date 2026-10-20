@@ -29,10 +29,10 @@ flowchart TD
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
 | 3 | Robot World Models | S3.1–S3.8 Engineering Complete + Learning Mastered |
-| 4 | VLA × World Model Integration | S4.1–S4.2 Engineering Complete + Learning Mastered；S4.3 Engineering Complete，Learning pending |
+| 4 | VLA × World Model Integration | S4.1–S4.3 Engineering Complete + Learning Mastered；S4.4 Engineering Complete，Learning pending |
 
-Current Task = **S4.3 — Risk / Success Scoring**
-Next Task = **S4.4 — Rejection / Alternate Action**（仅计划）
+Current Task = **S4.4 — Rejection / Alternate Action**
+Next Task = **S4.5 — Receding-horizon Replanning**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,33 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S4.4 status and Run
+
+Engineering:
+
+- [x] Code — 冻结S4.3 gate、primary优先/允许备选argmax/显式zero fallback、独立H3实际执行
+- [x] Experiment — candidate0/reject-only/alternate对照，拦截bad与误拒good，strict全fallback和zero风险反例
+- [x] Docs — [S4.4学习包](docs/vla/s4_4_rejection_alternate.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU .venv Python3.12.3 / NumPy2.5.4，无安装/下载/训练/重新校准。
+默认读取`tmp/s4_3_final_checked`及其上游文件；自有S4.3 source用`--scores tmp/my_s4_3`。
+先读Problem→Mathematics，第二条先预测严格success要求的影响：
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_4_rejection_alternate.py --output tmp/my_s4_4
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_4_rejection_alternate.py --require-success --output tmp/my_s4_4_strict
+```
+
+查看contract.json、decisions.npz、report.json与summary.csv。默认VLA替代将本bank的unsafe chunk从16/16降至0/16，
+goal success仍0/16；probe有3个zero fallback继续停在禁入区。α1 strict全部fallback且误拒所有good。
+只有一次H3 open-loop选择/执行，没有observe/replan；学习待Run/Modify/Explain，S4.5仅计划。
+
 ## S4.3 status and Run
 
 Engineering:
@@ -56,9 +83,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU .venv Python3.12.3 / NumPy2.5.4，无安装/下载/重新训练。
 默认读取`tmp/s4_2_verified`及其S4.1源文件；自己的S4.2产物用`--verification tmp/my_s4_2`。
@@ -71,7 +98,7 @@ OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_3_risk_success_scoring.py --m
 
 查看contract.json、scores.npz、report.json与confusion.csv。独立heldout ID中，risk raw/裕量规则FP/FN为0/1与6/0。
 Success裕量15.516mm大于10mm容差，规则全报不成功：FP0但漏掉32/32真实成功，与constant_negative相同。
-分数不是概率；probe不是VLA成功，flags不控制执行。Learning等待Run/Modify/Explain；S4.4仅计划。
+分数不是概率；probe不是VLA成功，flags不控制执行。S4.3 Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及五项Explain）；用户已授权推进S4.4，见当前任务状态。
 
 ## S4.2 status and Run
 

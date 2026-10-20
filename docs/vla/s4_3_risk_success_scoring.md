@@ -24,7 +24,7 @@
 | source actions | (16,K,3,2) float32 | world XY commanded displacement[m]；dt=.1s；原S4.1冻结bank |
 | AR / actual truth | (16,K,4,2) float64 / float32 | world XY[m]，含初态+3步；**评分不使用TF预测** |
 | RGB / text | (16,32,32,3) uint8 / (16,) Unicode | 仅取当下合成标记与literal语言，完美解析所选颜色目标 |
-| goal | (G,2) float64 | 当前已知world XY[m]，非从真实未来或成功标签反推 |
+| goal | (G,2) probe float32 / VLA float64 | 当前已知world XY[m]，非从真实未来或成功标签反推 |
 | risk / success score | (G,K) float64 | 有符号几何margin[m]；正值表示预测事件发生，不是概率 |
 | actual margin / label | (G,K) float64 / bool | 从独立plant真值算，仅用于校准或事后评价 |
 | flags | (G,K) bool | 有裕量的诊断判断，不控制执行或拒绝 |
@@ -197,8 +197,15 @@ S4.1 candidate0闭环0/16的能力结论保留；本节三步goal occupancy标�
 
 ## My Verification
 
-- [ ] Run：检查两个margin、独立calibration/heldout、VLA正例0与success全负基线。
-- [ ] Modify：先预测α1→0的数据/score/buffer不变量及FP/FN取舍，再运行新目录核对。
-- [ ] Explain：独立回答上述五问，手算320/160/80分母与全负预测的FP/FN。
+- [x] Run：检查两个margin、独立calibration/heldout、VLA正例0与success全负基线。
+- [x] Modify：先预测α1→0的数据/score/buffer不变量及FP/FN取舍，再运行新目录核对。
+- [x] Explain：独立回答上述五问，手算320/160/80分母与全负预测的FP/FN。
 
-Engineering Complete；Learning未确认。Current Task=S4.3；Next Task=S4.4 — Rejection / Alternate Action仅计划，STOP。
+Engineering Complete + Learning Mastered（2026-10-20 用户确认）。Current Task=S4.3；Next Task=S4.4 — Rejection / Alternate Action仅计划，STOP。
+
+2026-10-20 用户明确确认实验和预测均已完成，五项Explain准确说明离散未来risk圆盘与末点success的
+公式、m单位、含边界和独立事件；当前RGB/literal goal来源、AR/truth与score/flag/label shape/dtype，
+TF不用于评分、真实未来只供校准或评价；64/32独立reset组与旧8布局的分母，group max后q90 higher第58项，
+heldout/VLA不参与拟合。准确解释alpha1→0不变量和FP/FN方向及具体计数、success buffer大于score上界
+造成constant_negative退化；正确区分正例0时FNR=null、group覆盖与概率校准/分类准确率、flags与闭环执行、
+局部latency与整机实时。Run/Modify/Explain依据用户报告全部勾选；不增加风险拦截或闭环能力声明。
