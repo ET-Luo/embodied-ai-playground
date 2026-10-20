@@ -246,9 +246,12 @@ E4把规划次数10降到3，反馈成功18/20；模型未适应gain，只是每
 
 ## My Verification / Learner Verification
 
-- [ ] Run：运行E1，核对三方法/三条件及source hash、完整失败与计算开销。
-- [ ] Modify：先预测E1→4，再运行对照，检查t=0/4/8与最后2步；可选E10退化核验。
-- [ ] Explain：用自己的话回答五问，画观测/预测belief的不同反馈路径。
+- [x] Run：运行E1，核对三方法/三条件及source hash、完整失败与计算开销。
+- [x] Modify：先预测E1→4，再运行对照，检查t=0/4/8与最后2步；可选E10退化核验。
+- [x] Explain：用自己的话回答五问，画观测/预测belief的不同反馈路径。
 
-Engineering Complete；Learning三项待用户明确报告。Current Task=S3.7；Next Task=S3.8仅计划。
+Engineering Complete + Learning Mastered（2026-10-20 用户明确确认实验和预测完成，并准确回答五项Explain）。
+解释覆盖真实state与预测belief反馈路径、E1/4/10的时域/前缀/调用时刻、warm后缀、
+冻结模型纠偏但非gain辨识/稳定性证明、E变化不变量与计算取舍、重放审计及toy闭环证据边界。
+Current Task=S3.7；Next Task=S3.8仅计划。
 STOP，不自动开始下一任务。

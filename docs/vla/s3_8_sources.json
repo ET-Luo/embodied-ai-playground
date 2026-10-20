@@ -1,0 +1,40 @@
+{
+  "checked_on": "2026-10-20",
+  "scope": "Historical fixed variants for architecture learning; no latest-model survey, weights, datasets or upstream execution.",
+  "sources": [
+    {
+      "name": "DreamerV3 paper",
+      "version": "arXiv 2301.04104v2, 2024-04-17",
+      "url": "https://arxiv.org/html/2301.04104v2",
+      "sections": ["Figure 3", "World model learning", "Equation 1"],
+      "evidence": "RSSM observation posterior vs action-conditioned imagination prior; reconstruction/reward/continuation and actor-critic learning."
+    },
+    {
+      "name": "DreamerV3 official code",
+      "revision": "e01491fad6434b2245a3b8ca201dd7faedcc458c",
+      "revision_check": "git ls-remote https://github.com/danijar/dreamerv3.git HEAD",
+      "urls": [
+        "https://github.com/danijar/dreamerv3/blob/e01491fad6434b2245a3b8ca201dd7faedcc458c/dreamerv3/rssm.py",
+        "https://github.com/danijar/dreamerv3/blob/e01491fad6434b2245a3b8ca201dd7faedcc458c/dreamerv3/agent.py"
+      ],
+      "functions": ["RSSM.observe/_observe", "RSSM.imagine", "Agent.loss world-model and imagination branches"],
+      "limitation": "Static selected-function reading of this revision, not guaranteed identical to the historical paper implementation; no JAX install or run."
+    },
+    {
+      "name": "GAIA-1",
+      "version": "arXiv 2309.17080v1, 2023-09-29",
+      "url": "https://arxiv.org/html/2309.17080v1",
+      "sections": ["Figure 2", "2 Model", "2.4 Video Decoder", "Inference sampling"],
+      "evidence": "Video/text/action tokens, autoregressive image-token prediction and temporally aware video diffusion decoder. Not GAIA-2."
+    },
+    {
+      "name": "Genie 2",
+      "version": "Official introduction, 2024-12-04",
+      "url": "https://deepmind.google/blog/genie-2-a-large-scale-foundation-world-model/",
+      "sections": ["Action controls", "Generating counterfactuals", "Diffusion world model"],
+      "evidence": "Prompt image + keyboard/mouse action, latent-frame autoregression and causal Transformer/diffusion. Author demonstrations, not a reproducible physical-accuracy benchmark.",
+      "limitation": "Do not substitute Genie 1 latent-action semantics or newer Genie 3 behavior; blog is not an audited full implementation."
+    }
+  ],
+  "access_limitations": "Nature journal page redirected to inaccessible authentication; Dreamer study uses the accessible fixed arXiv v2 and official fixed source instead."
+}

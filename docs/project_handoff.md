@@ -2,7 +2,9 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S3.7 — MPC-style Replanning**，Engineering Complete；Learning待用户Run/Modify/Explain。
+Current Task = **S3.8 — Video / Generative World Model Concepts**，Engineering Complete；Learning待用户Run/Modify/Explain。
+S3.7 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
+Stage3 S3.1–S3.8工程包全部完成；S3.8 Learning尚未确认，不代表大视频模型复现。
 S3.6 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.5 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.4 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -25,8 +27,8 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S3.8 — Video / Generative World Model Concepts**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.6合成XY模型/一次性规划及S3.7冻结模型的toy状态反馈重规划，但未运行真实机器人World Model；S2.3仅架构与接口学习。
+Next Task = **S4.1 — VLA Proposal**，仅计划，不授权自动进入Stage4。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.7合成XY模型/规划/反馈及S3.8固定视频world model架构/解析反例学习包，但未运行真实机器人或大型视频World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
 
@@ -1813,3 +1815,81 @@ README/roadmap更新Engineering Complete，Learning三项未勾选，只有用�
 限制：理想无噪声XY观测、固定goal/wall/单seed20starts；MPC-style finite shrinking horizon，
 无模型适应/未知gain识别/视觉policy/真实contact或机器人实验，不提供一般稳定性或风险保证。
 Current Task=S3.7；Next Task=S3.8仅计划。用户读Problem→Mathematics→Run→先预测E1→4后Modify→五问Explain；STOP。
+
+## S3.7 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均已完成，五项Explain准确区分open_loop的t0真值、
+replan_no_feedback的模型预测prefix终点与mpc_feedback的已执行真实XY；重复搜索不等于观测反馈。
+正确写出T10/R=10-t/L=min(E,R)，列出E1 t0…9、E4 t0/4/8与4/4/2、E10单次规划，
+说明warm仅取chosen[L:]替换最后candidate、N不变，bank(N,R,2)/prediction(N,R+1,2)，单位m与dt.1s不变。
+准确解释冻结权重和normalizer仍可通过实际起点重置纠正gain引起的累计偏差，但没有模型适应、
+gain估计或稳定性/鲁棒性保证。
+明确E1→4保持checkpoint/统计/初态/T/plant/open-loop轨迹，改变观测频率、计算量及后续warm/candidate/选择，
+复述weak_gain feedback19→18/20而nominal/kick20/20，actual success无单调保证。
+准确给出source hash、train/validation隔离、planning state来源、bank/cost/argmin/plant重放、
+E10退化逐值一致等审计方法，解释no-feedback weak_gain3/20揭示搜索不能替代反馈。
+所有20次/10步固定、失败全保留；latency不含真实sensor/通信/调度和compute期间plant演化，
+不能当作物理机器人实时闭环证明。
+README与学习包Run/Modify/Explain已勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅修改四份状态文档，未重跑Python实验、安装或下载。
+环境与工程结果沿用上述S3.7记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU），
+不增加模型适应、一般闭环稳定性、真实机器人或deadline保证。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档修改。
+Current Task=S3.7（已掌握）；Next Task=S3.8 — Video / Generative World Model Concepts，仅计划。
+等待用户选择，不自动进入下一任务；未commit/push。
+
+## S3.8 Engineering — 2026-10-20
+
+用户明确请求推进S3.8；启动pwd正确，已有S3.7学习确认四份文档修改全部保留。
+读取AGENTS、README、handoff、roadmap和S0.1模板；此前无S3.8包。本轮仅S3.8，不开始Stage4。
+新增[学习包](vla/s3_8_video_world_model_concepts.md)、[sources](vla/s3_8_sources.json)、
+[脚本](../scripts/s3_8_generative_world_concepts.py)、[测试](../tests/test_s3_8_generative_world_concepts.py)。
+
+官方研究：DreamerV3 arXiv2301.04104v2 (2024-04-17) Figure3/World model learning/Equation1，
+GAIA-1 arXiv2309.17080v1 (2023-09-29) Figure2/Model/Video Decoder及sampling，
+Genie2官方2024-12-04介绍的action/counterfactual/latent diffusion架构；不混用GAIA2/Genie1或Genie3。
+`git ls-remote https://github.com/danijar/dreamerv3.git HEAD`返回
+`e01491fad6434b2245a3b8ca201dd7faedcc458c`，静态读该revision rssm.py observe/_observe/imagine和
+agent.py loss/model/imagination相关片段，未声称与历史论文逐行同版本。
+Nature全文访问被重定向到不可访问认证页，实际Dreamer依据使用可访问固定arXiv v2与固定官方源码；
+未执行上游、安装JAX、下载仓库/视频样本/dataset或weights。所有URL、日期、访问限制写入manifest。
+
+环境执行前核对repo `.venv/bin/python` / prefix/base_prefix，Python3.12.3 / NumPy2.5.4 / Pillow12.3.0；
+实际模块 `.venv/lib/python3.12/site-packages/numpy/__init__.py` 与 `PIL/__init__.py`，无新依赖/安装，requirements不变。
+本地profile s3_8_branching_video/1.0是独立解析toy，无墙/no contact任务，不沿用S3.5标签。
+20reset、左右两action、两固定隐藏mode，80真轨迹；8转移/9观测、dt.1s，动作±.015m x命令，
+隐藏b±1在整段固定，y每步漂移b*.0075m；初始画面完全相同。先验已知、未训练任何model。
+初态/action float32[m]，解析latent/state float64[m]，RGB32×32 uint8；已知位置与renderer均特权脚本逻辑，
+无learned视觉encoder/decoder、latent dynamics或denoiser。像素mean使用两真分支，是明确特权参考。
+
+Executed final code:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_8_generative_world_concepts.py --output tmp/s3_8_final
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_8_generative_world_concepts.py --samples 1 --output tmp/s3_8_k1_final
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s3_*.py' -v
+.venv/bin/python -m pip check
+git diff --check
+```
+
+初版tmp/s3_8_verified/tmp/s3_8_k1_verified发现解析加法沿用float32，最终版显式float64计算以匹配契约；
+报告/图片使用最终目录。K16 persistent/frame-resampled all-sample path MSE均.001434375m²，
+前者transition violation0，后者44.5703125%、整段invalid99.0625%；exact support coverage100%/7.5%。
+action-ignored coverage0、violation100%；mean-state path MSE.0007171875m²却violation100%。
+mean pixels/mean-state render/copy initial frame pixel MSE .001211227/.003733637/.005030121，
+末帧物体连通数真值1/mean pixels2；同初态左右action终点相距≈.24m。
+K1 persistent coverage50%、best-of-K .001434375m²；K16 coverage100%、best-of-K0，
+但all-sample MSE和sample0不变。best-of-K使用真未来挑整段sample，不等于单次部署预测/概率校准。
+K1正分支采样比例30%、K16为50.625%，是有限采样而非prior更改；hidden mode不同于ensemble uncertainty。
+
+31/31 Stage3测试通过（此前27项+本轮4项）：相同context动作反事实、持久/逐帧joint、K前缀/
+覆盖vs单次误差、均值像素ghost。独立inline核对所有dtype/shape、K真值/动作/图像不变量、样本前缀、
+renderer与均值重载、全部物理/分布metric、mean MSE解析值、左右共用随机mode、GIF9frames、PNG1044×624，
+source manifest读取与3类CLI拒绝（K0/K65/已有output）及report不覆盖，全部PASS。
+已用view_image检查最终comparison.png，GIF可解码；图像是脚本渲染而非上游模型结果。
+pip check无冲突；Markdown本地链接及git diff --check通过，产物ignored tmp/，未commit/push。
+无learned model，因此不报告虚构train loss、model inference latency或robot success；
+未证明任何官方模型有本toy失败率，不做开放世界覆盖/真实物理准确或闭环控制声明。
+README/roadmap同步S3.8 Engineering Complete；Stage3工程包全部完成，S3.8 Learning三项未勾选。
+Current Task=S3.8；Next Task=S4.1 — VLA Proposal仅计划，不自动开始Stage4。
+用户读固定架构表/公式→Run→先预测K16→1后Modify→五问Explain；STOP。

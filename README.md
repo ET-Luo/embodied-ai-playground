@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0及S1.1–S1.7工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断与冻结checkpoint闭环评价；已有S3.1–S3.6动力学与一次性规划实验、S3.7冻结模型的状态反馈重规划对照，仅合成XY验证，不代表真实机器人world model。
+以上是最终能力链；当前完成Stage0及S1.1–S1.7工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断与冻结checkpoint闭环评价；已有S3.1–S3.7合成XY模型/规划/反馈实验及S3.8视频world model架构与解析反例学习包，仅小型概念验证，不代表真实机器人world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
-| 3 | Robot World Models | S3.1–S3.6 Engineering Complete + Learning Mastered；S3.7 Engineering Complete，Learning待核验 |
+| 3 | Robot World Models | S3.1–S3.8 Engineering Complete；S3.1–S3.7 Learning Mastered，S3.8 Learning待核验 |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S3.7 — MPC-style Replanning**
-Next Task = **S3.8 — Video / Generative World Model Concepts**（仅计划）
+Current Task = **S3.8 — Video / Generative World Model Concepts**
+Next Task = **S4.1 — VLA Proposal**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,33 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S3.8 status and Run
+
+Engineering:
+
+- [x] Code — 解析动作条件双分支sampler/renderer，持久/逐帧重抽/均值/忽略动作反例，PNG/GIF
+- [x] Experiment — 20reset/80真轨迹，物理joint与像素误差分离、K16/1及best-of-K边界
+- [x] Docs — [S3.8学习包](docs/vla/s3_8_video_world_model_concepts.md)、[固定来源清单](docs/vla/s3_8_sources.json)：DreamerV3/GAIA-1/Genie2
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU .venv Python3.12.3 / NumPy2.5.4 / Pillow12.3.0，无训练/安装/dataset或weights下载。
+先读官方架构表与数学；第二条先预测K16→1对真值、sample0、coverage与best-of-K的不同影响：
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_8_generative_world_concepts.py --output tmp/my_s3_8
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_8_generative_world_concepts.py --samples 1 --output tmp/my_s3_8_k1
+```
+
+查看comparison.png/gif、contract.json和report.json。逐帧重抽与持久分支有相同平均位置MSE，
+但前者44.57%转移违例；pixel mean误差更低却出现两个ghost物体。K减少使support覆盖100%→50%，
+单个sample未变，best-of-K使用未来真值，非部署success。解析示例不是learned video model或官方复现。
+Stage3工程包全部完成；S3.8学习三项待用户明确报告。S4.1仅计划，不自动进入Stage4。
+
 ## S3.7 status and Run
 
 Engineering:
@@ -56,9 +83,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU .venv Python3.12.3 / NumPy2.5.4，无训练/新依赖/下载。默认只读 `tmp/s3_6_final`，
 自己的S3.6 source用 `--checkpoint tmp/my_s3_6`；缺失不会隐式重训。先读Problem→Mathematics：
@@ -72,7 +99,7 @@ OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_7_mpc_replanning.py --execute
 unknown gain下open-loop/无新状态重规划/E1真实反馈成功6/3/19（各20次）；kick下为2/0/20。
 E4真实反馈gain成功18/20，调用次数由每episode10降至3，执行前缀4/4/2；模型与统计不变。
 查看contract.json、report.json、executions.npz；这是理想XY观测的toy状态反馈闭环，非真实机器人验证。
-Engineering Complete；Learning三项待用户明确报告。S3.8仅计划，不自动进入。
+Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及五项Explain）。S3.8仅计划，不自动进入。
 
 ## S3.6 status and Run
 
