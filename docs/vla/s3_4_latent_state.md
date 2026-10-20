@@ -250,9 +250,13 @@ latent不是物理单位；重建≠预测≠控制；train-only encoder；未�
 
 ## My Verification / Learner Verification
 
-- [ ] Run：运行d2，查看contract、重建/预测/AR与动作消融。
-- [ ] Modify：先预测d2→d1，再运行核对数据不变量、shape与物理误差，并查看aliasing_probe。
-- [ ] Explain：用自己的话回答五问，画E→F→D与future target两条分支。
+- [x] Run：运行d2，查看contract、重建/预测/AR与动作消融。
+- [x] Modify：先预测d2→d1，再运行核对数据不变量、shape与物理误差，并查看aliasing_probe。
+- [x] Explain：用自己的话回答五问，画E→F→D与future target两条分支。
 
-Engineering Complete；Learning三项待用户明确报告。Current Task=S3.4；Next Task=S3.5仅计划。
+Engineering Complete + Learning Mastered（2026-10-20 用户明确确认实验和预测完成，并准确回答五项Explain）。
+解释覆盖E/D/F的shape和单位、PCA拟合后冻结、630观测/600转移与train-only统计、
+重建/latent/物理误差和特权reference、d1 aliasing及动力学充分性、AR未来观测隔离与toy证据边界。
+接口补充：D输出六路观测；已知sensor伪逆是独立的物理评价步骤。
+Current Task=S3.4；Next Task=S3.5仅计划。
 STOP，不自动开始下一任务。

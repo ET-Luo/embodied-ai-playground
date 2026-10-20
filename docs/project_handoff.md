@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S3.4 — Latent State Representation**，Engineering Complete；Learning待用户Run/Modify/Explain。
+Current Task = **S3.5 — Reward / Success / Contact Prediction**，Engineering Complete；Learning待用户Run/Modify/Explain。
+S3.4 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.3 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.2 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.1 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -22,8 +23,8 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S3.5 — Reward / Success / Contact Prediction**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1合成XY动力学、S3.2多步评价、S3.3小ensemble分歧与S3.4数值观测latent dynamics，但未运行真实机器人World Model；S2.3仅架构与接口学习。
+Next Task = **S3.6 — Model-based Planning**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.4合成XY动力学/多步/分歧/latent实验及S3.5新wall toy一步outcome heads，但未运行真实机器人World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
 
@@ -1567,3 +1568,80 @@ README/roadmap更新Engineering Complete，学习三项未勾选，仅用户反�
 限制：已知线性无噪声sensor、名义toy held-out，无视觉/OOD/未知sensor辨识或真实robot任务；
 没有success/failure-stage或闭环控制证据，低latent loss不等于状态充分或部署能力。
 Current Task=S3.4；Next Task=S3.5仅计划。用户读Problem→Mathematics→Run→先预测d2→d1后Modify→五问Explain；STOP。
+
+## S3.4 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均已完成，五项Explain准确覆盖E/D/F的shape、物理单位与无量纲latent，
+train-only PCA/SVD线性编码解码与神经autoencoder区别、E/D先fit再冻结。
+正确说明train30×21=630观测与30×20=600转移，terminal用于离线encoder拟合合法，
+无第21个动作；validation210观测/200转移不参与训练/统计，推理不使用未来观测。
+准确区分重建、latent预测、decoded physical error和future-encoding特权reference，
+后者不能作为部署预测或物理误差严格下界；不能仅以raw latent MSE跨表示排名。
+正确列出d2→d1的raw/split/clock/测量矩阵/观测统计/奇异值不变量，及PCA/MLP shape变化；
+d1保留55.6746%标准化观测方差、物理预测RMSE约121.901mm，相同z/动作却不同next-z
+说明表示动力学不充分，不仅是优化不足。
+准确说明AR20仅E(o0)初始化，未来观测反事实隔离、h1/动作索引/episode边界核验，
+线性无噪声已知sensor与位置Markov toy不证明视觉理解、真实系统Markov或机器人成功。
+助手补充接口边界：D只恢复六路观测，已知sensor伪逆是独立物理评价步骤，不属于learned decoder。
+README与学习包Run/Modify/Explain已勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅修改四份状态文档，未重跑Python实验、安装或下载。
+环境与工程结果沿用上述S3.4记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU），
+不增加视觉/OOD/真实sensor辨识或闭环成功证据。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档修改。
+Current Task=S3.4（已掌握）；Next Task=S3.5 — Reward / Success / Contact Prediction，仅计划。
+等待用户选择，不自动进入下一任务；未commit/push。
+
+## S3.5 Engineering — 2026-10-20
+
+用户明确请求推进S3.5学习；启动pwd正确，已有S3.4学习确认四份文档修改全部保留。
+读取AGENTS、README、handoff、roadmap、S0.1模板、S3.1源码与S3.3多头相关接口；此前无S3.5包。
+新增[学习包](vla/s3_5_outcome_heads.md)、[脚本](../scripts/s3_5_outcome_heads.py)、
+[测试](../tests/test_s3_5_outcome_heads.py)。仅本任务，不开始S3.6/规划或MPC。
+
+执行前核对repo `.venv/bin/python` / prefix/base_prefix，Python3.12.3 / NumPy2.5.4，实际模块路径
+`/home/lucas/projects/embodied-ai-playground/.venv/lib/python3.12/site-packages/numpy/__init__.py`。
+CPU单BLAS线程，无新依赖、安装、dataset/weights下载、旧repo访问或旧checkpoint修改；requirements不变。
+新profile s3_5_wall_outcomes/1.0显式改变动力学：S3.1 attempted transition后next_x截断到.12m，
+contact=attempted_x>.12m（主动墙约束，无force/真实contact solver）。
+固定goal[.09,0]m/radius.045m，success_next是下一状态goal occupancy；failure_next是next_x<−.2m或|y|>.2m。
+reward=(distance_before−distance_after)/.04m−.2contact−.5failure_next，无量纲。
+四标签各有定义但不假定统计独立；episode_success=terminal occupancy且全episode无failure，仅结果不入head。
+所有episode20转移/21状态、dt.1s，只有末步truncated，无事件termination；失败之后轨迹也全部保留。
+
+新生成60个独立reset，四种手写采集行为random/goal/right-push/outward，不是本轮训练policy。
+seed350/351，train40episodes/800转移、validation20/400；raw state/action/reward float32，事件bool，clock float64。
+模型输入仅当前XY+候选world displacement[m]，不含next_state/contact/result；input/reward统计只fit train800。
+4→32 tanh→4共292参数，reward linear + success/contact/failure三个sigmoid logits，float64 CPU。
+loss=标准化reward MSE+三个binary BCE均值，显式梯度/稳定logaddexp/sigmoid，Adam .01/2500步，seed352。
+默认threshold.5与学习对照.2固定指定，不从验证/OOD选优；有界分数不等于校准机器人风险。
+
+Executed:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_5_outcome_heads.py --output tmp/s3_5_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_5_outcome_heads.py --threshold .2 --output tmp/s3_5_t02_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s3_*.py' -v
+.venv/bin/python -m pip check
+git diff --check
+```
+
+train/validation reward RMSE .078729/.152957，validation常量train-mean基线.735068、zero-action消融.481000。
+默认validation success/contact/failure正样本72/131/138，各组N400，TP/FP/FN/TN分别
+46/10/26/318、129/0/2/269、132/1/6/261；Brier .063394/.003827/.018685。
+动作×3反事实重新执行墙toy/标注，非连续OOD轨迹；reward RMSE1.090921，常量1.837897，zero-action1.537491。
+OOD三head正样本73/155/156，TP/FP/FN/TN 44/31/29/296、150/1/5/244、112/2/44/242。
+threshold .2时validation混淆矩阵60/10/12/318、130/0/1/269、132/5/6/257；OOD failure FN44→33、FP2→3。
+阈值对照所有NPZ数据、权重、reward预测、probability逐值相同，Brier/BCE不变，仅decision/相关计数改变。
+首轮batch1全heads推理p50/p95 .008156/.008616ms，20warmup/200samples，含标准化/MLP/sigmoid，
+不含sensor/I/O/环境执行/标签计算/planning；不是机器人闭环latency。
+4tensor有限差分最大绝对误差1.126e-11；另对四个输出bias逐个核验梯度。
+
+18/18 Stage3测试通过（此前13项+本轮5项）：标签非等价组合、执行后时序、墙截断、threshold方向性、
+四head梯度与±1000 logits稳定性。独立inline核对raw转移逐值、四标签重算、episode_success及boundary，
+episode split、train-only统计/validation+100m隔离、checkpoint预测逐值复现、OOD重标注、reward与分类指标，
+所有confusion分母400、threshold全部NPZ不变量和FP非减/FN非增、6类CLI非法/已有目录拒绝及不覆盖，全部PASS。
+pip check无冲突；Markdown本地链接及git diff --check通过，产物ignored tmp/，未commit/push。
+README/roadmap更新Engineering Complete，学习三项未勾选，只有用户反馈可确认掌握。
+限制：toy一步事件不等于最终任务success/failure；contact是几何截断无真实force，failure score无校准保证。
+未训练head-driven policy、未集成latent/动力学或执行规划/机器人闭环；collection结果不是head控制成功证据。
+Current Task=S3.5；Next Task=S3.6仅计划。用户读Problem→Mathematics→Run→先预测threshold.5→.2后Modify→五问Explain；STOP。
