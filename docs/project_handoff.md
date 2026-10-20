@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S3.8 — Video / Generative World Model Concepts**，Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
+Current Task = **S4.1 — VLA Proposal**，Engineering Complete，Learning pending。
+S3.8 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.7 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 Stage3 S3.1–S3.8全部Engineering Complete + Learning Mastered；不代表大视频模型复现或真实机器人能力。
 S3.6 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -27,7 +28,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S4.1 — VLA Proposal**，仅计划，不授权自动进入Stage4。
+Next Task = **S4.2 — World-model Verification**，仅计划，不自动推进。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.7合成XY模型/规划/反馈及S3.8固定视频world model架构/解析反例学习包，但未运行真实机器人或大型视频World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -1914,3 +1915,44 @@ README与学习包Run/Modify/Explain已勾选，roadmap同步；Stage3全部工�
 验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档修改。
 Current Task=S3.8（已掌握）；Next Task=S4.1 — VLA Proposal，仅计划。
 等待用户选择，不自动开始Stage4；未commit/push。
+
+## S4.1 Engineering — 2026-10-20
+
+用户明确请求继续S4.1；启动pwd正确、git status --short为空。读取AGENTS/README/roadmap、
+交接当前及历史记录、S0.1模板和S1.7当前来源包。仅推进S4.1，未实施S4.2。
+[学习包](vla/s4_1_vla_proposal.md)、[script](../scripts/s4_1_vla_proposal.py)、
+[tests](../tests/test_s4_1_vla_proposal.py)。
+
+环境核对`.venv/bin/python` Python3.12.3、NumPy2.5.4，实际模块路径
+`.venv/lib/python3.12/site-packages/numpy/__init__.py`；无安装/下载。
+本地没有历史S1.5 weights.npz；先向用户说明，再显式以原seed7/2400steps重建CPU toy，
+不声称新weights文件与历史Python3.14 source逐bit一致。proposal加载后weights readonly，
+五份source文件SHA256前后一致；不训练，不重fit固定尺度或tokenizer。
+
+Executed:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s1_5_tiny_transformer_vla.py --output tmp/s4_1_source_s1_5 > tmp/s4_1_source_stdout.txt
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_1_vla_proposal.py --output tmp/s4_1_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_1_vla_proposal.py --candidates 1 --output tmp/s4_1_k1_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s4_1*.py'
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests
+.venv/bin/python -m pip check
+git diff --check
+```
+
+K5/K1输出(16,5,3,2)/(16,1,3,2)float32 world XY commanded displacement[m]，H3/dt.1s/每分量±.06m。
+16known attempts生成提案、2unsupported attempts保留输入拒绝，无伪造chunk。
+candidate0为原learned chunk，其余是固定±x/±y1cm手工偏置后clip；不是learned采样。
+旧8validation布局重复使用，没有独立test；独立candidate0 E1诊断两次均0/16成功，
+16条失败stage全final_goal_error_after_budget。无WM评分、排序、接受/拒绝坏动作或fallback。
+K5 proposal median/P95 .134/.231ms，K1 .139/.190ms，各16次、5warmup排除；
+计时含推理+bank+contract，不含render/IO/真实sensor/servo，不能作实时或稳定速度排名。
+
+3项新增测试覆盖语义/embodiment/unit/frame/dt错配、坏payload、候选前缀/clip来源；
+全34项测试通过。独立inline核对跨K source hash/offline/input/candidate0/闭环commands与trace完全一致，
+并核对16条失败stage；修改文档本地链接、pip check与git diff --check通过。
+所有产物ignored tmp，无新依赖、旧repo修改或commit/push。
+README/roadmap同步Engineering Complete，Run/Modify/Explain全部未勾选。
+Current Task=S4.1；Next Task=S4.2仅计划。
+用户先读Problem→Mathematics，Run→先预测K5→1后Modify→五问Explain；STOP等待学习确认及选择。

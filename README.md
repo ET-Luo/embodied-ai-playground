@@ -29,10 +29,10 @@ flowchart TD
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
 | 3 | Robot World Models | S3.1–S3.8 Engineering Complete + Learning Mastered |
-| 4 | VLA × World Model Integration | Planned |
+| 4 | VLA × World Model Integration | S4.1 Engineering Complete；Learning pending |
 
-Current Task = **S3.8 — Video / Generative World Model Concepts**
-Next Task = **S4.1 — VLA Proposal**（仅计划）
+Current Task = **S4.1 — VLA Proposal**
+Next Task = **S4.2 — World-model Verification**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -45,6 +45,33 @@ S0.1 Learning:
 - [x] Explain
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
+
+## S4.1 status and Run
+
+Engineering:
+
+- [x] Code — 冻结tiny VLA、原始chunk+显式手工bias候选、版本化动作契约
+- [x] Experiment — K5/1前缀不变量、18次输入含2拒绝、candidate0闭环0/16、契约边界测试
+- [x] Docs — [S4.1学习包](docs/vla/s4_1_vla_proposal.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU .venv Python3.12.3 / NumPy2.5.4，无安装/下载。历史S1.5 checkpoint本地缺失，
+已显式用原seed7/2400steps重建到`tmp/s4_1_source_s1_5`；proposal阶段不训练。
+先读学习包Problem→Mathematics，第二条先预测K5→1：
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_1_vla_proposal.py --output tmp/my_s4_1
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_1_vla_proposal.py --candidates 1 --output tmp/my_s4_1_k1
+```
+
+查看contract.json、proposals.npz与report.json。K5输出(16,5,3,2) world XY位移[m]；
+候选0来自learned策略，其余是手工偏置，不代表learned多模态采样。合法chunk的candidate0闭环仍0/16。
+未接world model、评分或候选选择；S4.2仅计划，等待用户学习确认及选择。
 
 ## S3.8 status and Run
 
@@ -72,7 +99,7 @@ OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_8_generative_world_concepts.p
 但前者44.57%转移违例；pixel mean误差更低却出现两个ghost物体。K减少使support覆盖100%→50%，
 单个sample未变，best-of-K使用未来真值，非部署success。解析示例不是learned video model或官方复现。
 S3.8 Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及五项Explain）。
-Stage3全部工程与学习完成；S4.1仅计划，不自动进入Stage4。
+Stage3全部工程与学习完成；用户已授权推进S4.1，见当前任务状态。
 
 ## S3.7 status and Run
 
