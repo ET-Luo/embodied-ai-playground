@@ -28,7 +28,7 @@ flowchart TD
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
-| 3 | Robot World Models | S3.1–S3.8 Engineering Complete；S3.1–S3.7 Learning Mastered，S3.8 Learning待核验 |
+| 3 | Robot World Models | S3.1–S3.8 Engineering Complete + Learning Mastered |
 | 4 | VLA × World Model Integration | Planned |
 
 Current Task = **S3.8 — Video / Generative World Model Concepts**
@@ -56,9 +56,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU .venv Python3.12.3 / NumPy2.5.4 / Pillow12.3.0，无训练/安装/dataset或weights下载。
 先读官方架构表与数学；第二条先预测K16→1对真值、sample0、coverage与best-of-K的不同影响：
@@ -71,7 +71,8 @@ OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_8_generative_world_concepts.p
 查看comparison.png/gif、contract.json和report.json。逐帧重抽与持久分支有相同平均位置MSE，
 但前者44.57%转移违例；pixel mean误差更低却出现两个ghost物体。K减少使support覆盖100%→50%，
 单个sample未变，best-of-K使用未来真值，非部署success。解析示例不是learned video model或官方复现。
-Stage3工程包全部完成；S3.8学习三项待用户明确报告。S4.1仅计划，不自动进入Stage4。
+S3.8 Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及五项Explain）。
+Stage3全部工程与学习完成；S4.1仅计划，不自动进入Stage4。
 
 ## S3.7 status and Run
 

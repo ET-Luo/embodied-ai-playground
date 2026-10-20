@@ -245,9 +245,12 @@ generative≠diffusion；pixels≠physics；frame marginals≠trajectory joint�
 
 ## My Verification / Learner Verification
 
-- [ ] Run：阅读固定版本架构表、运行K16，查看PNG/GIF与物理/像素指标。
-- [ ] Modify：先预测K16→1的不变量及coverage/best-of-K变化，再运行核对。
-- [ ] Explain：用自己的话回答五问，区分真正模型学习与本地解析示例。
+- [x] Run：阅读固定版本架构表、运行K16，查看PNG/GIF与物理/像素指标。
+- [x] Modify：先预测K16→1的不变量及coverage/best-of-K变化，再运行核对。
+- [x] Explain：用自己的话回答五问，区分真正模型学习与本地解析示例。
 
-Engineering Complete；Learning三项待用户明确报告。S3.1–S3.7已掌握，S3.8未确认掌握。
+Engineering Complete + Learning Mastered（2026-10-20 用户明确确认实验和预测完成，并准确回答五项Explain）。
+解释覆盖固定变体架构、generative/AR/diffusion区别、hidden mode的shape/单位/时间、
+均值与边缘/joint反例、K前缀/coverage/特权best-of-K，以及prior未来泄漏与真实机器人评价边界。
+Stage3 S3.1–S3.8全部工程与学习完成，不代表大型视频模型复现或真实机器人能力。
 Current Task=S3.8；Next Task=S4.1 — VLA Proposal，仅计划。STOP，不自动开始Stage4。

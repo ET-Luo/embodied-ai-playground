@@ -2,9 +2,9 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S3.8 — Video / Generative World Model Concepts**，Engineering Complete；Learning待用户Run/Modify/Explain。
+Current Task = **S3.8 — Video / Generative World Model Concepts**，Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.7 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
-Stage3 S3.1–S3.8工程包全部完成；S3.8 Learning尚未确认，不代表大视频模型复现。
+Stage3 S3.1–S3.8全部Engineering Complete + Learning Mastered；不代表大视频模型复现或真实机器人能力。
 S3.6 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.5 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.4 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -1893,3 +1893,24 @@ pip check无冲突；Markdown本地链接及git diff --check通过，产物ignor
 README/roadmap同步S3.8 Engineering Complete；Stage3工程包全部完成，S3.8 Learning三项未勾选。
 Current Task=S3.8；Next Task=S4.1 — VLA Proposal仅计划，不自动开始Stage4。
 用户读固定架构表/公式→Run→先预测K16→1后Modify→五问Explain；STOP。
+
+## S3.8 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均已完成，五项Explain准确区分DreamerV3 latent posterior/prior与
+actor/critic imagination、GAIA1 token dynamics/video diffusion decoder、Genie2动作条件latent diffusion；
+generative不等于diffusion，时间AR与去噪可组合，latent控制不必先渲染视频。
+正确给出初态/动作/真分支/sample/RGB shape、dtype、world XY单位与dt，解释整段固定hidden mode
+不等于每帧iid噪声或ensemble disagreement。
+准确说明非法mean-state的MSE低于合法采样、mean pixels产生ghost物体、render(mean state)不同，
+以及frame-resampled边缘正确却破坏joint，复述44.5703%转移/99.0625%整段违例。
+明确K16→1保持raw/规则/mean reference/sample0，persistent coverage100%→50%、best-of-K0→.001434375m²，
+all-sample MSE不变；best-of-K使用完整真未来事后选样，不代表单次部署或机器人success。
+正确说明prior imagination只能用历史/动作/预测latent/独立随机性，真实未来只能作监督/posterior或事后评价；
+解析toy与官方演示不证明真实物理、校准、OOD、闭环或实时能力，需独立动作/物体/物理/多步/任务/latency评价。
+README与学习包Run/Modify/Explain已勾选，roadmap同步；Stage3全部工程与学习完成。
+启动pwd正确，git status --short为空；本轮仅修改四份状态文档，未重跑Python实验、安装或下载。
+环境与工程证据沿用上述S3.8记录（repo .venv Python3.12.3 / NumPy2.5.4 / Pillow12.3.0 CPU），
+不增加大型视频模型训练/复现或真实机器人能力声明。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档修改。
+Current Task=S3.8（已掌握）；Next Task=S4.1 — VLA Proposal，仅计划。
+等待用户选择，不自动开始Stage4；未commit/push。
