@@ -199,8 +199,15 @@ E1/E3的kick观察时刻不同，前缀RMSE30/42.43mm；belief约79.37mm，但�
 
 ## My Verification
 
-- [ ] Run：检查循环中的planning state、selected prefix、实际next state、failure与拒绝记录。
-- [ ] Modify：先预测E1→3不变量、ticks0/3/6、末prefix2、kick误差与compute变化，再新目录运行。
-- [ ] Explain：独立回答上述五问，区分反馈时序证据与任务成功/最终benchmark。
+- [x] Run：检查循环中的planning state、selected prefix、实际next state、failure与拒绝记录。
+- [x] Modify：先预测E1→3不变量、ticks0/3/6、末prefix2、kick误差与compute变化，再新目录运行。
+- [x] Explain：独立回答上述五问，区分反馈时序证据与任务成功/最终benchmark。
 
-Engineering Complete；Learning未确认。Current Task=S4.5；Next Task=S4.6 — Final Benchmark仅计划，STOP。
+Engineering Complete + Learning Mastered（2026-10-20 用户确认）。Current Task=S4.5；Next Task=S4.6 — Final Benchmark仅计划，STOP。
+
+2026-10-20 用户明确确认实验和预测均已完成，五项Explain准确覆盖每轮模态/shape/dtype/单位、
+observed与belief起点、gain/kick/evaluator信息隔离；E1/E3 ticks和prefix、kick后的观测边界、
+固定H3超预算尾部与丢弃旧后缀；belief跨条件commands不变、256scalar分母与30/42.426/79.373mm推导；
+128attempt/16case/accepted-plan与T0拒绝分母、null/stage限制、unsafe0且goal0；
+跨E模型/阈值/protocol/t0决策不变量、latency包含关系和本地overrun0、旧buffer/理想观察/旧布局的证据边界。
+Run/Modify/Explain依据用户报告全部勾选；策略仍失败，S4.6未开始。

@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S4.5 — Receding-horizon Replanning**，Engineering Complete，Learning pending。
+Current Task = **S4.6 — Final Benchmark**，Engineering Complete，Learning pending。
+S4.5 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.4 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.3 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.2 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -32,7 +33,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S4.6 — Final Benchmark**，仅计划，不自动推进。
+Next Task = **无自动后续任务**，等待S4.6学习确认与用户选择。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.7合成XY模型/规划/反馈及S3.8固定视频world model架构/解析反例学习包，但未运行真实机器人或大型视频World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -2303,3 +2304,101 @@ NPZ逐字段round-trip、已有output保护、E0/E4/缺source拒绝、文档loca
 README/roadmap同步S4.5 Engineering Complete，Learning Run/Modify/Explain未勾选。
 Current Task=S4.5；Next Task=S4.6 — Final Benchmark仅计划。
 用户读Problem→Mathematics→Run→先预测E1→3后Modify→五问Explain；STOP等待用户确认及选择。
+
+## S4.5 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均完成；五项Explain准确说明当前RGB/text/planning state→K5/H3→WM/gate→
+执行min(E,8−t)的数据流及shape/dtype/单位，observed实测与belief预测prefix endpoint来源、
+plant gain/kick和evaluation goal隔离；E1 ticks0…7与E3 ticks0/3/6、prefix3/3/2、kick t2/t3反馈，
+固定H3末尾评分到t9/t10与丢弃旧后缀，不混同remaining budget。
+正确解释belief跨nominal/gain/kick命令不变、120mm扰动影响1/2/7状态，256scalar分母和
+30/42.426/79.373mm误差推导；128attempt、16case分组、128/48accepted plans与T0拒绝全分母、null/stage。
+明确unsafe0但goal/success0不证明控制能力、stage非根因；跨E模型/hash/normalizer/bias/H/K/dt/gate/protocol/
+t0选择不变量，正确解释latency分段包含关系、每episode compute及本地overrun0、旧probe buffer/
+精确proprio/完美goal解析/旧布局的证据限制。
+README与学习包Run/Modify/Explain全勾选，roadmap同步Learning Mastered，保留策略失败结论。
+启动pwd正确、git status --short为空；本轮仅更新四份状态文档，未重跑实验、训练、安装或下载。
+环境与工程证据沿用S4.5记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU）。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对四份文档修改。
+Current Task=S4.5（Engineering Complete + Learning Mastered）；Next Task=S4.6 — Final Benchmark仅计划。
+未自动实施最终benchmark，未commit/push。
+
+## S4.6 Engineering — 2026-10-20
+
+用户明确请求继续S4.6学习。启动pwd正确，保留S4.5学习确认已有README/handoff/roadmap/package四份修改。
+读取AGENTS/README/handoff/roadmap、S0.1模板、S4.5 package/script/tests、S1.5数据split生成逻辑与依赖。
+本轮只实现S4.6，未扩张训练/调参/新阶段。[学习包](vla/s4_6_final_benchmark.md)、
+[script](../scripts/s4_6_final_benchmark.py)、[tests](../tests/test_s4_6_final_benchmark.py)。
+
+环境重新确认repo `.venv/bin/python` Python3.12.3 / NumPy2.5.4，实际模块
+`.venv/lib/python3.12/site-packages/numpy/__init__.py`，CPU；无安装/下载/训练/重校准。
+默认`tmp/s4_5_final`，沿完整来源链加载readonly VLA/WM/统计/gate，前后hash一致。
+来源校验发现S4.5记录相对路径而gate来源使用绝对路径；比较前resolve规范化路径键，
+仍逐文件严格比较内容hash，没有更换source或放松检查。
+
+Matched baseline只生成K1 learned candidate0且不调用控制用WM/goal decoder/gate；
+WM系统K5包含相同candidate0+四手工bias，附加frozen affine WM/完美当前RGB目标解析/gate。
+同case/reset/RGB/text接口/actual-state反馈/E/H3/dt.1/budget8/plant gain-kick与评价定义，
+但visited states可不同、额外组件也不同，不能把差异仅归因于WM。一次forward每decision，无oracle控制。
+控制计时结束后才做baseline shadow WM或WM full-H3反事实plant，诊断结果不回流control；
+完整H3可含预算外尾部，rolling good不等于episode success。
+
+协议：从240个grid ordered red/blue pairs中排除S1.5 train32+validation8。
+固定seed461选8、seed462从剩余pool选8，两seed无重叠，共16新layout groups。
+每layout两texts×nominal/gain.65/kick/unsupported四条件=128pairs，双methods共256attempts/run。
+协议执行前保存并固定SHA256，未据结果换seed/阈值。新pair仍使用旧grid/颜色/camera/语言，非开放世界泛化。
+每seed/condition/method16attempts，合并seed32；条件复用16layouts，不把所有attempt视为独立场景。
+VLA来源训练metadata实际读取seed7/2400steps；WM data421/split422、calibration431；protocol seeds不是训练seed重复。
+每method五完整episode warmup排除；测量case内运行顺序交替。
+
+Executed:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_6_final_benchmark.py --output tmp/s4_6_verified > tmp/s4_6_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_6_final_benchmark.py --execute 3 --output tmp/s4_6_e3_verified > tmp/s4_6_e3_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s4_6*.py'
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_6_final_benchmark.py --output tmp/s4_6_final > tmp/s4_6_final_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_6_final_benchmark.py --execute 3 --output tmp/s4_6_e3_final > tmp/s4_6_e3_final_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_6_final_benchmark.py --output tmp/s4_6_final_checked > tmp/s4_6_final_checked_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_6_final_benchmark.py --execute 3 --output tmp/s4_6_e3_checked > tmp/s4_6_e3_checked_stdout.json
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests
+.venv/bin/python -m pip check
+git diff --check
+```
+
+两个E各256attempts，其中192完整8步轨迹、64个T0拒绝（每method32），原始state/action/clock不造假。
+每condition/method32分母：E1两系统success均0；baseline nominal/gain unsafe32/32，WM0/32；
+kick两系统unsafe0/success0，unknown输入拒绝均0动作/RMSE与accepted latency null。
+E3 nominal/gain同样risk差异、success0；kick baseline1/32 success，WM0/32。
+唯一成功为seed461、case `s461_kick_layout_166_0`，final L∞ goal error.004257508m；
+seed461该组1/16，seed462为0/16。保留paired反例，不称WM改善success，也不以单例声称baseline鲁棒。
+Nominal/gain baseline stage monitoring_risk，WM stage final_goal_error_after_budget；kick主要goal miss，unknown为input/output拒绝。
+
+E1 WM每条件256decisions×5=1280 candidate exposures：nominal/gain/kick actual bad144/165/16均被拒，
+risk-free被拒98/104/187，actual good1/0/5、false rejected good全0。
+Primary子集各256：拒绝57/73/57，actual primary bad32/32/0全拒，risk-free primary拒25/41/57。
+Good稀少或0，不能把0误拒推广为有用性/召回保证；allowed rolling good不代表选中或episode成功。
+E3每条件96decisions×5=480 exposures，bad139/132/16全拒，risk-free拒11/25/98，good0/0/3、误拒good0。
+所有数据都是WM own-visited-state反事实/重叠H3窗口，非独立1280场景。本次fallback0，不推翻S4.4 fallback失败。
+
+执行prefix RMSE[mm] baseline shadow/WM：E1 nominal≈2.172e-6/3.294e-6、gain12.624/12.173、kick30/30；
+E3 nominal≈2.586e-6/2.695e-6、gain20.292/14.413、kick42.426/42.426。
+完整32case组分母512physical scalars，unknown分母0→null；跨系统visited states不同，不作共同输入模型排名。
+
+最终checked nominal controller median/P95[ms]：E1 baseline.1798/.4876(256calls)、WM.3130/.6959(256)；
+E3 baseline.1954/.4471(96)、WM.3432/1.2565(96)。Per-episode control median分别1.4309/2.5519ms与.5912/1.0630ms。
+控制total含render/proposal/可选WM/gate/gather；baseline WM/gate=null，shadow/oracle diagnostics与toy apply单列。
+所有accepted本地control overruns0，但排除真实sensor/transport/servo/IO，不证明整机实时或多轮性能稳健性。
+
+7项新增tests与全66项通过：新pair/split/seed隔离、baseline controller不读WM/goal decoder、
+shadow模型改变不影响baseline动作、evaluator goal隔离、counterfactual kick对齐、matched E/primary、T0/缺pair拒绝。
+独立inline审计两E共512attempt：16新groups隔离、case pairing、逐步gain/kick、prefix/float32/clock、
+shadow SSE/反事实rejection、512scalar与seed/失败分母、跨E protocol/source/t0不变量。
+最终checked输出与此前完整审计raw轨迹逐值相同，paired/protocol一致且protocol hash复核通过。
+NPZ逐字段round-trip、已有output/E0/E4/missing source拒绝、local Markdown links、pip check、git diff --check通过。
+所有产物ignored tmp，无旧repo修改、commit/push。
+README/roadmap更新Stage0–4全部Engineering Complete，S4.6 Run/Modify/Explain未勾选。
+Current Task=S4.6；Next Task=无自动后续任务，等待S4.6学习确认与用户选择。
+用户读Problem→Mathematics→Run→先预测E1→3后Modify→五问Explain；STOP。
+最终工程结论：附加WM系统在本协议降低部分离散监测risk、增加compute，未提升任务成功；
+总体tiny策略能力仍未达标，不能声称WM单独贡献/真实机器人/广泛OOD/安全或大型foundation模型能力。
