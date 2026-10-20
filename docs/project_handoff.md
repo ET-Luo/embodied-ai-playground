@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S3.2 — Multi-step Rollout**，Engineering Complete；Learning待用户Run/Modify/Explain。
+Current Task = **S3.3 — Model Uncertainty**，Engineering Complete；Learning待用户Run/Modify/Explain。
+S3.2 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.1 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S2.7 Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
 Stage2 S2.1–S2.7全部工程与学习完成；不代表完整模型复现或机器人控制成功。
@@ -20,8 +21,8 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S3.3 — Model Uncertainty**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1合成XY单步world model及S3.2冻结checkpoint多步评价，但未运行真实机器人World Model；S2.3仅架构与接口学习。
+Next Task = **S3.4 — Latent State Representation**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1合成XY单步world model、S3.2冻结checkpoint多步评价及S3.3小ensemble分歧诊断，但未运行真实机器人World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
 
@@ -1411,3 +1412,77 @@ README/roadmap更新Engineering Complete，Run/Modify/Explain未勾选；只有�
 限制：仅toy固定动作预测，无学习uncertainty、无规划/控制、无机器人success/failure stage评价，
 没有证明长时稳定/泛化，也未修复模型漂移。Current Task=S3.2；Next Task=S3.3仅计划。
 用户先读Problem→Mathematics，再Run，先预测bias1→2mm后Modify，回答五问Explain；STOP。
+
+## S3.2 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均已完成，五项Explain准确区分TF每步真实状态输入与AR预测递归，
+解释h1同初态同动作保证一致，TF h100仍只是使用真实s99的局部单步预测。
+正确给出S3.1 200条转移每坐标MSE分母400、h1/h20端点分母20、h20 prefix分母400且不含t0。
+准确写出误差递推恒等式和Jacobian近似，指出放大/压缩/抵消使误差不保证线性或单调。
+明确bias1→2mm仅改变偏置预测器与解析探针，保持source/hash、truth、动作、普通MLP、基线与oracle；
+零动作解析100步L2漂移100→200mm，而非线性MLP的RMSE不要求翻倍。
+准确说明未来truth反事实、同动作及独立t0 reset审计；训练状态盒外16.3%说明坐标范围外推，
+不能推出其余都是ID、盒外必失败、已校准不确定性或所有误差由OOD造成。
+README与学习包Run/Modify/Explain已勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅修改四份状态文档，未重跑Python实验、安装或下载。
+环境与实验结果沿用上述S3.2工程记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU），
+不增加长时稳定、泛化、不确定性校准或真实机器人成功声明。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档修改。
+Current Task=S3.2（已掌握）；Next Task=S3.3 — Model Uncertainty，仅计划。
+等待用户选择，不自动开始ensemble或下一任务；未commit/push。
+
+## S3.3 Engineering — 2026-10-20
+
+用户明确请求推进S3.3；启动pwd正确，已有S3.2学习确认四份文档修改全部保留。
+读取AGENTS、README、handoff、roadmap、S0.1模板、S3.1源码和S3.2接口/学习包；此前无S3.3包。
+新增[学习包](vla/s3_3_model_uncertainty.md)、[脚本](../scripts/s3_3_model_uncertainty.py)、
+[测试](../tests/test_s3_3_model_uncertainty.py)。仅S3.3，不开始S3.4或risk/planning。
+
+执行前核对repo `.venv/bin/python`、prefix/base_prefix，Python3.12.3 / NumPy2.5.4，
+实际NumPy路径 `/home/lucas/projects/embodied-ai-playground/.venv/lib/python3.12/site-packages/numpy/__init__.py`。
+CPU单BLAS线程，无新依赖、安装、dataset/weights下载、旧repo访问或旧checkpoint修改，requirements不变。
+自包含重建S3.1 deterministic generator/split；30train episodes/600transitions，10evaluation/200。
+另独立seed330生成10名义calibration episodes/200transitions，只设置score q95阈值。
+训练共享x/delta统计只fit原train600；K5个4→32→2 MLP共1130参数，各1500步full-batch Adam。
+每成员按完整episode有放回采30次，seed3300+k；初始化seed3400+k，保持20转移episode边界。
+raw float32，模型float64；动作仍world commanded XY displacement[m]，dt.1s，无success标签。
+
+四个配对单步评价组各200条：ID、当前state x+.8m、action×3、same-input next-x+10mm隐藏机制变化。
+OOD是反事实tuple而非连续trajectory；隐藏条件显式改变ground-truth机制，不改动作语义或预测。
+D=sqrt(mean over K members and2coordinates of centered physical next-state prediction²)，ddof0，单位m。
+flag=D>独立calibration q95；bad=ensemble mean L2 error>.005m是人工诊断标签，非机器人failure。
+全部成员/均值物理误差、score分位数/相关性、逐样本及全分母confusion均保留；不调OOD阈值。
+
+Executed:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_3_model_uncertainty.py --output tmp/s3_3_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_3_model_uncertainty.py --shift-mm 20 --output tmp/s3_3_shift20_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_3_model_uncertainty.py --members 2 --output tmp/s3_3_k2_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s3_*.py' -v
+.venv/bin/python -m pip check
+git diff --check
+```
+
+默认threshold .177804622mm；ID/state/action/hidden均值预测RMSE为.125052/2.946716/9.238062/7.068643mm，
+score中位数.065647/1.251255/.651191/.065647mm；flagged1/200/168/1条，高误差0/49/110/200条。
+TP/FP/FN/TN分别0/1/0/199、49/151/0/0、110/58/0/32、1/0/199/0。
+各组score与error Pearson约.6451/.7765/.8012/.00365，仅描述相关性，不是校准。
+复制第一个成员K次：score中位数0，隐藏机制200条高误差全部漏报。
+shift20mm时所有权重/预测/score/threshold与其他条件不变，hidden RMSE14.139159mm，仍漏报199/200。
+K2 threshold .114464mm、ID RMSE.125224mm；state/action高误差34/113条且FN1/6，hidden FN197/200。
+K2前两个成员权重与bootstrap IDs等于K5前两个，不能从成员数推出单调提升或独立错误。
+默认batch1 ensemble推理+mean/score p50/p95 .033752/.066264ms，20warmup/200samples，
+不含训练、文件、真值、环境或planning。不是机器人latency或闭环成功证据。
+
+最终9/9 Stage3协议测试通过（S3.2四项回归+S3.3五项）：population score分母/单位、共同偏置/
+成员排列不变性、same-input target变化盲点、严格threshold混淆矩阵、NaN/rank/单成员拒绝。
+独立inline核对checkpoint重载逐值复现全部成员预测和score、K2成员前缀、bootstrap只train、
+train统计重算及validation+100m不影响train统计、calibration阈值重算、物理MSE与confusion分母200、
+shift20除hidden target/error外所有数组逐值不变、state/action OOD语义；全部PASS。
+6类CLI非法参数/已有目录拒绝（members1/11、epochs0、shiftNaN/51、已有output），report不覆盖。
+pip check无冲突；Markdown本地链接及git diff --check通过；所有产物ignored tmp/，未commit/push。
+README/roadmap更新Engineering Complete，学习三项未勾选，只有用户报告可确认Learning Mastered。
+限制：deterministic toy单步分歧，不估计aleatoric噪声、不提供概率/coverage保证、不可靠检测任意OOD；
+无policy/closed-loop success/failure-stage或规划实验。Current Task=S3.3；Next Task=S3.4仅计划。
+用户读Problem→Mathematics→Run→先预测shift10→20mm后Modify→五问Explain；STOP。

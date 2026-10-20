@@ -217,9 +217,12 @@ TF输入真值；AR输入预测；同初态同动作；端点≠prefix；小单�
 
 ## My Verification / Learner Verification
 
-- [ ] Run：运行默认实验，读TF/AR轨迹、20/100步端点与S3.1 replay指标。
-- [ ] Modify：先预测bias1→2mm，再比较不变量与偏置预测器；可选H40前缀实验。
-- [ ] Explain：用自己的话回答五问，画出两条数据流并说明长时误差的证据边界。
+- [x] Run：运行默认实验，读TF/AR轨迹、20/100步端点与S3.1 replay指标。
+- [x] Modify：先预测bias1→2mm，再比较不变量与偏置预测器；可选H40前缀实验。
+- [x] Explain：用自己的话回答五问，画出两条数据流并说明长时误差的证据边界。
 
-Engineering Complete；Learning待用户明确报告。Current Task=S3.2；Next Task=S3.3仅计划。
+Engineering Complete + Learning Mastered（2026-10-20 用户明确确认实验和预测完成，并准确回答五项Explain）。
+解释覆盖TF/AR递推、h1一致与h100局部单步、端点/prefix分母、误差传播与非单调性、
+bias不变量及解析漂移、未来truth反事实与episode边界、训练状态盒外比例的证据限制。
+Current Task=S3.2；Next Task=S3.3仅计划。
 STOP，不自动开始ensemble或下一任务。

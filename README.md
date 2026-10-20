@@ -21,18 +21,18 @@ flowchart TD
   R --> E
 ```
 
-以上是最终能力链；当前完成Stage0及S1.1–S1.7工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断与冻结checkpoint闭环评价；已有S3.1单步state dynamics MLP及S3.2冻结模型多步漂移评价，仅合成XY验证，不代表真实机器人world model。
+以上是最终能力链；当前完成Stage0及S1.1–S1.7工程包：数据契约、sequence dataset、RLDS/OXE概念与真实样本检查、continuous/discrete action与RGB-language chunk toy实验。已实现literal语言条件state MLP、tiny learned word embedding、tiny CNN定位和summary多模态融合对照；已实现tiny averaged-patch Transformer action chunk，但当前闭环失败；另完成独立tiny语言泛化诊断与冻结checkpoint闭环评价；已有S3.1单步state dynamics MLP、S3.2冻结模型多步漂移评价与S3.3小ensemble分歧诊断，仅合成XY验证，不代表真实机器人world model。
 
 | Stage | 主线 | 状态 |
 |---|---|---|
 | 0 | Embodied AI Data & Action Representation | S0.1–S0.7 Engineering Complete + Learning Mastered |
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
-| 3 | Robot World Models | S3.1 Engineering Complete + Learning Mastered；S3.2 Engineering Complete，Learning待核验 |
+| 3 | Robot World Models | S3.1–S3.2 Engineering Complete + Learning Mastered；S3.3 Engineering Complete，Learning待核验 |
 | 4 | VLA × World Model Integration | Planned |
 
-Current Task = **S3.2 — Multi-step Rollout**
-Next Task = **S3.3 — Model Uncertainty**（仅计划）
+Current Task = **S3.3 — Model Uncertainty**
+Next Task = **S3.4 — Latent State Representation**（仅计划）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -46,6 +46,34 @@ S0.1 Learning:
 
 Engineering Complete + Learning Mastered（2026-10-13 用户确认实验、预测及五项 Explain）。Sprint Learning Mode：Codex 完成当前任务工程包，用户 Run → Modify → Explain，然后决定是否进入下一任务。
 
+## S3.3 status and Run
+
+Engineering:
+
+- [x] Code — 5个226参数NumPy MLP、episode bootstrap、train-only共享统计、物理分歧score
+- [x] Experiment — 独立名义阈值集、ID/状态/动作/隐藏机制对照、全分母误报漏报与复制成员反例
+- [x] Docs — [S3.3学习包](docs/vla/s3_3_model_uncertainty.md)
+
+Learning:
+
+- [ ] Run
+- [ ] Modify
+- [ ] Explain
+
+CPU .venv Python3.12.3 / NumPy2.5.4，无新依赖或下载；自包含小ensemble训练，不依赖旧checkpoint。
+先读学习包Problem→Mathematics，第二条先预测隐藏机制偏移的影响：
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_3_model_uncertainty.py --output tmp/my_s3_3
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_3_model_uncertainty.py --shift-mm 20 --output tmp/my_s3_3_shift20
+```
+
+默认ID/state-shift/action-scale均值预测RMSE约.125/2.947/9.238mm；
+同输入hidden next-x+10mm时score与ID完全相同，200条L2>5mm样本漏报199条。
+阈值来自独立名义calibration score的q95，分歧单位m，不能当作校准风险或机器人失败概率。
+查看contract.json、report.json、evaluation.npz与samples.csv；复制成员score0仍可全部错误。
+Engineering Complete；Learning三项待用户明确报告。S3.4仅计划，不自动进入。
+
 ## S3.2 status and Run
 
 Engineering:
@@ -56,9 +84,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU .venv Python3.12.3 / NumPy2.5.4，无训练、安装或下载。读取已有 `tmp/s3_1_final`；
 自己的S3.1产物可用 `--checkpoint tmp/my_s3_1` 指定，缺失不会隐式重训。
@@ -73,7 +101,7 @@ OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_2_multistep_rollout.py --bias
 MLP AR 20/100步端点RMSE1.607/15.576mm。每步+x1mm偏置使100步端点RMSE60.689mm。
 查看report.json、rollouts.npz、curves.csv；TF每步看真值，AR只从起点递归。
 100步truth输入16.3%在训练状态包围盒外，误差含分布变化影响；无机器人闭环成功声明。
-Engineering Complete；Learning三项待用户明确报告。S3.3仅计划，不自动进入。
+Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及五项Explain）。S3.3仅计划，不自动进入。
 
 ## S3.1 status and Run
 
