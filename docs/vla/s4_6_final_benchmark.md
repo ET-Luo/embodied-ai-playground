@@ -201,7 +201,7 @@ prefix/dtype/clock、shadow SSE、反事实拒绝计数、seed/失败/512scalar�
 Stage0–4工程学习链已覆盖数据契约→tiny VLA→现代架构概念→tiny WM→验证/gate/反馈→matched评价。
 原始物理数据、train-only normalization、来源/时序/失败分母与CPU约束均保留。
 工程包完成与任务能力达标分开：这次benchmark已完成，learned policy总体仍失败；
-S4.6 Learning待用户Run/Modify/Explain，不自动开始新阶段或修复任务。
+S4.6 Learning Mastered（2026-10-20 用户确认Run/Modify/Explain），不自动开始新阶段或修复任务。
 
 ## Failure Analysis / Limitations
 
@@ -244,8 +244,15 @@ Matched结果≠WM单独贡献；protocol seed≠training seed；拒绝exposure�
 
 ## My Verification
 
-- [ ] Run：检查先行冻结protocol、new-pair隔离、matched结果、seed拆分、拒绝分母和计时边界。
-- [ ] Modify：先预测E1→3协议不变量、call/exposure变化与success非单调可能，再新目录运行核对。
-- [ ] Explain：独立回答上述五问，用证据描述项目完成与能力限制。
+- [x] Run：检查先行冻结protocol、new-pair隔离、matched结果、seed拆分、拒绝分母和计时边界。
+- [x] Modify：先预测E1→3协议不变量、call/exposure变化与success非单调可能，再新目录运行核对。
+- [x] Explain：独立回答上述五问，用证据描述项目完成与能力限制。
 
-Engineering Complete；Learning未确认。Current Task=S4.6；Next Task=无自动后续任务，等待用户学习确认与选择。
+Engineering Complete + Learning Mastered（2026-10-20 用户确认）。Current Task=S4.6；Next Task=无自动后续任务，等待用户选择。
+
+2026-10-20 用户明确确认实验和预测均完成，五项Explain准确覆盖matched接口与额外bias/WM/goal decoder/gate
+组件的归因限制、不同visited states；240−40的new-pair排除与双seed不重叠、16groups/128pairs/256attempts/
+每组32/512scalars及T0 null；shadow/oracle在controller计时之后、不回流控制，rolling good与重叠exposures
+非episode success/独立场景；跨E不变量与calls/exposures变化、E3 baseline独有成功及good支持稀少；
+风险降低但success不增、额外compute与有限grid/single checkpoint/旧buffer/离散监测/无实机IO的证据边界。
+Run/Modify/Explain依据用户报告全部勾选；Stage0–4工程与学习完成，策略能力仍未达标。

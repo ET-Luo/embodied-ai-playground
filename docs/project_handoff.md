@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S4.6 — Final Benchmark**，Engineering Complete，Learning pending。
+Current Task = **S4.6 — Final Benchmark**，Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
+Stage0–4全部Engineering Complete + Learning Mastered；tiny策略能力仍未达标，无真实机器人能力声明。
 S4.5 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.4 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S4.3 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
@@ -33,7 +34,7 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **无自动后续任务**，等待S4.6学习确认与用户选择。
+Next Task = **无自动后续任务**，等待用户选择。
 已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1–S3.7合成XY模型/规划/反馈及S3.8固定视频world model架构/解析反例学习包，但未运行真实机器人或大型视频World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
@@ -2402,3 +2403,22 @@ Current Task=S4.6；Next Task=无自动后续任务，等待S4.6学习确认与�
 用户读Problem→Mathematics→Run→先预测E1→3后Modify→五问Explain；STOP。
 最终工程结论：附加WM系统在本协议降低部分离散监测risk、增加compute，未提升任务成功；
 总体tiny策略能力仍未达标，不能声称WM单独贡献/真实机器人/广泛OOD/安全或大型foundation模型能力。
+
+## S4.6 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均完成；五项Explain准确说明matched checkpoint/reset/观测接口/H/E/dt/budget/
+plant/outcome规则，额外bias/WM/goal decoder/gate共同变化，不能WM单独归因，后续visited states允许不同。
+正确计算240有序pairs排除旧40、双seed461/462无重叠、16groups/128pairs/256attempts、每组32与512scalars，
+T0拒绝分母0→null，protocol seeds不是独立training seeds。
+明确baseline shadow在controller计时后、只诊断不控制；WM own-state full-H3反事实labels含未来kick和预算外尾部，
+rolling good不等于8步episode success、1280exposures不等于独立场景。
+准确说明跨E模型/协议/t0不变量、tick/prefix/calls/exposures变化，保留E3 seed461 layout166 red baseline1/32
+与WM0/32反例，good稀少下false rejected good0不能证明有用性或广泛召回。
+正确总结监测risk32/32→0/32、success未改善与compute增加，own-visited RMSE非模型排名，
+局部overrun0与有限grid/single checkpoint/未重校准buffer/采样监测/无实机IO不能证明泛化、安全或实时。
+README和学习包Run/Modify/Explain全部勾选，roadmap同步；Stage0–4工程与学习全部完成，策略能力未达标结论保留。
+启动pwd正确、git status --short为空；本轮仅更新四份状态文档，未重跑实验、训练、安装或下载。
+环境与工程证据沿用S4.6记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU）。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对四份文档修改。
+Current Task=S4.6（Engineering Complete + Learning Mastered）；Next Task=无自动后续任务，等待用户选择。
+未开始新阶段/训练修复，未commit/push。

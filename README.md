@@ -29,10 +29,10 @@ flowchart TD
 | 1 | Tiny Vision-Language-Action Policy | S1.1–S1.7 Engineering Complete + Learning Mastered；VLA控制仍失败 |
 | 2 | Modern VLA Architecture Study | S2.1–S2.7 Engineering Complete + Learning Mastered |
 | 3 | Robot World Models | S3.1–S3.8 Engineering Complete + Learning Mastered |
-| 4 | VLA × World Model Integration | S4.1–S4.6 Engineering Complete；S4.1–S4.5 Learning Mastered，S4.6 Learning pending |
+| 4 | VLA × World Model Integration | S4.1–S4.6 Engineering Complete + Learning Mastered；策略能力仍未达标 |
 
 Current Task = **S4.6 — Final Benchmark**
-Next Task = **无自动后续任务**（等待S4.6学习确认与用户选择）
+Next Task = **无自动后续任务**（Stage0–4工程与学习完成，等待用户选择）
 
 S0.1 Engineering:
 - [x] Code — toy episode、NPZ + JSON、validator
@@ -56,9 +56,9 @@ Engineering:
 
 Learning:
 
-- [ ] Run
-- [ ] Modify
-- [ ] Explain
+- [x] Run
+- [x] Modify
+- [x] Explain
 
 CPU .venv Python3.12.3 / NumPy2.5.4，无安装/下载/训练/重新校准。
 默认读取`tmp/s4_5_final`及完整上游来源，自有产物用`--source tmp/my_s4_5`。
@@ -72,7 +72,8 @@ OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s4_6_final_benchmark.py --execut
 查看protocol/contract/report.json、executions.npz与summary.csv。每run128 matched pairs/256attempts；
 E1两系统success均0/32，WM将nominal/gain监测risk32/32降至0/32，但增加compute。
 E3 kick出现VLA-only1/32、WM0/32反例，不声称WM提高任务成功；额外bias/goal decoder也限制WM单独归因。
-Stage0–4工程包全部完成，tiny策略能力仍未达标；S4.6学习待Run/Modify/Explain，不自动开始后续工作。
+S4.6 Engineering Complete + Learning Mastered（2026-10-20 用户确认实验、预测及五项Explain）。
+Stage0–4工程与学习全部完成，tiny策略能力仍未达标；不自动开始后续工作。
 
 ## S4.5 status and Run
 
