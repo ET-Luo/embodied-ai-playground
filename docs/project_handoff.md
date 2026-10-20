@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S3.3 — Model Uncertainty**，Engineering Complete；Learning待用户Run/Modify/Explain。
+Current Task = **S3.4 — Latent State Representation**，Engineering Complete；Learning待用户Run/Modify/Explain。
+S3.3 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.2 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S3.1 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S2.7 Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
@@ -21,8 +22,8 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S3.4 — Latent State Representation**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1合成XY单步world model、S3.2冻结checkpoint多步评价及S3.3小ensemble分歧诊断，但未运行真实机器人World Model；S2.3仅架构与接口学习。
+Next Task = **S3.5 — Reward / Success / Contact Prediction**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1合成XY动力学、S3.2多步评价、S3.3小ensemble分歧与S3.4数值观测latent dynamics，但未运行真实机器人World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
 
@@ -1486,3 +1487,83 @@ README/roadmap更新Engineering Complete，学习三项未勾选，只有用户�
 限制：deterministic toy单步分歧，不估计aleatoric噪声、不提供概率/coverage保证、不可靠检测任意OOD；
 无policy/closed-loop success/failure-stage或规划实验。Current Task=S3.3；Next Task=S3.4仅计划。
 用户读Problem→Mathematics→Run→先预测shift10→20mm后Modify→五问Explain；STOP。
+
+## S3.3 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均已完成，五项Explain准确覆盖episode bootstrap与不同初始化的多样性，
+完整episode相关性、原train600拟合共享统计、calibration仅定阈值及held-out evaluation隔离。
+正确写出K×N×2预测均值和population RMS分歧公式，解释2K分母、ddof0、单位m，
+区分无需真值的score、单样本L2、逐坐标RMSE与ensemble均值standard error。
+明确q95来自独立名义calibration200个score，flag为D>阈值、bad为真实L2>5mm诊断标签，
+经验分位数不保证评价集5%误报率，也不提供机器人失败概率或安全风险。
+准确指出shift10→20mm只改变隐藏机制target及误差相关诊断，保持权重/bootstrap/统计/
+calibration/阈值、其他组结果与hidden输入/预测/score/flag；解释hidden RMSE7.069→14.139mm
+仍漏报199/200，以及复制成员score约0仍可全错。
+区分epistemic proxy、未估计的aleatoric噪声与条件转移机制变化；说明输入OOD不必然失败、
+更多成员不保证准确/可信、低分歧不证明低误差或真实控制安全。
+README与学习包Run/Modify/Explain已勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅修改四份状态文档，未重跑Python实验、安装或下载。
+环境与工程结果沿用上述S3.3记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU），
+不增加不确定性校准、任意OOD检测、机器人安全或闭环成功声明。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档修改。
+Current Task=S3.3（已掌握）；Next Task=S3.4 — Latent State Representation，仅计划。
+等待用户选择，不自动进入下一任务；未commit/push。
+
+## S3.4 Engineering — 2026-10-20
+
+用户明确请求推进S3.4；启动pwd正确，已有S3.3学习确认的四份文档修改全部保留。
+读取AGENTS、README、handoff、roadmap、S0.1模板、S3.1源码与S3.3学习包；此前无S3.4包。
+新增[学习包](vla/s3_4_latent_state.md)、[脚本](../scripts/s3_4_latent_state.py)、
+[测试](../tests/test_s3_4_latent_state.py)。仅本任务，未开始S3.5或规划。
+
+执行前确认repo `.venv/bin/python` / prefix/base_prefix，Python3.12.3 / NumPy2.5.4，实际模块路径
+`/home/lucas/projects/embodied-ai-playground/.venv/lib/python3.12/site-packages/numpy/__init__.py`。
+CPU单BLAS线程，无新依赖/安装/dataset/weights下载或旧repo访问，requirements不变。
+复用S3.1 generator与episode split（seed31/32），不改旧checkpoint；新增6路已知线性投影观测，
+profile s3_4_linear_sensor_latent/1.0。raw state/obs/action float32物理m，clock float64、dt.1s。
+六路投影观测不是图像，encoder为train拟合的线性PCA，不声称神经autoencoder或视觉学习。
+
+train30episodes的21观测各取一次，共630条fit观测mean/std及SVD；只取前d主方向，冻结E/D。
+dynamics对600个train转移fit独立输入/delta_z统计，(d+2)→32 tanh→d residual MLP，
+full-batch Adam .01/2000步，seed340；d2/d1分别226/161参数。
+所有validation210观测/200转移未进统计/梯度，latent无量纲；每步命令仍world XY位移[m]。
+物理评价将decoded六路观测经已知sensor伪逆恢复XY，是特权synthetic几何，不是未知sensor标定学习。
+未来编码仅监督或诊断reference；AR20仅从E(o0)初始化，不看中途真值，不执行policy。
+
+Executed final code:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_4_latent_state.py --output tmp/s3_4_final
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_4_latent_state.py --latent-dim 1 --output tmp/s3_4_d1_final
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s3_*.py' -v
+.venv/bin/python -m pip check
+git diff --check
+```
+
+首轮另运行tmp/s3_4_verified、tmp/s3_4_d1_verified；最终版清理未使用SVD调用，并将未来编码
+重建诊断命名为reference而非floor，避免误称物理误差严格下界，数值模型结果相同。
+d2保留观测方差≈100%，validation物理重建RMSE2.35952e-6mm（接近raw舍入），
+单步decoded physical RMSE .116069mm、zero-action消融17.285216mm、latent persistence17.286918mm，
+AR20 endpoint .758313mm。d2 train单步physical RMSE .085263mm。
+d1保留55.674615%train标准化观测方差，validation物理重建121.208062mm、单步121.900999mm，
+future encoding reference121.894283mm、AR20 endpoint154.780218mm。
+d2/d1 raw latent prediction MSE1.09065e-6/7.22123e-5，对应latent persistence .0247726/.0247894；
+不同表示loss不作物理精度排名，d1虽预测latent更好仍缺物理状态信息。
+4tensor梯度有限差分最大绝对误差d2约1.985e-11/d1约4.324e-11。
+d1在已知encoder物理null方向构造相距.1m、同z（误差<1e-12）两state，同[.03,.02]m动作
+后的真实next-z差≈.001666315，证明该压缩表示对这两个状态不满足确定性动力学充分性。
+首轮d2 batch1 encode/predict/decode p50/p95 .009404/.010985ms，20warmup/200samples，
+不含sensor生成、真值、物理评价、I/O或planning；非机器人端到端latency。
+
+13/13 Stage3协议测试通过（此前9项+本轮4项）：d2 held-out重建、d1 aliasing、未来observation
+反事实不影响AR且h1一致、无效/退化encoder输入拒绝。
+独立inline核对raw/split/d2→d1数据不变量、train630 PCA重算、validation+100m不影响encoder、
+train600 latent统计重算、checkpoint单步与完整AR逐值重载、物理MSE/样本数、共有PCA轴/奇异值、
+5类CLI拒绝（d0/d3/epochs0/10001/已有output）及report不覆盖，全部PASS。
+该inline首轮发现d1 batch200单步与batch10 AR首步仅2.776e-17无量纲舍入差，
+随后用atol1e-14/rtol0核验这项数值等价；checkpoint同计算路径重载仍要求逐值相等。
+pip check无冲突；Markdown本地链接及git diff --check通过；所有产物ignored tmp/，未commit/push。
+README/roadmap更新Engineering Complete，学习三项未勾选，仅用户反馈可确认掌握。
+限制：已知线性无噪声sensor、名义toy held-out，无视觉/OOD/未知sensor辨识或真实robot任务；
+没有success/failure-stage或闭环控制证据，低latent loss不等于状态充分或部署能力。
+Current Task=S3.4；Next Task=S3.5仅计划。用户读Problem→Mathematics→Run→先预测d2→d1后Modify→五问Explain；STOP。

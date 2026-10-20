@@ -238,9 +238,12 @@ ID RMSE约.125mm；指定输入OOD时误差/分歧增大，但同输入隐藏执
 
 ## My Verification / Learner Verification
 
-- [ ] Run：运行默认实验，核对四组误差/分歧与完整混淆矩阵。
-- [ ] Modify：先预测shift10→20mm的不变量，再运行核对；可选K2对照。
-- [ ] Explain：用自己的话回答五问，解释低分歧高误差与阈值证据边界。
+- [x] Run：运行默认实验，核对四组误差/分歧与完整混淆矩阵。
+- [x] Modify：先预测shift10→20mm的不变量，再运行核对；可选K2对照。
+- [x] Explain：用自己的话回答五问，解释低分歧高误差与阈值证据边界。
 
-Engineering Complete；Learning三项待用户明确报告。Current Task=S3.3；Next Task=S3.4仅计划。
+Engineering Complete + Learning Mastered（2026-10-20 用户明确确认实验和预测完成，并准确回答五项Explain）。
+解释覆盖episode bootstrap与独立初始化、train-only共享统计、K×N×2与2K分母、
+独立q95阈值和flag/bad语义、隐藏机制/复制成员反例，以及epistemic/aleatoric与风险校准边界。
+Current Task=S3.3；Next Task=S3.4仅计划。
 STOP，不自动开始下一任务。
