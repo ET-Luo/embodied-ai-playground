@@ -2,7 +2,8 @@
 
 Updated 2026-10-20 (Europe/Berlin)。新会话读 AGENTS.md → 本文 → README → 当前学习包。
 
-Current Task = **S3.1 — State Dynamics**，Engineering Complete；Learning待用户Run/Modify/Explain。
+Current Task = **S3.2 — Multi-step Rollout**，Engineering Complete；Learning待用户Run/Modify/Explain。
+S3.1 Engineering Complete + Learning Mastered（2026-10-20 用户确认）。
 S2.7 Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
 Stage2 S2.1–S2.7全部工程与学习完成；不代表完整模型复现或机器人控制成功。
 S2.6 Engineering Complete + Learning Mastered（2026-10-19 用户确认）。
@@ -19,8 +20,8 @@ S1.3 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.2 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 S1.1 Engineering Complete + Learning Mastered（2026-10-17 用户确认）。
 Stage0 S0.1–S0.7 Engineering Complete + Learning Mastered（历史用户确认）。
-Next Task = **S3.2 — Multi-step Rollout**，仅计划，不授权自动进入。
-已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；新增S3.1合成XY单步world model，但未运行真实机器人World Model；S2.3仅架构与接口学习。
+Next Task = **S3.3 — Model Uncertainty**，仅计划，不授权自动进入。
+已实现literal条件state MLP、tiny learned word embedding、独立tiny CNN定位和summary融合对照；已有tiny averaged-patch Transformer action chunk但未学成控制；另有独立tiny语言目标泛化诊断和冻结checkpoint闭环评价，未修复S1.5；没有运行真实OpenVLA；已有S3.1合成XY单步world model及S3.2冻结checkpoint多步评价，但未运行真实机器人World Model；S2.3仅架构与接口学习。
 
 ## Initialization and inherited experience
 
@@ -1341,3 +1342,72 @@ pip check无冲突，文档本地链接与git diff --check通过；所有实验�
 README/roadmap更新Engineering Complete，Learning三项保持未勾选；未commit/push。
 Current Task=S3.1；Next Task=S3.2仅计划。用户先读Problem→Architecture，再Run，
 先预测epochs变化后Modify，用自己的话回答五项Explain；等待明确学习反馈，不自动推进。
+
+## S3.1 learning confirmation — 2026-10-20
+
+用户明确确认实验和预测均已完成，五项Explain准确覆盖：VLA policy与forward dynamics的
+输入输出、完全可观测确定性XY不需要language、commanded displacement与realized displacement
+及位置相关gain/XY串扰、惯性系统需速度等Markov信息。
+正确给出20actions/21states时序、4维输入/2维实际位移target、反标准化加当前状态，
+解释完整episode split与train-only mean/std、无量纲训练MSE和m²/MSE及m/RMSE单位。
+准确指出2000→20步保持数据/split/统计/契约/验证输入目标与基线不变，改变权重/预测/loss/误差；
+单步更准不证明多步稳定、policy/planning/controller或真实机器人闭环成功。
+README与学习包Run/Modify/Explain已勾选，roadmap同步Learning Mastered。
+启动pwd正确，git status --short为空；本轮仅修改四份状态文档，未重跑Python实验、安装或下载。
+环境与实验结果沿用上述S3.1工程记录（repo .venv Python3.12.3 / NumPy2.5.4 CPU），
+不增加多步稳定、OOD或机器人成功声明。
+验证：`git diff --check`通过；`git diff --stat`与`git status --short`核对仅四份文档变更。
+Current Task=S3.1（已掌握）；Next Task=S3.2 — Multi-step Rollout，仅计划。
+等待用户选择，不自动进入下一任务；未commit/push。
+
+## S3.2 Engineering — 2026-10-20
+
+用户明确请求继续S3.2；启动pwd正确，已有S3.1学习确认的四份文档修改全部保留。
+读取AGENTS、README、handoff、roadmap、S0.1模板、S3.1学习包/源代码；此前无S3.2包。
+新增[学习包](vla/s3_2_multistep_rollout.md)、[脚本](../scripts/s3_2_multistep_rollout.py)、
+[协议测试](../tests/test_s3_2_multistep_rollout.py)。仅本任务，不开始S3.3。
+
+执行前核对解释器repo `.venv/bin/python`、prefix/base_prefix，Python3.12.3 / NumPy2.5.4，
+实际NumPy路径 `/home/lucas/projects/embodied-ai-playground/.venv/lib/python3.12/site-packages/numpy/__init__.py`。
+CPU单BLAS线程，无训练、新依赖、安装、dataset/weights下载或旧repo访问，requirements不变。
+冻结 `tmp/s3_1_final` 的model.npz、episodes.npz、contract.json，记录各SHA256且结束前重核对。
+拒绝未知schema、action/time/dynamics语义不符、坏shape/dtype/clock/split、非train-only统计。
+
+10条原validation episode，原20actions/21states不变，按seed3200+episode_id生成延长部分固定动作；
+同原synthetic dynamics延长到100步，dt.1s，同episode仅t0 reset，不拼接其他episode。
+TF每步接收真实state，AR仅起点接收真值，全部预测器共用动作；无policy闭环。
+保留float32 raw；MLP拼接输入float32沿用S3.1归一化，网络/状态输出float64。
+首轮h1逐值一致性检查发现TF float32与AR float64基线加法精度差异（最大约1.2e-8m），
+统一评价输入算术为float64、MLP接口显式float32、oracle遵循generator float32后通过；
+没有放宽h1相等断言。原S3.1全部200条预测逐值精确复现。
+
+Executed:
+
+```bash
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_2_multistep_rollout.py --output tmp/s3_2_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_2_multistep_rollout.py --bias-mm 2 --output tmp/s3_2_bias2_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python scripts/s3_2_multistep_rollout.py --steps 40 --output tmp/s3_2_h40_verified
+OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p 'test_s3_2_multistep_rollout.py' -v
+.venv/bin/python -m pip check
+git diff --check
+```
+
+MLP h1/5/20/100 TF local RMSE .0983/.0924/.1042/.4649mm，
+AR endpoint .0983/.3999/1.6074/15.5763mm；原S3.1 200条TF prefix RMSE .13786978mm。
+默认MLP+1mm x偏置AR h100端点60.6893mm，bias2mm为128.2071mm，非严格翻倍。
+不动/理想加法h100 AR端点175.8165/71.8391mm；oracle全部TF/AR零误差。
+零动作identity解析探针TF L2 1/2mm，AR h100 L2 100/200mm，严格线性只属该探针。
+H40时MLP端点3.9189mm，全部共有前缀不变；100步truth/MLP AR输入状态盒外比例各16.3%，
+20步为2.0%/2.5%，长时误差混合递归传递与状态分布变化，盒内也不保证统计ID。
+首轮100步batch10 TF+AR共200次批量推理p50/p95=2.595741/4.159114ms，3warmup/20samples；
+含循环及finite/h1核验，不含真值生成、metrics、文件I/O、环境或planning，非机器人latency。
+
+4/4独立协议测试通过：未来truth反事实不影响AR、oracle对齐零漂移、已知bias累积与独立reset、
+延长保持source与共有前缀。独立inline核对artifact重载、各模型端点MSE重算、S3.1预测逐值重放、
+source hash未变、bias不变量、H40/100所有数组共有前缀、6类CLI拒绝（已有目录/steps20/501/
+biasNaN/11/缺source）、已有report不覆盖、action语义错配拒绝，全部PASS。
+pip check无冲突；Markdown本地链接及git diff --check通过；产物ignored tmp/，未commit/push。
+README/roadmap更新Engineering Complete，Run/Modify/Explain未勾选；只有用户反馈可确认掌握。
+限制：仅toy固定动作预测，无学习uncertainty、无规划/控制、无机器人success/failure stage评价，
+没有证明长时稳定/泛化，也未修复模型漂移。Current Task=S3.2；Next Task=S3.3仅计划。
+用户先读Problem→Mathematics，再Run，先预测bias1→2mm后Modify，回答五问Explain；STOP。

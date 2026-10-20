@@ -176,9 +176,11 @@ held-out单步RMSE约0.138mm，理想加法约6.85mm。它没有证明多步稳�
 
 ## My Verification / Learner Verification
 
-- [ ] Run：自己运行默认命令，查contract、数据时序和三个held-out误差。
-- [ ] Modify：先预测2000→20步的变化，再运行比较数据/统计/基线和MLP。
-- [ ] Explain：用自己的话回答五问，讲清action语义、Markov和评价边界。
+- [x] Run：自己运行默认命令，查contract、数据时序和三个held-out误差。
+- [x] Modify：先预测2000→20步的变化，再运行比较数据/统计/基线和MLP。
+- [x] Explain：用自己的话回答五问，讲清action语义、Markov和评价边界。
 
-Engineering Complete；Learning Run/Modify/Explain等待用户明确报告。助手运行不计学习掌握。
+Engineering Complete + Learning Mastered（2026-10-20 用户明确确认实验和预测完成，并准确回答五项Explain）。
+解释覆盖policy/dynamics输入输出、commanded/realized位移、Markov状态、20/21时序、残差恢复、
+episode split、train-only统计、误差单位、训练步数不变量及单步/闭环证据边界。
 Current Task=S3.1；Next Task=S3.2（仅计划）。STOP，不自动进入下一任务。
